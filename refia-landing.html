@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refia — IA para inventarios | NAVA Experiments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --nava-blue: #003366;
+      --nava-teal-deep: #0F706E;
+      --nava-emerald: #1F9D7A;
+      --nava-gold: #C9A15A;
+      --nava-ivory: #F7F5EF;
+      --nava-graphite: #253138;
+      --nava-experiments: #E3734A;
+
+      --font-heading: "Sora", system-ui, -apple-system, sans-serif;
+      --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--nava-ivory);
+      color: var(--nava-graphite);
+      font-family: var(--font-body);
+      line-height: 1.6;
+    }
+
+    /* Hero */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 48px 32px;
+      background: linear-gradient(135deg, var(--nava-ivory) 0%, rgba(207, 161, 90, 0.03) 100%);
+      text-align: center;
+    }
+
+    .logo-container {
+      margin-bottom: 64px;
+    }
+
+    .logo-container svg {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 24px;
+    }
+
+    .nava-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--nava-teal-deep);
+      margin-bottom: 8px;
+    }
+
+    .line-badge {
+      display: inline-block;
+      background: var(--nava-experiments);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 24px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(32px, 7vw, 64px);
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--nava-blue);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .tagline {
+      font-size: 18px;
+      color: var(--nava-graphite);
+      margin-bottom: 12px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--nava-teal-deep);
+      font-weight: 500;
+      margin-bottom: 56px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Status */
+    .status {
+      background: rgba(207, 161, 90, 0.08);
+      border: 1px solid var(--nava-gold);
+      border-radius: 8px;
+      padding: 24px 32px;
+      margin-bottom: 48px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .status-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--nava-teal-deep);
+      margin-bottom: 8px;
+    }
+
+    .status-text {
+      font-size: 14px;
+      color: var(--nava-graphite);
+      line-height: 1.6;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      margin-top: 32px;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-primary {
+      background: var(--nava-experiments);
+      color: white;
+    }
+
+    .cta-primary:hover {
+      background: #D35F3A;
+      transform: translateY(-2px);
+    }
+
+    .cta-secondary {
+      background: transparent;
+      color: var(--nava-blue);
+      border: 1.5px solid var(--nava-blue);
+    }
+
+    .cta-secondary:hover {
+      background: var(--nava-blue);
+      color: white;
+    }
+
+    .icon-whatsapp {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Divider */
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: var(--nava-gold);
+      margin: 32px auto;
+    }
+
+    /* Footer info */
+    .footer-info {
+      margin-top: 56px;
+      font-size: 12px;
+      color: var(--nava-teal-deep);
+      max-width: 480px;
+      line-height: 1.8;
+    }
+
+    .footer-info strong {
+      color: var(--nava-blue);
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero {
+        padding: 32px 20px;
+        min-height: auto;
+        padding-top: 60px;
+        padding-bottom: 60px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .tagline {
+        font-size: 16px;
+      }
+
+      .status {
+        padding: 20px 24px;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero > * {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .logo-container { animation-delay: 0.1s; }
+    h1 { animation-delay: 0.2s; }
+    .tagline { animation-delay: 0.3s; }
+    .subtitle { animation-delay: 0.4s; }
+    .status { animation-delay: 0.5s; }
+    .cta-section { animation-delay: 0.6s; }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="logo-container">
+      <div class="nava-label">Producto NAVA</div>
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <!-- Colibrí simplificado para landing -->
+        <path d="M60 20 Q80 40 85 65 Q88 80 75 85 Q60 88 50 75 Q45 65 48 50 Q55 30 60 20Z" fill="#003366" opacity="0.8"/>
+        <path d="M55 50 Q65 55 70 70" stroke="#C9A15A" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="52" cy="65" r="3" fill="#C9A15A"/>
+      </svg>
+    </div>
+
+    <div class="line-badge">NAVA Experiments</div>
+
+    <h1>Refia</h1>
+
+    <p class="tagline">IA para organizar inventarios de repuestos con inteligencia aplicada</p>
+
+    <p class="subtitle">Simplificamos la gestión de stock con automatización inteligente</p>
+
+    <div class="status">
+      <div class="status-label">Estado actual</div>
+      <div class="status-text">
+        Estamos en construcción activa de la plataforma. Nuestro equipo está diseñando la experiencia de usuario y preparando el piloto. <strong>¿Quieres ser de los primeros en probar Refia?</strong>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <a href="https://wa.me/573186195434?text=Hola%20Mema,%20estoy%20interesado%20en%20conocer%20m%C3%A1s%20sobre%20Refia" class="cta cta-primary">
+        <svg class="icon-whatsapp" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371 0-.57 0-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.2-5.043 5.697-5.043 9.426 0 3.325.855 6.507 2.486 9.21l-2.646 9.662 9.961-2.615c2.573 1.431 5.479 2.19 8.535 2.19h.005c9.687 0 17.543-7.856 17.543-17.543 0-4.687-1.88-9.1-5.287-12.409a17.505 17.505 0 00-12.517-5.179z"/>
+        </svg>
+        Cuéntame más
+      </a>
+      <a href="https://wa.me/573186195434?text=Hola%20Mema,%20quisiera%20participar%20en%20el%20piloto%20de%20Refia" class="cta cta-secondary">
+        Quiero participar en el piloto
+      </a>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="footer-info">
+      <strong>Refia</strong> es un producto experimental de <strong>NAVA</strong> — Growth, AI & Human Behavior Lab. Contáctanos directamente para conocer más detalles del proyecto.
+    </div>
+  </section>
+</body>
+</html>
