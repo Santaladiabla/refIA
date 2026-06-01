@@ -4,447 +4,91 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>REFIA — Buscador</title>
-<style>
-    :root {
-      --blue: #003366;
-      --blue-hover: #1a4d8a;
-      --gold: #C9A15A;
-      --gold-bg: #fdf6ec;
-      --gold-border: #f0d99a;
-      --ivory: #F7F5EF;
-      --white: #ffffff;
-      --gray-100: #f0eeea;
-      --gray-200: #e2dfd8;
-      --gray-400: #9b9890;
-      --gray-600: #6b6864;
-      --gray-800: #2d2c2a;
-      --green: #2e7d5a;
-      --green-bg: #e8f5ef;
-      --amber: #b06a00;
-      --amber-bg: #fff8ec;
-      --red: #c0392b;
-      --red-bg: #fdf2f1;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--ivory);
-      color: var(--gray-800);
-      min-height: 100vh;
-    }
-
-    /* ─── HEADER ─── */
-    .header {
-      background: var(--blue);
-      padding: 14px 20px 0;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.25);
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .logo {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-weight: 700;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: -0.5px;
-    }
-    .logo span { color: var(--gold); }
-
-    .logo-sub {
-      font-size: 10px;
-      color: rgba(255,255,255,0.45);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-left: 3px;
-      align-self: flex-end;
-      margin-bottom: 4px;
-    }
-
-    .header-badge {
-      margin-left: auto;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: rgba(255,255,255,0.6);
-      font-size: 11px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-
-    /* Search */
-    .search-wrap {
-      position: relative;
-      margin-bottom: -1px;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 13px 44px 13px 44px;
-      border: 2px solid transparent;
-      border-radius: 12px 12px 0 0;
-      font-size: 16px;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--white);
-      color: var(--gray-800);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    .search-input:focus { border-color: var(--gold); }
-    .search-input::placeholder { color: var(--gray-400); }
-
-    .search-icon {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 17px;
-      pointer-events: none;
-      opacity: 0.45;
-    }
-
-    .search-clear {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--gray-200);
-      border: none;
-      color: var(--gray-600);
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 12px;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      font-weight: 700;
-    }
-    .search-clear.visible { display: flex; }
-
-    /* ─── FILTERS ─── */
-    .filters-bar {
-      background: var(--white);
-      border-bottom: 1px solid var(--gray-200);
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding: 10px 16px;
-      display: flex;
-      gap: 7px;
-      align-items: center;
-      white-space: nowrap;
-    }
-    .filters-bar::-webkit-scrollbar { display: none; }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 5px 13px;
-      border-radius: 20px;
-      font-size: 12.5px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1.5px solid var(--gray-200);
-      background: var(--white);
-      color: var(--gray-600);
-      transition: all 0.12s;
-      user-select: none;
-    }
-    .chip:hover { border-color: var(--blue); color: var(--blue); }
-    .chip.on { background: var(--blue); border-color: var(--blue); color: var(--white); }
-
-    .chip-count {
-      font-size: 10.5px;
-      background: rgba(0,0,0,0.08);
-      border-radius: 10px;
-      padding: 0 5px;
-    }
-    .chip.on .chip-count { background: rgba(255,255,255,0.2); }
-
-    .sep { width: 1px; height: 20px; background: var(--gray-200); margin: 0 2px; flex-shrink: 0; }
-
-    /* ─── TOOLBAR ─── */
-    .toolbar {
-      padding: 10px 18px 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .results-label {
-      font-size: 13px;
-      color: var(--gray-600);
-    }
-    .results-label strong { color: var(--gray-800); font-weight: 600; }
-
-    .sort-select {
-      font-size: 12px;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      border: 1.5px solid var(--gray-200);
-      background: var(--white);
-      color: var(--gray-600);
-      padding: 5px 10px;
-      border-radius: 8px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    /* ─── GRID ─── */
-    .grid {
-      padding: 4px 14px 28px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    @media (min-width: 560px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 860px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-
-    /* ─── CARD ─── */
-    .card {
-      background: var(--white);
-      border: 1.5px solid var(--gray-200);
-      border-radius: 14px;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      transition: border-color 0.12s, box-shadow 0.12s, transform 0.12s;
-    }
-    .card:hover {
-      border-color: var(--blue);
-      box-shadow: 0 4px 18px rgba(0,51,102,0.1);
-      transform: translateY(-1px);
-    }
-
-    .card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 9px;
-    }
-
-    .badge-cat {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      background: var(--gray-100);
-      color: var(--gray-600);
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
-
-    .badge-fuente {
-      font-size: 10px;
-      color: var(--gray-400);
-    }
-
-    .card-desc {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--gray-800);
-      line-height: 1.35;
-      margin-bottom: 6px;
-    }
-
-    .card-sku {
-      font-size: 11px;
-      color: var(--gray-400);
-      font-variant-numeric: tabular-nums;
-      margin-bottom: 8px;
-    }
-
-    .card-oem {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--gold-bg);
-      border: 1px solid var(--gold-border);
-      color: #8a6720;
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 6px;
-      margin-bottom: 6px;
-      width: fit-content;
-    }
-
-    .card-compat {
-      font-size: 11px;
-      color: var(--gray-600);
-      line-height: 1.4;
-      margin-bottom: 8px;
-      padding-left: 2px;
-    }
-
-    .card-foto {
-      width: 100%;
-      max-height: 140px;
-      object-fit: contain;
-      border-radius: 8px;
-      background: var(--gray-100);
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    /* spacer pushes footer to bottom */
-    .card-spacer { flex: 1; }
-
-    .card-footer {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      padding-top: 11px;
-      border-top: 1px solid var(--gray-100);
-      margin-top: 10px;
-      gap: 8px;
-    }
-
-    .price-block {}
-
-    .price-value {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-weight: 700;
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--blue);
-      line-height: 1;
-    }
-
-    .price-label {
-      font-size: 10px;
-      color: var(--gray-400);
-      margin-top: 2px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .price-lock {
-      font-size: 10px;
-      opacity: 0.5;
-    }
-
-    .card-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 5px;
-    }
-
-    .stock-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .stock-ok  { background: var(--green-bg); color: var(--green); }
-    .stock-low { background: var(--amber-bg); color: var(--amber); }
-    .stock-out { background: var(--red-bg); color: var(--red); }
-
-    .btn-wa {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: #25D366;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 11px;
-      font-size: 12px;
-      font-weight: 600;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.12s;
-      white-space: nowrap;
-    }
-    .btn-wa:hover { background: #1eb957; }
-
-    /* ─── HIGHLIGHT ─── */
-    mark {
-      background: #fff0b3;
-      color: inherit;
-      border-radius: 2px;
-      padding: 0 1px;
-    }
-
-    /* ─── EMPTY STATE ─── */
-    .empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 56px 20px;
-      color: var(--gray-400);
-    }
-    .empty-icon { font-size: 44px; margin-bottom: 12px; }
-    .empty h3 { font-size: 15px; color: var(--gray-600); margin-bottom: 6px; }
-    .empty p  { font-size: 13px; }
+  <style>
+    :root{--blue:#003366;--gold:#C9A15A;--gold-bg:#fdf6ec;--gold-border:#f0d99a;--ivory:#F7F5EF;--white:#fff;--g1:#f0eeea;--g2:#e2dfd8;--g4:#9b9890;--g6:#6b6864;--g8:#2d2c2a;--green:#2e7d5a;--green-bg:#e8f5ef;--amber:#b06a00;--amber-bg:#fff8ec;--red:#c0392b;--red-bg:#fdf2f1}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--ivory);color:var(--g8);min-height:100vh}
+    .hdr{background:var(--blue);padding:14px 20px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 16px rgba(0,0,0,.25)}
+    .hdr-top{display:flex;align-items:center;margin-bottom:14px}
+    .logo{font-size:24px;font-weight:700;color:#fff;letter-spacing:-.5px}
+    .logo span{color:var(--gold)}
+    .logo-sub{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-left:3px;align-self:flex-end;margin-bottom:4px}
+    .hdr-badge{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:11px;padding:4px 12px;border-radius:20px}
+    .sw{position:relative;margin-bottom:-1px}
+    .si{width:100%;padding:13px 44px;border:2px solid transparent;border-radius:12px 12px 0 0;font-size:16px;font-family:inherit;background:#fff;color:var(--g8);outline:none;transition:border-color .15s}
+    .si:focus{border-color:var(--gold)}
+    .si::placeholder{color:var(--g4)}
+    .sicon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none;opacity:.4}
+    .sclear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:var(--g2);border:none;color:var(--g6);width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;display:none;align-items:center;justify-content:center}
+    .sclear.vis{display:flex}
+    .fb{background:#fff;border-bottom:1px solid var(--g2);overflow-x:auto;scrollbar-width:none;padding:10px 16px;display:flex;gap:7px;align-items:center;white-space:nowrap}
+    .fb::-webkit-scrollbar{display:none}
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:5px 13px;border-radius:20px;font-size:12.5px;font-weight:500;cursor:pointer;border:1.5px solid var(--g2);background:#fff;color:var(--g6);transition:all .12s;user-select:none}
+    .chip:hover{border-color:var(--blue);color:var(--blue)}
+    .chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+    .cc{font-size:10.5px;background:rgba(0,0,0,.08);border-radius:10px;padding:0 5px}
+    .chip.on .cc{background:rgba(255,255,255,.2)}
+    .sep{width:1px;height:20px;background:var(--g2);margin:0 2px;flex-shrink:0}
+    .tb{padding:10px 18px 6px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .rl{font-size:13px;color:var(--g6)}
+    .rl strong{color:var(--g8);font-weight:600}
+    .ss{font-size:12px;font-family:inherit;border:1.5px solid var(--g2);background:#fff;color:var(--g6);padding:5px 10px;border-radius:8px;outline:none;cursor:pointer}
+    .grid{padding:4px 14px 28px;display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:560px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:860px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .card{background:#fff;border:1.5px solid var(--g2);border-radius:14px;padding:15px;display:flex;flex-direction:column;transition:border-color .12s,box-shadow .12s,transform .12s}
+    .card:hover{border-color:var(--blue);box-shadow:0 4px 18px rgba(0,51,102,.1);transform:translateY(-1px)}
+    .cm{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+    .bcat{font-size:10.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;background:var(--g1);color:var(--g6);padding:3px 8px;border-radius:6px}
+    .bfue{font-size:10px;color:var(--g4)}
+    .cdesc{font-size:14px;font-weight:600;color:var(--g8);line-height:1.35;margin-bottom:6px}
+    .csku{font-size:11px;color:var(--g4);margin-bottom:8px}
+    .coem{display:inline-flex;align-items:center;gap:4px;background:var(--gold-bg);border:1px solid var(--gold-border);color:#8a6720;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;margin-bottom:6px;width:fit-content}
+    .ccompat{font-size:11px;color:var(--g6);line-height:1.4;margin-bottom:8px}
+    .cfoto{width:100%;max-height:140px;object-fit:contain;border-radius:8px;background:var(--g1);margin-bottom:8px;display:block}
+    .csp{flex:1}
+    .cfoot{display:flex;align-items:flex-end;justify-content:space-between;padding-top:11px;border-top:1px solid var(--g1);margin-top:10px;gap:8px}
+    .pval{font-size:19px;font-weight:700;color:var(--blue);line-height:1}
+    .plbl{font-size:10px;color:var(--g4);margin-top:2px}
+    .cact{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+    .sbadge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
+    .sok{background:var(--green-bg);color:var(--green)}
+    .slow{background:var(--amber-bg);color:var(--amber)}
+    .sout{background:var(--red-bg);color:var(--red)}
+    .bwa{display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;border:none;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;white-space:nowrap}
+    .bwa:hover{background:#1eb957}
+    mark{background:#fff0b3;color:inherit;border-radius:2px;padding:0 1px}
+    .empty{grid-column:1/-1;text-align:center;padding:56px 20px;color:var(--g4)}
+    .empty .ei{font-size:44px;margin-bottom:12px}
+    .empty h3{font-size:15px;color:var(--g6);margin-bottom:6px}
+    .empty p{font-size:13px}
   </style>
 </head>
 <body>
-
-<!-- HEADER -->
-<header class="header">
-  <div class="header-top">
+<header class="hdr">
+  <div class="hdr-top">
     <div class="logo">Re<span>FIA</span><span class="logo-sub">beta</span></div>
-    <div class="header-badge" id="totalBadge">— SKUs</div>
+    <div class="hdr-badge" id="badge">-- SKUs</div>
   </div>
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input
-      type="text"
-      id="q"
-      class="search-input"
-      placeholder="Busca por pieza, vehículo o código OEM..."
-      autocomplete="off"
-      autocorrect="off"
-      spellcheck="false"
-      inputmode="search"
-    >
-    <button class="search-clear" id="clearBtn" onclick="clearQ()">✕</button>
+  <div class="sw">
+    <span class="sicon">&#128269;</span>
+    <input type="text" id="q" class="si" placeholder="Busca por pieza, vehículo o código OEM..." autocomplete="off" autocorrect="off" spellcheck="false" inputmode="search">
+    <button class="sclear" id="clr" onclick="clearQ()">&#x2715;</button>
   </div>
 </header>
-
-<!-- FILTERS -->
-<div class="filters-bar" id="filtersBar">
-  <!-- Built by JS -->
-</div>
-
-<!-- TOOLBAR -->
-<div class="toolbar">
-  <div class="results-label" id="resultsLabel">Cargando…</div>
-  <select class="sort-select" id="sortSel" onchange="render()">
+<div class="fb" id="fb"></div>
+<div class="tb">
+  <div class="rl" id="rl">Cargando...</div>
+  <select class="ss" id="srt" onchange="render()">
     <option value="rel">Relevancia</option>
-    <option value="precio_asc">Precio ↑</option>
-    <option value="precio_desc">Precio ↓</option>
-    <option value="stock">Stock</option>
+    <option value="pa">Precio arriba</option>
+    <option value="pd">Precio abajo</option>
+    <option value="st">Stock</option>
   </select>
 </div>
-
-<!-- PRODUCTS GRID -->
 <div class="grid" id="grid"></div>
-
 <script>
-/* ━━━━━━━━━━━━━━━━━━━━━━ DATA ━━━━━━━━━━━━━━━━━━━━━━ */
-// refia-build.py — 2026-06-01 02:27 — 97 SKUs
+// refia-build.py — 2026-06-01 02:38 — 97 SKUs
 const P = [
   // ── BODEGA P3 (74) ──
   {sku:"B390739512",d:"Soporte Amortiguador Chevrolet Onix Turbo",c:"Amortiguadores",oem:"",co:78000,p:93600,e:4,f:"Bodega P3"},
@@ -547,182 +191,58 @@ const P = [
   {sku:"350029600-IMP",d:"VALVULAS ADMISION N300 1.2 X JGO",c:"Sin categorizar",oem:"",co:23228,p:27874,e:3,f:"Importaci\u00f3n"},
   {sku:"350029700-IMP",d:"VALVULAS ESCAPE N300 1.2 X JGO",c:"Sin categorizar",oem:"",co:23228,p:27874,e:3,f:"Importaci\u00f3n"},
 ];
-
-/* ━━━━━━━━━━━━━━━━━━━━━━ STATE ━━━━━━━━━━━━━━━━━━━━━━ */
-let activeCat   = 'all';
-let activeFuente = 'all';
-
-/* ━━━━━━━━━━━━━━━━━━━━━━ UTILS ━━━━━━━━━━━━━━━━━━━━━━ */
-function norm(s) {
-  return (s || '').toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9\/\s]/g, ' ');
+var aC='all',aF='all';
+function norm(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\/\s]/g,' ');}
+function fmt(n){return'$'+Math.round(n).toLocaleString('es-CO');}
+function sCls(e){return e===0?'sout':e<=2?'slow':'sok';}
+function sTxt(e){return e===0?'Sin stock':e===1?'1 und.':e===2?'2 und.':e+' und.';}
+function hl(t,toks){if(!toks.length)return t;var re=new RegExp('('+toks.map(function(x){return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')','gi');return t.replace(re,'<mark>$1</mark>');}
+function wa(item){var msg='*'+item.d+'*\nSKU: '+item.sku+(item.oem?'\nRef. OEM: '+item.oem:'')+'\nDisponibilidad: '+item.e+' unidad(es)\n\n_Don Repuestos - cotización con RefIA_';return'https://wa.me/573000000000?text='+encodeURIComponent(msg);}
+function buildFB(){
+  var fuentes=['all','Importación','Bodega P3'],flbl={all:'Todos','Importación':'Importación','Bodega P3':'Bodega P3'};
+  var h=fuentes.map(function(f){var n=f==='all'?P.length:P.filter(function(x){return x.f===f;}).length;return'<div class="chip '+(aF===f?'on':'')+'" onclick="setF(\''+f+'\')">'+flbl[f]+' <span class="cc">'+n+'</span></div>';}).join('');
+  h+='<div class="sep"></div>';
+  var cats={};P.forEach(function(x){cats[x.c]=(cats[x.c]||0)+1;});
+  h+='<div class="chip '+(aC==='all'?'on':'')+'" onclick="setC(\'all\')">Todas <span class="cc">'+P.length+'</span></div>';
+  Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" onclick="setC(\''+c.replace(/'/g,"\\'")+'\')">'  +c+' <span class="cc">'+n+'</span></div>';});
+  document.getElementById('fb').innerHTML=h;
 }
-
-function fmtCOP(n) {
-  return '$' + Math.round(n).toLocaleString('es-CO');
-}
-
-function stockCls(e) {
-  if (e === 0) return 'stock-out';
-  if (e <= 2)  return 'stock-low';
-  return 'stock-ok';
-}
-function stockTxt(e) {
-  if (e === 0) return '✗ Sin stock';
-  if (e === 1) return '⚠ 1 und.';
-  if (e === 2) return '⚠ 2 und.';
-  return '✓ ' + e + ' und.';
-}
-
-function highlight(text, tokens) {
-  if (!tokens.length) return text;
-  const escaped = tokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-  const re = new RegExp('(' + escaped.join('|') + ')', 'gi');
-  return text.replace(re, '<mark>$1</mark>');
-}
-
-function waMsg(item) {
-  const lines = [
-    `*${item.d}*`,
-    `SKU: ${item.sku}`,
-    item.oem ? `Ref. OEM: ${item.oem}` : null,
-    `Disponibilidad: ${item.e} unidad(es)`,
-    ``,
-    `_Don Repuestos — cotización generada con RefIA_`
-  ].filter(Boolean).join('\n');
-  const phone = '573000000000';
-  return `https://wa.me/${phone}?text=${encodeURIComponent(lines)}`;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━ FILTERS BAR ━━━━━━━━━━━━━━━━━━━━━━ */
-function buildFilters() {
-  const bar = document.getElementById('filtersBar');
-
-  // Fuente chips
-  const fuentes = ['all', 'Importación', 'Bodega P3'];
-  const fuenteLabels = { all: 'Todos', 'Importación': 'Importación', 'Bodega P3': 'Bodega P3' };
-
-  let html = fuentes.map(f => {
-    const cnt = f === 'all' ? P.length : P.filter(x => x.f === f).length;
-    return `<div class="chip ${activeFuente === f ? 'on' : ''}" onclick="setFuente('${f}')">${fuenteLabels[f]} <span class="chip-count">${cnt}</span></div>`;
-  }).join('');
-
-  html += '<div class="sep"></div>';
-
-  // Category chips
-  const cats = {};
-  P.forEach(x => { cats[x.c] = (cats[x.c] || 0) + 1; });
-  const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
-
-  html += `<div class="chip ${activeCat === 'all' ? 'on' : ''}" onclick="setCat('all')">Todas <span class="chip-count">${P.length}</span></div>`;
-  sorted.forEach(([cat, cnt]) => {
-    html += `<div class="chip ${activeCat === cat ? 'on' : ''}" onclick="setCat('${cat}')">${cat} <span class="chip-count">${cnt}</span></div>`;
+function setF(f){aF=f;buildFB();render();}
+function setC(c){aC=c;buildFB();render();}
+function render(){
+  var q=document.getElementById('q').value.trim();
+  var toks=norm(q).split(/\s+/).filter(function(t){return t.length>1;});
+  document.getElementById('clr').classList.toggle('vis',q.length>0);
+  var res=P.filter(function(item){
+    if(aF!=='all'&&item.f!==aF)return false;
+    if(aC!=='all'&&item.c!==aC)return false;
+    if(!toks.length)return true;
+    var hay=norm(item.d+' '+item.oem+' '+item.c+' '+item.sku);
+    return toks.every(function(t){return hay.indexOf(t)>=0;});
   });
-
-  bar.innerHTML = html;
-}
-
-function setFuente(f) {
-  activeFuente = f;
-  buildFilters();
-  render();
-}
-
-function setCat(c) {
-  activeCat = c;
-  buildFilters();
-  render();
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━ SEARCH + RENDER ━━━━━━━━━━━━━━━━━━━━━━ */
-function getQuery() {
-  return document.getElementById('q').value.trim();
-}
-
-function search() {
-  const q = norm(getQuery());
-  const tokens = q ? q.split(/\s+/).filter(t => t.length > 1) : [];
-
-  let results = P.filter(item => {
-    if (activeFuente !== 'all' && item.f !== activeFuente) return false;
-    if (activeCat !== 'all' && item.c !== activeCat) return false;
-    if (!tokens.length) return true;
-    const hay = norm(item.d + ' ' + item.oem + ' ' + item.c + ' ' + item.sku);
-    return tokens.every(t => hay.includes(t));
-  });
-
-  // Sort
-  const sort = document.getElementById('sortSel').value;
-  if (sort === 'precio_asc')  results.sort((a, b) => a.p - b.p);
-  else if (sort === 'precio_desc') results.sort((a, b) => b.p - a.p);
-  else if (sort === 'stock')  results.sort((a, b) => b.e - a.e);
-  // relevance: items where query matches desc first, then oem
-  else if (tokens.length) {
-    results.sort((a, b) => {
-      const sa = tokens.filter(t => norm(a.d).includes(t)).length;
-      const sb = tokens.filter(t => norm(b.d).includes(t)).length;
-      return sb - sa || b.e - a.e;
-    });
-  }
-
-  return { results, tokens };
-}
-
-function render() {
-  const { results, tokens } = search();
-  const grid = document.getElementById('grid');
-  const label = document.getElementById('resultsLabel');
-  const q = getQuery();
-
-  // Clear btn
-  document.getElementById('clearBtn').classList.toggle('visible', q.length > 0);
-
-  // Results label
-  label.innerHTML = results.length
-    ? `<strong>${results.length}</strong> producto${results.length !== 1 ? 's' : ''} encontrado${results.length !== 1 ? 's' : ''}`
-    : 'Sin resultados';
-
-  if (!results.length) {
-    grid.innerHTML = `<div class="empty">
-      <div class="empty-icon">🔎</div>
-      <h3>No encontramos "${q}"</h3>
-      <p>Prueba con el nombre del vehículo, la categoría o el código OEM</p>
-    </div>`;
-    return;
-  }
-
-  grid.innerHTML = results.map(item => {
-    const descHtml = highlight(item.d, tokens);
-    const oemHtml  = item.oem ? highlight(item.oem, tokens) : '';
-
-    return `
-    <div class="card">
-      <div class="card-meta">
-        <span class="badge-cat">${item.c}</span>
-        <span class="badge-fuente">${item.f}</span>
-      </div>
-      ${item.foto ? `<img class="card-foto" src="${item.foto}" alt="${item.d}" loading="lazy" onerror="this.style.display='none'">` : ''}
-      <div class="card-desc">${descHtml}</div>
-      <div class="card-sku">${item.sku}</div>
-      ${item.oem ? `<div class="card-oem">⬡ OEM: ${oemHtml}</div>` : ''}
-      ${item.compat ? `<div class="card-compat">🚗 ${item.compat}</div>` : ''}
-      <div class="card-spacer"></div>
-      <div class="card-footer">
-        <div class="price-block">
-          <div class="price-value">${fmtCOP(item.p)}</div>
-          <div class="price-label"><span class="price-lock">🔒</span> precio piso</div>
-        </div>
-        <div class="card-actions">
-          <span class="stock-badge ${stockCls(item.e)}">${stockTxt(item.e)}</span>
-          <a class="btn-wa" href="${waMsg(item)}" target="_blank">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Cotizar
-          </a>
-        </div>
-      </div>
-    </div>`;
+  var srt=document.getElementById('srt').value;
+  if(srt==='pa')res.sort(function(a,b){return a.p-b.p;});
+  else if(srt==='pd')res.sort(function(a,b){return b.p-a.p;});
+  else if(srt==='st')res.sort(function(a,b){return b.e-a.e;});
+  document.getElementById('rl').innerHTML=res.length?'<strong>'+res.length+'</strong> producto'+(res.length!==1?'s':'')+' encontrado'+(res.length!==1?'s':''):'Sin resultados';
+  var grid=document.getElementById('grid');
+  if(!res.length){grid.innerHTML='<div class="empty"><div class="ei">&#128270;</div><h3>Sin resultados para "'+q+'"</h3><p>Prueba con el vehículo, categoría o código OEM</p></div>';return;}
+  grid.innerHTML=res.map(function(item){
+    var dh=hl(item.d,toks),oh=item.oem?hl(item.oem,toks):'';
+    return '<div class="card"><div class="cm"><span class="bcat">'+item.c+'</span><span class="bfue">'+item.f+'</span></div>'+(item.foto?'<img class="cfoto" src="'+item.foto+'" alt="'+item.d+'" loading="lazy" onerror="this.style.display=\'none\'">'  :'')+
+    '<div class="cdesc">'+dh+'</div><div class="csku">'+item.sku+'</div>'+
+    (item.oem?'<div class="coem">OEM: '+oh+'</div>':'')+
+    (item.compat?'<div class="ccompat">'+item.compat+'</div>':'')+
+    '<div class="csp"></div><div class="cfoot"><div><div class="pval">'+fmt(item.p)+'</div><div class="plbl">precio piso</div></div>'+
+    '<div class="cact"><span class="sbadge '+sCls(item.e)+'">'+sTxt(item.e)+'</span>'+
+    '<a class="bwa" href="'+wa(item)+'" target="_blank">Cotizar WA</a></div></div></div>';
   }).join('');
 }
-
-/* ━━━━━━�
+document.getElementById('q').addEventListener('input',render);
+function clearQ(){document.getElementById('q').value='';document.getElementById('q').focus();render();}
+document.getElementById('badge').textContent=P.length+' SKUs';
+buildFB();
+render();
+</script>
+</body>
+</html>
