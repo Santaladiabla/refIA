@@ -233,7 +233,7 @@
 </div>
 
 <script>
-// refia-build.py — 2026-06-03 03:04 — 1112 SKUs
+// refia-build.py — 2026-06-03 03:18 — 1112 SKUs
 const P = [
   // ── AMORTIGUADORES (32) ──
   {sku:"A G707127",d:"DRS Amortiguador delantero izquierdo Sonic - Onix",c:"Amortiguad",oem:"95917162",co:0,p:0,e:1,f:"Amortiguadores",compat:"DRS Amortiguador delantero izquierdo Sonic - Onix",foto:"http://donrepuestos.com/wp-content/uploads/2022/11/Amortiguador-delantero-izquierdo-Chevrolet-Sonic-.webp",bodega:"CARTAGENA"},
@@ -1477,4 +1477,30 @@ function openModal(idx){
   // Price table
   var margen=item.co>0?Math.round((item.p-item.co)/item.p*100):null;
   var priceHtml='<tr><td>Costo</td><td>'+fmt(item.co)+'</td></tr>'
-    +'<tr class="price-piso"><td>&#1282
+    +'<tr class="price-piso"><td>&#128274; Precio piso</td><td>'+fmt(item.p)+'</td></tr>'
+    +(margen!==null?'<tr class="price-margen"><td>Margen</td><td>'+margen+'%</td></tr>':'');
+  document.getElementById('m-price').innerHTML='<table class="price-table">'+priceHtml+'</table>';
+  document.getElementById('m-wa').href=wa(item);
+  document.getElementById('overlay').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('overlay').style.display='none';
+  document.body.style.overflow='';
+}
+
+/* -- INIT -- */
+document.getElementById('q').addEventListener('input',render);
+document.getElementById('srt').addEventListener('change',render);
+document.getElementById('clr').addEventListener('click',function(){document.getElementById('q').value='';render();});
+document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.getElementById('close').addEventListener('click',closeModal);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+P.forEach(function(p,i){p._idx=i;});
+buildFB();
+render();
+</script>
+</body>
+</html>
