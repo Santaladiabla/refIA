@@ -72,15 +72,15 @@
 
     /* LOCATION BADGE */
     .loc{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;letter-spacing:.3px;padding:2px 8px;border-radius:20px;white-space:nowrap}
-    .loc-bog{background:#e0f2fe;color:#0369a1}
-    .loc-car{background:#fff3e0;color:#b45309}
+    .loc-bog{background:#dbeafe;color:#1e40af}
+    .loc-car{background:#fee2e2;color:#dc2626}
     .loc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-    .loc-bog .loc-dot{background:#0369a1}
-    .loc-car .loc-dot{background:#b45309}
+    .loc-bog .loc-dot{background:#1e40af}
+    .loc-car .loc-dot{background:#dc2626}
     /* Modal location */
     .m-loc{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:4px}
-    .m-loc-bog{background:rgba(3,105,161,.1);color:#0369a1}
-    .m-loc-car{background:rgba(180,83,9,.1);color:#b45309}
+    .m-loc-bog{background:rgba(30,64,175,.12);color:#1e40af}
+    .m-loc-car{background:rgba(220,38,38,.1);color:#dc2626}
 
     /* HIGHLIGHT */
     mark{background:#fff0b3;color:inherit;border-radius:2px;padding:0 1px}
@@ -166,7 +166,7 @@
 
 <header class="hdr">
   <div class="hdr-top">
-    <div class="logo">Re<span>FIA</span><span class="logo-sub">beta</span></div>
+    <div class="logo">REF<span>IA</span><span class="logo-sub">beta</span></div>
     <div class="hdr-badge" id="badge">-- SKUs</div>
   </div>
   <div class="sw">
@@ -215,7 +215,7 @@
             <span class="price-title">Precios internos</span>
             <span class="price-badge">&#128274; Solo vendedora</span>
           </div>
-          <table class="price-table" id="m-prices"></table>
+          <div id="m-prices"></div>
         </div>
       </div>
     </div>
@@ -1375,12 +1375,9 @@ function mLocClass(b){return b==='Bogotá'?'m-loc-bog':b==='Cartagena'?'m-loc-ca
 
 /* ── FILTERS ── */
 function buildFB(){
-  var fuentes=['all','Importación','Bodega P3'],flbl={all:'Todos','Importación':'Importación','Bodega P3':'Bodega P3'};
-  var h=fuentes.map(function(f){var n=f==='all'?P.length:P.filter(function(x){return x.f===f;}).length;return'<div class="chip '+(aF===f?'on':'')+'" onclick="setF(\''+f+'\')">'+flbl[f]+' <span class="cc">'+n+'</span></div>';}).join('');
-  h+='<div class="sep"></div>';
   var cats={};P.forEach(function(x){cats[x.c]=(cats[x.c]||0)+1;});
-  h+='<div class="chip '+(aC==='all'?'on':'')+'" onclick="setC(\'all\')">Todas <span class="cc">'+P.length+'</span></div>';
-  Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" onclick="setC(\''+c.replace(/'/g,"\\'")+'\')">'+c+' <span class="cc">'+n+'</span></div>';});
+  var h='<div class="chip '+(aC==='all'?'on':'')+' onclick="setC(\'all\')">'+'Todos'+' <span class="cc">'+P.length+'</span></div>';
+  Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var cat=e[0],n=e[1];h+='<div class="chip '+(aC===cat?'on':'')+' onclick="setC(\''+cat.replace(/'/g,"\\\'")+'\')">'+cat+' <span class="cc">'+n+'</span></div>';});
   document.getElementById('fb').innerHTML=h;
 }
 function setF(f){aF=f;buildFB();render();}
@@ -1465,7 +1462,7 @@ function openModal(idx){
 
   // Compatibilities
   var compatEl=document.getElementById('m-compat');
-  if(item.compat){
+  if(item.compat && item.compat !== item.d){
     var chips=item.compat.split(',').map(function(v){return'<span class="compat-chip">'+v.trim()+'</span>';}).join('');
     compatEl.innerHTML='<div class="compat-head">&#128663; Compatible con</div><div class="compat-chips">'+chips+'</div>';
     compatEl.style.display='block';
