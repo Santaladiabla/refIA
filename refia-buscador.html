@@ -72,15 +72,15 @@
 
     /* LOCATION BADGE */
     .loc{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;letter-spacing:.3px;padding:2px 8px;border-radius:20px;white-space:nowrap}
-    .loc-bog{background:#dbeafe;color:#1e40af}
-    .loc-car{background:#fee2e2;color:#dc2626}
+    .loc-bog{background:#e0f2fe;color:#0369a1}
+    .loc-car{background:#fff3e0;color:#b45309}
     .loc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-    .loc-bog .loc-dot{background:#1e40af}
-    .loc-car .loc-dot{background:#dc2626}
+    .loc-bog .loc-dot{background:#0369a1}
+    .loc-car .loc-dot{background:#b45309}
     /* Modal location */
     .m-loc{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:4px}
-    .m-loc-bog{background:rgba(30,64,175,.12);color:#1e40af}
-    .m-loc-car{background:rgba(220,38,38,.1);color:#dc2626}
+    .m-loc-bog{background:rgba(3,105,161,.1);color:#0369a1}
+    .m-loc-car{background:rgba(180,83,9,.1);color:#b45309}
 
     /* HIGHLIGHT */
     mark{background:#fff0b3;color:inherit;border-radius:2px;padding:0 1px}
@@ -166,7 +166,7 @@
 
 <header class="hdr">
   <div class="hdr-top">
-    <div class="logo">REF<span>IA</span><span class="logo-sub">beta</span></div>
+    <div class="logo">Re<span>FIA</span><span class="logo-sub">beta</span></div>
     <div class="hdr-badge" id="badge">-- SKUs</div>
   </div>
   <div class="sw">
@@ -215,7 +215,7 @@
             <span class="price-title">Precios internos</span>
             <span class="price-badge">&#128274; Solo vendedora</span>
           </div>
-          <div id="m-prices"></div>
+          <table class="price-table" id="m-prices"></table>
         </div>
       </div>
     </div>
@@ -233,7 +233,7 @@
 </div>
 
 <script>
-// refia-build.py — 2026-06-03 03:18 — 1112 SKUs
+// refia-build.py — 2026-06-03 17:33 — 1112 SKUs
 const P = [
   // ── AMORTIGUADORES (32) ──
   {sku:"A G707127",d:"DRS Amortiguador delantero izquierdo Sonic - Onix",c:"Amortiguad",oem:"95917162",co:0,p:0,e:1,f:"Amortiguadores",compat:"DRS Amortiguador delantero izquierdo Sonic - Onix",foto:"https://donrepuestos.com/wp-content/uploads/2022/11/Amortiguador-delantero-izquierdo-Chevrolet-Sonic-.webp",bodega:"CARTAGENA"},
@@ -422,7 +422,7 @@ const P = [
   {sku:"B291640005-I",d:"Bujia DENSO Toyota Fortuner K20HR-U11",c:"Buj\u00edas",oem:"K20HR-U11",co:3500,p:4200,e:12,f:"Bodega P3",compat:"Fortuner | Toyota",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Bujia-Denso-Toyota-Fortuner.webp",bodega:"Bogot\u00e1"},
   {sku:"B291640035-I",d:"Bujia Denso Dodge Journey IXUH221",c:"Buj\u00edas",oem:"IXUH221",co:4500,p:5400,e:12,f:"Bodega P3",compat:"Dodge | Journey",bodega:"Bogot\u00e1"},
   {sku:"B291640040-I",d:"Bujia Denso Nissan Frontier FXE20H",c:"Buj\u00edas",oem:"FXE20H",co:6500,p:7800,e:12,f:"Bodega P3",compat:"Frontier | Nissan",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Bujia-Denso-Nissan-Frontier-1.webp",bodega:"Bogot\u00e1"},
-  {sku:"B291640010-I",d:"Bujia Iridium Denso Mazda 2/3 PT16TT",c:"Buj\u00edas",oem:"PT16TT",co:6500,p:7800,e:12,f:"Bodega P3",compat:"Mazda | Mazda 2",bodega:"Bogot\u00e1"},
+  {sku:"B291640010-I",d:"Bujia Iridium Denso Mazda 2/3 PT16TT",c:"Buj\u00edas",oem:"PT16TT",co:6500,p:7800,e:12,f:"Bodega P3",compat:"Mazda | Mazda 2",foto:"https://imagen-item.btwholding.com/imagenes-item/estatica/204959/3_7tzyt8hjwak5gxylcyvp_orig.jpg",bodega:"Bogot\u00e1"},
   {sku:"B291640020-I",d:"Bujia Iridium Denso Toyota 2.7 - Kia Sportage",c:"Buj\u00edas",oem:"",co:6200,p:7440,e:8,f:"Bodega P3",compat:"Kia | Sportage | Toyota",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Bujia-Denso-Toyota-2.4-Kia-Sportage-1.webp",bodega:"Bogot\u00e1"},
   {sku:"B350029600-I",d:"Juego v\u00e1lvulas admisi\u00f3n Chevrolet N300 1.2",c:"Sin categorizar",oem:"",co:25000,p:30000,e:3,f:"Bodega P3",compat:"Chevrolet | N300",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Valvulas-de-admision-Chevrolet-N300-1.webp",bodega:"Bogot\u00e1"},
   {sku:"B350029700-I",d:"Juego v\u00e1lvulas escape Chevrolet N300 1.2",c:"Sin categorizar",oem:"",co:25000,p:30000,e:3,f:"Bodega P3",compat:"Chevrolet | Escape | N300",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Valvulas-de-escape-Chevrolet-N-300-1.webp",bodega:"Bogot\u00e1"},
@@ -471,7 +471,7 @@ const P = [
   {sku:"B210002511-I",d:"Soporte motor Tras Dodge Journey 3.6 4\u00d74 M11<",c:"Soportes Motor",oem:"M11<",co:33000,p:39600,e:2,f:"Bodega P3",compat:"2011 | Dodge | Journey",foto:"https://donrepuestos.com/wp-content/uploads/2022/11/soporte-motor-trasero-Dodge-Journey-2.4-d.webp",bodega:"Bogot\u00e1"},
   {sku:"B460005003-I",d:"Soporte motor Tras. Chevrolet Traverse M11-16",c:"Soportes Motor",oem:"M11-16",co:69000,p:82800,e:2,f:"Bodega P3",compat:"2011-16 | Chevrolet | Traverse",foto:"https://donrepuestos.com/wp-content/uploads/2024/10/soporte-motor-trasero-Chevrolet-Traverse.webp",bodega:"Bogot\u00e1"},
   {sku:"B460002301-I",d:"Soporte motor derecho Captiva 2.4 2011>",c:"Soportes Motor",oem:"",co:60917,p:73100,e:2,f:"Bodega P3",compat:"2011 | Captiva",foto:"https://donrepuestos.com/wp-content/uploads/2025/04/soporte-motor-derecho-Chevrolet-Captiva-2.4-2011c.webp",bodega:"Bogot\u00e1"},
-  {sku:"B060585600-IA",d:"Bocin Rda Del.Toyota Rav4 2.0/2.5 4\u00d72/4 M13-9",c:"Suspensi\u00f3n",oem:"M13-9",co:78000,p:93600,e:3,f:"Bodega P3",compat:"2013 | Rav4 | Toyota",bodega:"Bogot\u00e1"},
+  {sku:"B060585600-IA",d:"Bocin Rda Del.Toyota Rav4 2.0/2.5 4\u00d72/4 M13-9",c:"Suspensi\u00f3n",oem:"M13-9",co:78000,p:93600,e:3,f:"Bodega P3",compat:"2013 | Rav4 | Toyota",foto:"https://image.imotriz.com/uploads/products/31410-60350-BOCIN-RUEDA-DELANTERA-TOYOTA-RAV4.webp",bodega:"Bogot\u00e1"},
   {sku:"B360585515-I",d:"Bocin trasero Suzuki Swift Dezire 1.2 11/17",c:"Suspensi\u00f3n",oem:"",co:95000,p:114000,e:2,f:"Bodega P3",compat:"Dezire | Suzuki | Swift",foto:"https://donrepuestos.com/wp-content/uploads/2025/01/bocin-trasero-Suzuki-Swift.webp",bodega:"Bogot\u00e1"},
   {sku:"B460616600-I",d:"Tijera Del/Der Chevrolet Captiva 2.4",c:"Suspensi\u00f3n",oem:"",co:124000,p:148800,e:2,f:"Bodega P3",compat:"Captiva | Chevrolet",foto:"https://donrepuestos.com/wp-content/uploads/2022/11/Puno-Tijera-Delantera-Captiva-rotated-1.jpg",bodega:"Bogot\u00e1"},
   {sku:"B460616800-I",d:"Tijera Del/Der Chevrolet Tracker 1.8",c:"Suspensi\u00f3n",oem:"",co:75000,p:90000,e:2,f:"Bodega P3",compat:"Chevrolet | Tracker",foto:"https://donrepuestos.com/wp-content/uploads/2023/10/tijera-derecha-Chevrolet-Tracker-c.webp",bodega:"Bogot\u00e1"},
@@ -503,17 +503,17 @@ const P = [
   {sku:"B440106900",d:"Bomba agua Chevrolet Sail 1.4",c:"Bombas",oem:"",co:40000,p:48000,e:1,f:"Importaci\u00f3n",compat:"Chevrolet | Sail",foto:"https://donrepuestos.com/wp-content/uploads/2024/05/bomba-agua-Chevrolet-Sail-c.webp",bodega:"Cartagena"},
   {sku:"291640035-IMP",d:"BUJIA DENSO DODGE JOURNEY IXUH221",c:"Buj\u00edas",oem:"IXUH221",co:4387,p:5264,e:12,f:"Importaci\u00f3n",compat:"Dodge | Journey",bodega:"Cartagena"},
   {sku:"291640005-IMP",d:"BUJIA DENSO TOYOTA FORTUNER K20HR-U11",c:"Buj\u00edas",oem:"K20HR-U11",co:3355,p:4026,e:12,f:"Importaci\u00f3n",compat:"Fortuner | Toyota",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Bujia-Denso-Toyota-Fortuner.webp",bodega:"Cartagena"},
-  {sku:"291640010-IMP",d:"BUJIA IRIDIUM DENSO MAZDA 2 / 3 PT16TT",c:"Buj\u00edas",oem:"PT16TT",co:6194,p:7433,e:8,f:"Importaci\u00f3n",compat:"Mazda | Mazda 2",bodega:"Cartagena"},
+  {sku:"291640010-IMP",d:"BUJIA IRIDIUM DENSO MAZDA 2 / 3 PT16TT",c:"Buj\u00edas",oem:"PT16TT",co:6194,p:7433,e:8,f:"Importaci\u00f3n",compat:"Mazda | Mazda 2",foto:"https://imagen-item.btwholding.com/imagenes-item/estatica/204959/3_7tzyt8hjwak5gxylcyvp_orig.jpg",bodega:"Cartagena"},
   {sku:"291640020-IMP",d:"BUJIA IRIDIUM DENSO TOYOTA 2.7 - KIA SPORTAG",c:"Buj\u00edas",oem:"IKH16TT",co:6194,p:7433,e:12,f:"Importaci\u00f3n",compat:"Kia | Toyota",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Bujia-Denso-Toyota-2.4-Kia-Sportage-1.webp",bodega:"Cartagena"},
   {sku:"291640305-IMP",d:"Bujia Onix Turbo 1.0 - Tracker Turbo 1.2",c:"Buj\u00edas",oem:"IAJ10RC-7P | 12683541",co:18130,p:21756,e:10,f:"Importaci\u00f3n",compat:"Onix | Tracker",bodega:"Cartagena"},
   {sku:"291640040-IMP",d:"BIJIA DENSO NISSAN FRONTIER FXE20H",c:"Sin categorizar",oem:"FXE20H",co:6194,p:7433,e:12,f:"Importaci\u00f3n",compat:"Frontier | Nissan",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Bujia-Denso-Nissan-Frontier-1.webp",bodega:"Cartagena"},
   {sku:"350623400-IMP",d:"KIT AXIAL + TERMINAL + FUELLE DERECHO N300",c:"Sin categorizar",oem:"",co:26174,p:31409,e:2,f:"Importaci\u00f3n",compat:"N300",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/kit-direccion-Chevrolet-N-300-izquierdo-1-1.webp",bodega:"Cartagena"},
   {sku:"350623500-IMP",d:"KIT AXIAL + TERMINAL + FUELLE IZQUIERDO N300",c:"Sin categorizar",oem:"B350623500",co:26174,p:31409,e:2,f:"Importaci\u00f3n",compat:"N300",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/kit-direccion-Chevrolet-N-300-izquierdo-1-1.webp",bodega:"Cartagena"},
-  {sku:"460072400-IMP",d:"KIT REPARTICION CAPTIVA 2.4",c:"Sin categorizar",oem:"12680750 | 7021091",co:185021,p:222025,e:2,f:"Importaci\u00f3n",compat:"Captiva",bodega:"Cartagena"},
-  {sku:"350065900-IMP",d:"POLEA CIGUE\u00d1AL N300 1.2 1.3",c:"Sin categorizar",oem:"9052774",co:32931,p:39518,e:2,f:"Importaci\u00f3n",compat:"N300",bodega:"Cartagena"},
+  {sku:"460072400-IMP",d:"KIT REPARTICION CAPTIVA 2.4",c:"Sin categorizar",oem:"12680750 | 7021091",co:185021,p:222025,e:2,f:"Importaci\u00f3n",compat:"Captiva",foto:"https://image.imotriz.com/uploads/products/12680750-KIT-DE-REPARTICION-CAPTIVA-2-4.webp",bodega:"Cartagena"},
+  {sku:"350065900-IMP",d:"POLEA CIGUE\u00d1AL N300 1.2 1.3",c:"Sin categorizar",oem:"9052774",co:32931,p:39518,e:2,f:"Importaci\u00f3n",compat:"N300",foto:"https://image.imotriz.com/uploads/products/9052774-POLEA-CIGUENAL-N300.webp",bodega:"Cartagena"},
   {sku:"440042210-IMP",d:"TAPA VALVULAS SONIC/CRUZE/TRACKER",c:"Sin categorizar",oem:"96889998",co:97363,p:116836,e:2,f:"Importaci\u00f3n",compat:"Cruze | Sonic | Tracker",foto:"https://donrepuestos.com/wp-content/uploads/2022/11/Tapa-valvulas-Chevrolet-Sonic.webp",bodega:"Cartagena"},
-  {sku:"350029600-IMP",d:"VALVULAS ADMISION N300 1.2 X JGO",c:"Sin categorizar",oem:"2829SN | 7152117",co:23228,p:27874,e:3,f:"Importaci\u00f3n",compat:"N300",bodega:"Cartagena"},
-  {sku:"350029700-IMP",d:"VALVULAS ESCAPE N300 1.2 X JGO",c:"Sin categorizar",oem:"2830ZN | 7152118",co:23228,p:27874,e:3,f:"Importaci\u00f3n",compat:"Escape | N300",bodega:"Cartagena"},
+  {sku:"350029600-IMP",d:"VALVULAS ADMISION N300 1.2 X JGO",c:"Sin categorizar",oem:"2829SN | 7152117",co:23228,p:27874,e:3,f:"Importaci\u00f3n",compat:"N300",foto:"https://image.imotriz.com/uploads/products/96463002-VALVULA-DE-ADMISION-SPARK-GT-1200-CC.webp",bodega:"Cartagena"},
+  {sku:"350029700-IMP",d:"VALVULAS ESCAPE N300 1.2 X JGO",c:"Sin categorizar",oem:"2830ZN | 7152118",co:23228,p:27874,e:3,f:"Importaci\u00f3n",compat:"Escape | N300",foto:"https://image.imotriz.com/uploads/products/96463003-VALVULA-DE-ESCAPE-SPARK-GT-1200-CC.webp",bodega:"Cartagena"},
 
   // ── KOTRACO (739) ──
   {sku:"6014002B",d:"BOBINA DE ENCENDIDO CHEVROLET ASTRA/ZAFIRA 97",c:"Bobinas",oem:"93248876 SMP: UF705 Bosch: F00ZS0203 Spartan: IC279",co:47320,p:56784,e:1,f:"Kotraco",compat:"Astra | Chevrolet | Zafira"},
@@ -560,7 +560,7 @@ const P = [
   {sku:"6028015",d:"Bobina encendido Hyundai Santafe V6 1.7 02-6",c:"Bobinas",oem:"",co:96530,p:115836,e:1,f:"Kotraco",compat:"Hyundai",foto:"https://donrepuestos.com/wp-content/uploads/2026/05/Bobina-encendido-Hyundai-Santa-Fe-V6-e.webp",bodega:"Bogot\u00e1"},
   {sku:"6028010",d:"Bobina encendido Hyundai Tucson IX 2.0",c:"Bobinas",oem:"",co:34930,p:41916,e:8,f:"Kotraco",compat:"Hyundai | Tucson",foto:"https://donrepuestos.com/wp-content/uploads/2026/05/bobina-encendido-Hyundai-Tucson-IX-2.0-c.webp",bodega:"Bogot\u00e1"},
   {sku:"6028011",d:"Bobina encendido Hyundai Tucson Sportgae 2.4",c:"Bobinas",oem:"",co:34930,p:41916,e:4,f:"Kotraco",compat:"Hyundai | Tucson"},
-  {sku:"6028012",d:"Bobina encendido Hyundai Veloster Kia Soul",c:"Bobinas",oem:"16 PIEZAS IDK-2004GDI",co:38430,p:46116,e:8,f:"Kotraco",compat:"Hyundai | Kia | Soul"},
+  {sku:"6028012",d:"Bobina encendido Hyundai Veloster Kia Soul",c:"Bobinas",oem:"16 PIEZAS IDK-2004GDI",co:38430,p:46116,e:8,f:"Kotraco",compat:"Hyundai | Kia | Soul",foto:"https://image.imotriz.com/uploads/products/27301-03015-BOBINA-IGNICION-GRAND-I10-PICANTO-ION-1-2-CC-RIO-SPICE-1-250-CC.webp"},
   {sku:"6031002",d:"Bobina encendido Jac J5 J6 1.8 2.0 2013-6",c:"Bobinas",oem:"",co:47740,p:57288,e:2,f:"Kotraco",compat:"2013",foto:"https://donrepuestos.com/wp-content/uploads/2026/06/Bobina-encendido-JAC-J5-c.webp",bodega:"Bogot\u00e1"},
   {sku:"6033003",d:"Bobina encendido Kia Rio 06 11",c:"Bobinas",oem:"",co:50700,p:60840,e:3,f:"Kotraco",compat:"Kia | Rio",foto:"https://donrepuestos.com/wp-content/uploads/2026/06/bobina-encendido-Kia-Rio-c-1.webp",bodega:"Bogot\u00e1"},
   {sku:"6033006",d:"Bobina encendido Kia Rio 98 02",c:"Bobinas",oem:"",co:69930,p:83916,e:1,f:"Kotraco",compat:"Kia | Rio",foto:"https://donrepuestos.com/wp-content/uploads/2026/06/bobina-encendido-Kia-Rio-d.webp",bodega:"Bogot\u00e1"},
@@ -613,7 +613,7 @@ const P = [
   {sku:"10014001",d:"Switch encendido Chev.Corsa1.4 M98-02(5Termi)",c:"El\u00e9ctricos",oem:"M98-02",co:13930,p:16716,e:2,f:"Kotraco",compat:"2098",foto:"https://donrepuestos.com/wp-content/uploads/2026/05/Switch-encendido-Chevrolet-Corsa-1.4-d.webp",bodega:"Bogot\u00e1"},
   {sku:"6828004",d:"FILTRO CARCAZA HYUNDAI ACCENT",c:"Filtros",oem:"31112-1G000 31112-14000",co:19800,p:23760,e:1,f:"Kotraco",compat:"Accent | Hyundai"},
   {sku:"6828003",d:"FILTRO CARCAZA HYUNDAI ELANTRA 1.6 VELOSTER K",c:"Filtros",oem:"27300-2E601 SMP: UF816",co:29900,p:35880,e:1,f:"Kotraco",compat:"Elantra | Hyundai"},
-  {sku:"6828005",d:"FILTRO CARCAZA HYUNDAI GETZ 1.3 1.4 1.6",c:"Filtros",oem:"3111207000",co:21700,p:26040,e:1,f:"Kotraco",compat:"Hyundai"},
+  {sku:"6828005",d:"FILTRO CARCAZA HYUNDAI GETZ 1.3 1.4 1.6",c:"Filtros",oem:"3111207000",co:21700,p:26040,e:1,f:"Kotraco",compat:"Hyundai",foto:"https://image.imotriz.com/uploads/products/0023091-FILTRO-CARCAZA-HYUNDAI-GETZ.webp"},
   {sku:"6833001",d:"FILTRO CARCAZA KIA PICANTO",c:"Filtros",oem:"",co:23400,p:28080,e:1,f:"Kotraco",compat:"Kia | Picanto"},
   {sku:"6814005",d:"FILTRO COMBUSTIBLE CHEVROLET BLAZER, DAEWOO +",c:"Filtros",oem:"19177256 25178732 25314775 Airtex: E3954M Delphi: FG0072 Walbro: TU407",co:5250,p:6300,e:3,f:"Kotraco",compat:"Blazer | Chevrolet"},
   {sku:"6814004",d:"FILTRO COMBUSTIBLE CHEVROLET CORSA, ASTRA +",c:"Filtros",oem:"93285978 93277518 93277517 25165013 9128201 Bosch: F00TE1055",co:5880,p:7056,e:1,f:"Kotraco",compat:"Astra | Chevrolet | Corsa"},
@@ -642,7 +642,7 @@ const P = [
   {sku:"6914029A",d:"INYECTOR CHEVROLET GRAN VITARA 2.5 04/08",c:"Inyectores",oem:"2112004520 25054092 1821365J00",co:55622,p:66746,e:4,f:"Kotraco",compat:"Chevrolet | Vitara"},
   {sku:"6914014A",d:"INYECTOR CHEVROLET LUV 2300 RODEO 2.6",c:"Inyectores",oem:"8942356270 9941189120 MR5A-211",co:64330,p:77196,e:4,f:"Kotraco",compat:"Chevrolet | Luv | Rodeo"},
   {sku:"6914006A",d:"INYECTOR CHEVROLET OPTRA 1.8 07/10 4 HUECOS",c:"Inyectores",oem:"",co:61222,p:73466,e:4,f:"Kotraco",compat:"Chevrolet | Optra"},
-  {sku:"6914047",d:"INYECTOR CHEVROLET SPARK CRONOS 1.0 4H",c:"Inyectores",oem:"93740951 96239411",co:50715,p:60858,e:8,f:"Kotraco",compat:"Chevrolet | Spark"},
+  {sku:"6914047",d:"INYECTOR CHEVROLET SPARK CRONOS 1.0 4H",c:"Inyectores",oem:"93740951 96239411",co:50715,p:60858,e:8,f:"Kotraco",compat:"Chevrolet | Spark",foto:"https://image.imotriz.com/uploads/products/93740951-INYECTOR-CHEVROLET-SPARK-CRONOS.webp"},
   {sku:"6914015A",d:"INYECTOR CHEVROLET SPRINT/SWIFT (INY) 6H",c:"Inyectores",oem:"13650-50G01 13650-50G00 91172375 SMP: TS423 SMP: TS243 Wells: SU4211",co:85255,p:102306,e:4,f:"Kotraco",compat:"Chevrolet | Swift",foto:"https://donrepuestos.com/wp-content/uploads/2023/01/Inyector-Chevrolet-Sprint-mono-punto.webp",bodega:"Bogot\u00e1"},
   {sku:"6914046",d:"INYECTOR CHEVROLET VITARA 1.6 93/00",c:"Inyectores",oem:"",co:108600,p:130320,e:2,f:"Kotraco",compat:"Chevrolet | Vitara"},
   {sku:"6914049",d:"INYECTOR CHEVROLET VITARA 2.0 99-04 4HUECOS",c:"Inyectores",oem:"",co:51590,p:61908,e:2,f:"Kotraco",compat:"Chevrolet | Vitara"},
@@ -1375,9 +1375,12 @@ function mLocClass(b){return b==='Bogotá'?'m-loc-bog':b==='Cartagena'?'m-loc-ca
 
 /* ── FILTERS ── */
 function buildFB(){
+  var fuentes=['all','Importación','Bodega P3'],flbl={all:'Todos','Importación':'Importación','Bodega P3':'Bodega P3'};
+  var h=fuentes.map(function(f){var n=f==='all'?P.length:P.filter(function(x){return x.f===f;}).length;return'<div class="chip '+(aF===f?'on':'')+'" onclick="setF(\''+f+'\')">'+flbl[f]+' <span class="cc">'+n+'</span></div>';}).join('');
+  h+='<div class="sep"></div>';
   var cats={};P.forEach(function(x){cats[x.c]=(cats[x.c]||0)+1;});
-  var h='<div class="chip '+(aC==='all'?'on':'')+' onclick="setC(\'all\')">'+'Todos'+' <span class="cc">'+P.length+'</span></div>';
-  Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var cat=e[0],n=e[1];h+='<div class="chip '+(aC===cat?'on':'')+' onclick="setC(\''+cat.replace(/'/g,"\\\'")+'\')">'+cat+' <span class="cc">'+n+'</span></div>';});
+  h+='<div class="chip '+(aC==='all'?'on':'')+'" onclick="setC(\'all\')">Todas <span class="cc">'+P.length+'</span></div>';
+  Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" onclick="setC(\''+c.replace(/'/g,"\\'")+'\')">'+c+' <span class="cc">'+n+'</span></div>';});
   document.getElementById('fb').innerHTML=h;
 }
 function setF(f){aF=f;buildFB();render();}
@@ -1462,7 +1465,7 @@ function openModal(idx){
 
   // Compatibilities
   var compatEl=document.getElementById('m-compat');
-  if(item.compat && item.compat !== item.d){
+  if(item.compat){
     var chips=item.compat.split(',').map(function(v){return'<span class="compat-chip">'+v.trim()+'</span>';}).join('');
     compatEl.innerHTML='<div class="compat-head">&#128663; Compatible con</div><div class="compat-chips">'+chips+'</div>';
     compatEl.style.display='block';
