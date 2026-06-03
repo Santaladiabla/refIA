@@ -233,7 +233,7 @@
 </div>
 
 <script>
-// refia-build.py — 2026-06-03 02:33 — 1112 SKUs
+// refia-build.py — 2026-06-03 02:53 — 1112 SKUs
 const P = [
   // ── AMORTIGUADORES (32) ──
   {sku:"A G707127",d:"DRS Amortiguador delantero izquierdo Sonic - Onix",c:"Amortiguad",oem:"95917162",co:0,p:0,e:1,f:"Amortiguadores",compat:"DRS Amortiguador delantero izquierdo Sonic - Onix",foto:"http://donrepuestos.com/wp-content/uploads/2022/11/Amortiguador-delantero-izquierdo-Chevrolet-Sonic-.webp",bodega:"CARTAGENA"},
@@ -1368,7 +1368,7 @@ function fmt(n){return n===0?'N/D':'$'+Math.round(n).toLocaleString('es-CO');}
 function sCls(e){return e===0?'sout':e<=2?'slow':'sok';}
 function sTxt(e){return e===0?'Sin stock':e===1?'1 und.':e===2?'2 und.':e+' und.';}
 function hl(t,toks){if(!toks.length)return t;var re=new RegExp('('+toks.map(function(x){return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')','gi');return t.replace(re,'<mark>$1</mark>');}
-function wa(item){var msg='*'+item.d+'*\nSKU: '+item.sku+(item.oem?'\nRef. OEM: '+item.oem:'')+'\nDisponibilidad: '+item.e+' unidad(es)'+(item.bodega?'\nBodega: '+item.bodega:'')+'\n\n_Don Repuestos - cotización con RefIA_';return'https://wa.me/573000000000?text='+encodeURIComponent(msg);}
+function wa(item){var msg='*'+item.d+'*\nSKU: '+item.sku+(item.oem?'\nRef. OEM: '+item.oem:'')+'\nDisponibilidad: '+item.e+' unidad(es)'+(item.bodega?'\nBodega: '+item.bodega:'')+'\n\n_Don Repuestos - cotización con RefIA_';return'https://wa.me/573154134396?text='+encodeURIComponent(msg);}
 function locBadge(b,cls){return b?'<span class="loc '+cls+'"><span class="loc-dot"></span>'+b+'</span>':'';}
 function locClass(b){return b==='Bogotá'?'loc-bog':b==='Cartagena'?'loc-car':'';}
 function mLocClass(b){return b==='Bogotá'?'m-loc-bog':b==='Cartagena'?'m-loc-car':'';}
