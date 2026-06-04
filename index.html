@@ -3,300 +3,902 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Refia — IA para inventarios | NAVA Experiments</title>
+  <title>NAVA — Laboratorio digital que convierte ideas en sistemas</title>
+  <meta name="description" content="No somos una agencia. Somos el laboratorio que toma tu idea, le da estructura, la prueba con IA y la convierte en algo que crece.">
+  <meta property="og:title" content="NAVA — Laboratorio digital">
+  <meta property="og:description" content="Convertimos ideas en sistemas que crecen. Behavioral Science + IA + Estrategia.">
+  <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
+    /* ── TOKENS ── */
     :root {
-      --nava-blue: #003366;
-      --nava-teal-deep: #0F706E;
-      --nava-emerald: #1F9D7A;
-      --nava-gold: #C9A15A;
-      --nava-ivory: #F7F5EF;
-      --nava-graphite: #253138;
-      --nava-experiments: #E3734A;
-
-      --font-heading: "Sora", system-ui, -apple-system, sans-serif;
-      --font-body: "Inter", system-ui, -apple-system, sans-serif;
+      --blue:        #003366;
+      --blue-deep:   #001833;
+      --teal:        #0F706E;
+      --emerald:     #1F9D7A;
+      --aqua:        #67C9D4;
+      --gold:        #C9A15A;
+      --ivory:       #F7F5EF;
+      --graphite:    #253138;
+      --c-exp:       #E3734A;
+      --c-mlab:      #0E858B;
+      --c-media:     #18A8A1;
+      --c-studio:    #2D6C90;
+      --fh: "Sora", system-ui, sans-serif;
+      --fb: "Inter", system-ui, sans-serif;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ivory);
+      color: var(--graphite);
+      font-family: var(--fb);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
     }
 
-    html, body {
-      height: 100%;
-      background: var(--nava-ivory);
-      color: var(--nava-graphite);
-      font-family: var(--font-body);
-      line-height: 1.6;
+    /* ══ NAV ══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 52px;
+      background: rgba(0, 24, 51, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(103, 201, 212, 0.1);
+      transition: background 0.3s;
     }
+    nav.scrolled {
+      background: rgba(247, 245, 239, 0.95);
+      border-bottom-color: rgba(37,49,56,0.08);
+    }
+    .nav-logo img {
+      height: 50px; width: auto; object-fit: contain;
+      mix-blend-mode: screen;
+      transition: mix-blend-mode 0.3s;
+    }
+    nav.scrolled .nav-logo img { mix-blend-mode: multiply; }
+    .nav-cta {
+      font-family: var(--fb); font-size: 13px; font-weight: 600;
+      color: var(--aqua); text-decoration: none;
+      border: 1.5px solid rgba(103,201,212,0.4);
+      padding: 9px 22px; border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { background: var(--aqua); color: var(--blue-deep); border-color: var(--aqua); }
+    nav.scrolled .nav-cta { color: var(--blue); border-color: var(--blue); }
+    nav.scrolled .nav-cta:hover { background: var(--blue); color: var(--ivory); }
 
-    /* Hero */
+    /* ══ HERO ══ */
     .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 48px 32px;
-      background: linear-gradient(135deg, var(--nava-ivory) 0%, rgba(207, 161, 90, 0.03) 100%);
-      text-align: center;
+      position: relative; min-height: 100vh; overflow: hidden;
+      background: var(--blue-deep);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 130px 52px 100px;
     }
 
-    .logo-container {
-      margin-bottom: 64px;
+    /* Gradientes de profundidad */
+    .hero-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 75% 60% at 10% 65%, rgba(15,112,110,0.22) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 55% at 82% 22%, rgba(103,201,212,0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 45% 40% at 55% 88%, rgba(201,161,90,0.07) 0%, transparent 50%);
+      animation: glow-pulse 14s ease-in-out infinite alternate;
+    }
+    @keyframes glow-pulse {
+      0%   { opacity: 0.75; transform: scale(1); }
+      100% { opacity: 1;    transform: scale(1.06); }
     }
 
-    .logo-container svg {
-      width: 120px;
-      height: 120px;
-      margin-bottom: 24px;
+    /* Grid sutil animado */
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+      background-size: 68px 68px;
+      animation: grid-drift 30s linear infinite;
+    }
+    @keyframes grid-drift {
+      0%   { transform: translateY(0) translateX(0); }
+      100% { transform: translateY(68px) translateX(34px); }
     }
 
-    .nava-label {
-      font-family: var(--font-body);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--nava-teal-deep);
-      margin-bottom: 8px;
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto; width: 100%;
+    }
+    .hero-content > * {
+      opacity: 0; transform: translateY(26px);
+      animation: hero-in 0.8s var(--ease) forwards;
+    }
+    .hero-content .eyebrow      { animation-delay: 0.08s; }
+    .hero-content h1            { animation-delay: 0.22s; }
+    .hero-content .hero-sub     { animation-delay: 0.38s; }
+    .hero-content .hero-actions { animation-delay: 0.52s; }
+    .hero-content .hero-proof   { animation-delay: 0.64s; }
+
+    @keyframes hero-in {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .line-badge {
-      display: inline-block;
-      background: var(--nava-experiments);
-      color: white;
-      padding: 6px 16px;
-      border-radius: 24px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      margin-bottom: 32px;
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--aqua);
+      margin-bottom: 28px;
+    }
+    .eyebrow::before {
+      content: ''; display: block;
+      width: 28px; height: 1.5px; background: var(--aqua);
     }
 
     h1 {
-      font-family: var(--font-heading);
-      font-size: clamp(32px, 7vw, 64px);
-      font-weight: 600;
-      line-height: 1.1;
-      color: var(--nava-blue);
-      margin-bottom: 20px;
-      letter-spacing: -0.02em;
+      font-family: var(--fh);
+      font-size: clamp(44px, 6.8vw, 82px);
+      font-weight: 600; line-height: 1.04; letter-spacing: -0.03em;
+      color: var(--ivory); margin-bottom: 28px;
+    }
+    h1 .accent {
+      background: linear-gradient(135deg, var(--aqua) 0%, var(--emerald) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .tagline {
-      font-size: 18px;
-      color: var(--nava-graphite);
-      margin-bottom: 12px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px);
+      color: rgba(247,245,239,0.65);
+      max-width: 580px; margin-bottom: 48px; line-height: 1.72;
     }
 
-    .subtitle {
-      font-size: 14px;
-      color: var(--nava-teal-deep);
-      font-weight: 500;
+    .hero-actions {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
       margin-bottom: 56px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
-    /* Status */
-    .status {
-      background: rgba(207, 161, 90, 0.08);
-      border: 1px solid var(--nava-gold);
-      border-radius: 8px;
-      padding: 24px 32px;
-      margin-bottom: 48px;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
+    .btn-primary {
+      font-family: var(--fb); font-size: 14px; font-weight: 600;
+      color: var(--blue-deep); background: var(--aqua);
+      text-decoration: none; padding: 15px 32px; border-radius: 8px;
+      transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: #82D4DE; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(103,201,212,0.3); }
+
+    .btn-wa {
+      font-family: var(--fb); font-size: 14px; font-weight: 600;
+      color: white; background: #25D366; text-decoration: none;
+      padding: 15px 28px; border-radius: 8px;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-wa:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.25); }
+    .btn-wa svg { width: 18px; height: 18px; fill: white; flex-shrink: 0; }
+
+    .btn-ghost {
+      font-family: var(--fb); font-size: 14px; font-weight: 500;
+      color: rgba(247,245,239,0.45); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: rgba(247,245,239,0.85); }
+
+    /* Proof strip en hero */
+    .hero-proof {
+      display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+      padding-top: 48px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .proof-item {
+      display: flex; align-items: baseline; gap: 8px;
+    }
+    .proof-num {
+      font-family: var(--fh); font-size: 22px; font-weight: 600;
+      color: var(--gold);
+    }
+    .proof-label {
+      font-size: 12px; color: rgba(247,245,239,0.4);
+      letter-spacing: 0.04em;
+    }
+    .proof-sep {
+      width: 1px; height: 24px;
+      background: rgba(255,255,255,0.1);
     }
 
-    .status-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--nava-teal-deep);
-      margin-bottom: 8px;
+    /* Scroll hint */
+    .scroll-hint {
+      position: absolute; bottom: 36px; left: 52px;
+      display: flex; align-items: center; gap: 12px;
+      color: rgba(247,245,239,0.22);
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      animation: hero-in 1s var(--ease) 0.9s both;
+    }
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(247,245,239,0.35), transparent);
+      animation: line-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes line-pulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+      50%       { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
     }
 
-    .status-text {
-      font-size: 14px;
-      color: var(--nava-graphite);
-      line-height: 1.6;
+    /* ══ FADE-UP SCROLL ANIMATION ══ */
+    .fade-up {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    .stagger > * {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    }
+    .stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+    .stagger.visible > *:nth-child(2) { transition-delay: 0.09s; }
+    .stagger.visible > *:nth-child(3) { transition-delay: 0.18s; }
+    .stagger.visible > *:nth-child(4) { transition-delay: 0.27s; }
+    .stagger.visible > * { opacity: 1; transform: translateY(0); }
+
+    /* ══ DIVIDER ══ */
+    .divider {
+      width: calc(100% - 104px); max-width: 1100px; height: 1px;
+      background: rgba(37,49,56,0.09); margin: 0 auto;
     }
 
-    /* CTA Section */
-    .cta-section {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      align-items: center;
-      margin-top: 32px;
+    /* ══ SECTION BASE ══ */
+    section {
+      padding: 96px 52px; max-width: 1100px; margin: 0 auto;
     }
 
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 32px;
-      border-radius: 6px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      border: none;
-      cursor: pointer;
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--teal);
+      margin-bottom: 52px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: rgba(37,49,56,0.1);
     }
 
-    .cta-primary {
-      background: var(--nava-experiments);
-      color: white;
+    /* ══ MANIFESTO ══ */
+    .manifesto-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 52px;
+    }
+    .manifesto-num {
+      font-family: var(--fh); font-size: 11px; font-weight: 700;
+      color: var(--gold); letter-spacing: 0.14em; margin-bottom: 14px;
+    }
+    .manifesto-title {
+      font-family: var(--fh); font-size: 18px; font-weight: 600;
+      color: var(--blue); margin-bottom: 12px; line-height: 1.25;
+    }
+    .manifesto-text { font-size: 14px; line-height: 1.78; opacity: 0.66; }
+
+    /* ══ LÍNEAS ══ */
+    .lineas-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 2px; background: rgba(37,49,56,0.08);
+      border-radius: 16px; overflow: hidden;
+    }
+    .linea-card {
+      background: var(--ivory); padding: 44px;
+      transition: background 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .linea-card:hover { background: #fff; }
+    .linea-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px; transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s var(--ease);
+    }
+    .linea-card:hover::after { transform: scaleX(1); }
+    .linea-card:nth-child(1)::after { background: var(--c-mlab); }
+    .linea-card:nth-child(2)::after { background: var(--c-media); }
+    .linea-card:nth-child(3)::after { background: var(--c-studio); }
+    .linea-card:nth-child(4)::after { background: var(--c-exp); }
+
+    .linea-badge {
+      display: inline-block; padding: 5px 14px; border-radius: 24px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: white; margin-bottom: 22px;
+    }
+    .linea-title {
+      font-family: var(--fh); font-size: 20px; font-weight: 600;
+      color: var(--blue); margin-bottom: 12px; line-height: 1.22;
+    }
+    .linea-desc { font-size: 14px; line-height: 1.72; opacity: 0.68; margin-bottom: 18px; }
+    .linea-tag { font-size: 12px; font-weight: 500; font-style: italic; opacity: 0.45; }
+
+    /* ══ PROYECTOS ══ */
+    .proyectos-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    }
+    .proyecto-card {
+      border: 1px solid rgba(37,49,56,0.09);
+      border-radius: 16px; padding: 40px;
+      background: white; position: relative; overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .proyecto-card:hover {
+      box-shadow: 0 12px 40px rgba(37,49,56,0.1);
+      transform: translateY(-3px);
+    }
+    .proyecto-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .proyecto-card.exp::before  { background: linear-gradient(90deg, var(--c-exp), #F09870); }
+    .proyecto-card.mlab::before { background: linear-gradient(90deg, var(--c-mlab), var(--emerald)); }
+    .proyecto-card.studio::before { background: linear-gradient(90deg, var(--c-studio), var(--aqua)); }
+
+    .proyecto-linea {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .proyecto-card.exp   .proyecto-linea { color: var(--c-exp); }
+    .proyecto-card.mlab  .proyecto-linea { color: var(--c-mlab); }
+    .proyecto-card.studio .proyecto-linea { color: var(--c-studio); }
+
+    .proyecto-wide { grid-column: 1 / -1; }
+
+    .proyecto-nombre {
+      font-family: var(--fh); font-size: 26px; font-weight: 600;
+      color: var(--blue); margin-bottom: 12px;
+    }
+    .proyecto-desc {
+      font-size: 14px; line-height: 1.77; opacity: 0.68; margin-bottom: 24px;
     }
 
-    .cta-primary:hover {
-      background: #D35F3A;
+    .proyecto-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 500; color: var(--teal);
+    }
+    .proyecto-status::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--emerald);
+      animation: status-pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes status-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.3; transform: scale(0.8); }
+    }
+
+    .proyecto-status.studio-color { color: var(--c-studio); }
+    .proyecto-status.studio-color::before { background: var(--c-studio); }
+
+    .demo-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--c-studio);
+      text-decoration: none; margin-top: 10px;
+      transition: opacity 0.2s;
+    }
+    .demo-link:hover { opacity: 0.65; }
+
+    /* ══ CASOS REALES ══ */
+    .casos-outer {
+      background: #F1EFE9;
+      padding: 0;
+    }
+    .casos-inner {
+      padding: 96px 52px; max-width: 1100px; margin: 0 auto;
+    }
+
+    .casos-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    }
+    .caso-card {
+      background: white; border-radius: 16px; overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .caso-card:hover {
+      box-shadow: 0 12px 40px rgba(37,49,56,0.09);
       transform: translateY(-2px);
     }
-
-    .cta-secondary {
-      background: transparent;
-      color: var(--nava-blue);
-      border: 1.5px solid var(--nava-blue);
+    .caso-header {
+      padding: 32px 36px 28px;
+      border-bottom: 1px solid rgba(37,49,56,0.07);
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    }
+    .caso-logo-area {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .caso-cliente {
+      font-family: var(--fh); font-size: 20px; font-weight: 600;
+      color: var(--blue); line-height: 1.2;
+    }
+    .caso-sector {
+      font-size: 12px; opacity: 0.45; letter-spacing: 0.02em;
+    }
+    .caso-linea-badge {
+      display: inline-block; padding: 5px 14px; border-radius: 24px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: white; flex-shrink: 0;
     }
 
-    .cta-secondary:hover {
-      background: var(--nava-blue);
-      color: white;
+    .caso-body { padding: 28px 36px 32px; }
+    .caso-proyecto-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 8px; opacity: 0.45;
+    }
+    .caso-proyecto-nombre {
+      font-family: var(--fh); font-size: 16px; font-weight: 600;
+      color: var(--blue); margin-bottom: 12px;
+    }
+    .caso-desc {
+      font-size: 14px; line-height: 1.74; opacity: 0.65; margin-bottom: 20px;
+    }
+    .caso-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
     }
 
-    .icon-whatsapp {
-      width: 20px;
-      height: 20px;
+    /* ══ DIFERENCIAL ══ */
+    .diferencial-outer {
+      padding: 0 52px 96px; max-width: 1100px; margin: 0 auto;
+    }
+    .diferencial-wrap {
+      background: var(--blue-deep);
+      border-radius: 20px; padding: 80px;
+      color: var(--ivory); position: relative; overflow: hidden;
+    }
+    .diferencial-wrap::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 5% 50%, rgba(15,112,110,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 95% 20%, rgba(103,201,212,0.07) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .diferencial-content { position: relative; z-index: 1; }
+
+    .diferencial-wrap .section-label {
+      color: var(--aqua);
+    }
+    .diferencial-wrap .section-label::after {
+      background: rgba(247,245,239,0.12);
+    }
+    .diferencial-headline {
+      font-family: var(--fh);
+      font-size: clamp(26px, 3.5vw, 44px);
+      font-weight: 600; line-height: 1.16; letter-spacing: -0.02em;
+      margin-bottom: 20px; max-width: 660px;
+    }
+    .diferencial-sub {
+      font-size: 16px; opacity: 0.64; max-width: 560px;
+      line-height: 1.74; margin-bottom: 52px;
     }
 
-    /* Divider */
-    .divider {
-      width: 48px;
-      height: 1px;
-      background: var(--nava-gold);
-      margin: 32px auto;
+    .formula {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .formula-item {
+      background: rgba(247,245,239,0.07);
+      border: 1px solid rgba(247,245,239,0.14);
+      border-radius: 8px; padding: 12px 20px;
+      font-family: var(--fh); font-size: 13px; font-weight: 500;
+      color: var(--ivory);
+      transition: background 0.2s;
+    }
+    .formula-item:hover { background: rgba(247,245,239,0.12); }
+    .formula-op { font-size: 20px; color: var(--gold); font-weight: 300; opacity: 0.7; }
+    .formula-result {
+      background: var(--gold); border-radius: 8px; padding: 12px 20px;
+      font-family: var(--fh); font-size: 13px; font-weight: 700;
+      color: var(--blue-deep);
     }
 
-    /* Footer info */
-    .footer-info {
-      margin-top: 56px;
-      font-size: 12px;
-      color: var(--nava-teal-deep);
-      max-width: 480px;
-      line-height: 1.8;
+    /* ══ CONTACTO ══ */
+    .contacto-outer { padding: 0 52px 96px; max-width: 1100px; margin: 0 auto; }
+    .contacto-wrap {
+      text-align: center; max-width: 560px; margin: 0 auto; padding: 96px 0;
+    }
+    .contacto-isotipo {
+      width: 68px; height: auto; margin: 0 auto 32px; display: block;
+      opacity: 0.85; mix-blend-mode: multiply;
+    }
+    .contacto-wrap h2 {
+      font-family: var(--fh);
+      font-size: clamp(26px, 3.5vw, 40px);
+      font-weight: 600; color: var(--blue); margin-bottom: 16px;
+      letter-spacing: -0.02em; line-height: 1.2;
+    }
+    .contacto-wrap p {
+      font-size: 16px; opacity: 0.62; margin-bottom: 44px; line-height: 1.7;
+    }
+    .contacto-btns {
+      display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
     }
 
-    .footer-info strong {
-      color: var(--nava-blue);
-      font-weight: 600;
+    /* ══ FOOTER ══ */
+    footer {
+      border-top: 1px solid rgba(37,49,56,0.09);
+      padding: 28px 52px;
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 1100px; margin: 0 auto;
+      font-size: 12px; opacity: 0.4;
     }
 
-    /* Responsive */
-    @media (max-width: 640px) {
-      .hero {
-        padding: 32px 20px;
-        min-height: auto;
-        padding-top: 60px;
-        padding-bottom: 60px;
-      }
-
-      h1 {
-        font-size: 32px;
-      }
-
-      .tagline {
-        font-size: 16px;
-      }
-
-      .status {
-        padding: 20px 24px;
-      }
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 768px) {
+      nav { padding: 12px 20px; }
+      .nav-logo img { height: 42px; }
+      .hero { padding: 100px 24px 80px; }
+      .hero .hero-proof { gap: 20px; }
+      .scroll-hint { left: 24px; }
+      section { padding: 64px 24px; }
+      .manifesto-grid { grid-template-columns: 1fr; gap: 36px; }
+      .lineas-grid    { grid-template-columns: 1fr; }
+      .proyectos-grid { grid-template-columns: 1fr; }
+      .casos-inner    { padding: 64px 24px; }
+      .casos-grid     { grid-template-columns: 1fr; }
+      .diferencial-outer { padding: 0 24px 64px; }
+      .diferencial-wrap  { padding: 44px 28px; }
+      .formula { gap: 8px; }
+      .formula-item, .formula-result { font-size: 12px; padding: 10px 14px; }
+      .contacto-outer { padding: 0 24px 64px; }
+      .contacto-wrap  { padding: 64px 0; }
+      .contacto-btns  { flex-direction: column; align-items: center; }
+      footer { flex-direction: column; gap: 6px; text-align: center; padding: 24px; }
+      .divider { width: calc(100% - 48px); }
     }
-
-    /* Animation */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hero > * {
-      animation: fadeInUp 0.6s ease-out forwards;
-    }
-
-    .logo-container { animation-delay: 0.1s; }
-    h1 { animation-delay: 0.2s; }
-    .tagline { animation-delay: 0.3s; }
-    .subtitle { animation-delay: 0.4s; }
-    .status { animation-delay: 0.5s; }
-    .cta-section { animation-delay: 0.6s; }
   </style>
 </head>
 <body>
-  <section class="hero">
-    <div class="logo-container">
-      <div class="nava-label">Producto NAVA</div>
-      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none">
-        <!-- Colibrí simplificado para landing -->
-        <path d="M60 20 Q80 40 85 65 Q88 80 75 85 Q60 88 50 75 Q45 65 48 50 Q55 30 60 20Z" fill="#003366" opacity="0.8"/>
-        <path d="M55 50 Q65 55 70 70" stroke="#C9A15A" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="52" cy="65" r="3" fill="#C9A15A"/>
-      </svg>
-    </div>
 
-    <div class="line-badge">NAVA Experiments</div>
+  <!-- ══ NAV ══ -->
+  <nav id="nav">
+    <a href="#" class="nav-logo" aria-label="NAVA">
+      <img src="nava-logo.png" alt="NAVA — Laboratorio digital">
+    </a>
+    <a href="#contacto" class="nav-cta">Hablemos</a>
+  </nav>
 
-    <h1>Refia</h1>
+  <!-- ══ HERO ══ -->
+  <div class="hero" id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
 
-    <p class="tagline">IA para organizar inventarios de repuestos con inteligencia aplicada</p>
+    <div class="hero-content">
+      <div class="eyebrow">Laboratorio digital · Colombia</div>
 
-    <p class="subtitle">Simplificamos la gestión de stock con automatización inteligente</p>
+      <h1>
+        Convertimos ideas en<br>
+        <span class="accent">sistemas que crecen.</span>
+      </h1>
 
-    <div class="status">
-      <div class="status-label">Estado actual</div>
-      <div class="status-text">
-        Estamos en construcción activa de la plataforma. Nuestro equipo está diseñando la experiencia de usuario y preparando el piloto. <strong>¿Quieres ser de los primeros en probar Refia?</strong>
+      <p class="hero-sub">
+        No somos una agencia. Somos el equipo que toma tu idea,
+        le da estructura, la valida con IA y la convierte en algo real —
+        un producto, un sistema, un canal o un experimento que avanza.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://wa.me/573186195434?text=Hola%2C+quiero+conocer+más+sobre+NAVA" class="btn-wa" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Agenda una llamada
+        </a>
+        <a href="#proyectos" class="btn-ghost">Ver qué estamos construyendo ↓</a>
+      </div>
+
+      <div class="hero-proof">
+        <div class="proof-item">
+          <span class="proof-num">3</span>
+          <span class="proof-label">proyectos activos</span>
+        </div>
+        <div class="proof-sep"></div>
+        <div class="proof-item">
+          <span class="proof-num">2</span>
+          <span class="proof-label">demos en vivo</span>
+        </div>
+        <div class="proof-sep"></div>
+        <div class="proof-item">
+          <span class="proof-num">4</span>
+          <span class="proof-label">líneas de trabajo</span>
+        </div>
+        <div class="proof-sep"></div>
+        <div class="proof-item">
+          <span class="proof-num">2026</span>
+          <span class="proof-label">laboratorio en construcción</span>
+        </div>
       </div>
     </div>
 
-    <div class="cta-section">
-      <a href="https://wa.me/573186195434?text=Hola%20Mema,%20estoy%20interesado%20en%20conocer%20m%C3%A1s%20sobre%20Refia" class="cta cta-primary">
-        <svg class="icon-whatsapp" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371 0-.57 0-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378c-3.055 2.2-5.043 5.697-5.043 9.426 0 3.325.855 6.507 2.486 9.21l-2.646 9.662 9.961-2.615c2.573 1.431 5.479 2.19 8.535 2.19h.005c9.687 0 17.543-7.856 17.543-17.543 0-4.687-1.88-9.1-5.287-12.409a17.505 17.505 0 00-12.517-5.179z"/>
-        </svg>
-        Cuéntame más
-      </a>
-      <a href="https://wa.me/573186195434?text=Hola%20Mema,%20quisiera%20participar%20en%20el%20piloto%20de%20Refia" class="cta cta-secondary">
-        Quiero participar en el piloto
-      </a>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
     </div>
+  </div>
 
-    <div class="divider"></div>
-
-    <div class="footer-info">
-      <strong>Refia</strong> es un producto experimental de <strong>NAVA</strong> — Growth, AI & Human Behavior Lab. Contáctanos directamente para conocer más detalles del proyecto.
+  <!-- ══ MANIFESTO ══ -->
+  <section>
+    <div class="section-label fade-up">Cómo pensamos</div>
+    <div class="manifesto-grid stagger">
+      <div class="manifesto-item">
+        <div class="manifesto-num">01</div>
+        <div class="manifesto-title">Con estructura antes de ejecutar</div>
+        <p class="manifesto-text">
+          Cada proyecto arranca con una promesa clara, métricas definidas y criterios
+          de éxito acordados. Sin eso no hay sprint — hay ruido.
+        </p>
+      </div>
+      <div class="manifesto-item">
+        <div class="manifesto-num">02</div>
+        <div class="manifesto-title">Con IA como infraestructura</div>
+        <p class="manifesto-text">
+          Automatizamos lo repetible para dedicar energía a lo que realmente mueve
+          el negocio. La IA no es un feature — es el sistema operativo de todo lo que construimos.
+        </p>
+      </div>
+      <div class="manifesto-item">
+        <div class="manifesto-num">03</div>
+        <div class="manifesto-title">Con comportamiento humano como guía</div>
+        <p class="manifesto-text">
+          Diseñamos sistemas, mensajes y experiencias basados en cómo las personas
+          realmente procesan, deciden y actúan — no en cómo creemos que deberían hacerlo.
+        </p>
+      </div>
     </div>
   </section>
+
+  <div class="divider"></div>
+
+  <!-- ══ LÍNEAS ══ -->
+  <section id="lineas">
+    <div class="section-label fade-up">Las cuatro líneas</div>
+    <div class="lineas-grid stagger">
+      <div class="linea-card">
+        <div class="linea-badge" style="background:var(--c-mlab)">Marketing Lab</div>
+        <div class="linea-title">Sistemas de crecimiento para negocios</div>
+        <p class="linea-desc">Traducimos necesidades comerciales en sistemas ejecutables: diagnósticos, activos de conversión, automatización y orden operativo.</p>
+        <div class="linea-tag">Para empresas que necesitan crecer con más dirección y menos improvisación.</div>
+      </div>
+      <div class="linea-card">
+        <div class="linea-badge" style="background:var(--c-media)">Media</div>
+        <div class="linea-title">Canales y formatos con vocación de audiencia</div>
+        <p class="linea-desc">Diseñamos conceptos editoriales, arquitectura de canal y sistemas de publicación pensados para captar atención sostenida y monetizarla.</p>
+        <div class="linea-tag">Para marcas que quieren construir audiencia, no solo comprar alcance.</div>
+      </div>
+      <div class="linea-card">
+        <div class="linea-badge" style="background:var(--c-studio)">Studio</div>
+        <div class="linea-title">Productos y experiencias digitales</div>
+        <p class="linea-desc">Convertimos ideas en productos funcionales, prototipos y experiencias digitales listos para entenderse y ponerse a prueba.</p>
+        <div class="linea-tag">Para ideas que ya probaron tener demanda y merecen convertirse en producto.</div>
+      </div>
+      <div class="linea-card">
+        <div class="linea-badge" style="background:var(--c-exp)">Experiments</div>
+        <div class="linea-title">Validación de ideas nuevas</div>
+        <p class="linea-desc">Aquí viven las apuestas en exploración: pilotos, pruebas de concepto y validaciones tempranas con estructura suficiente para aprender.</p>
+        <div class="linea-tag">Para ideas que todavía no saben si valen la pena — antes de apostar en grande.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══ PROYECTOS ACTIVOS ══ -->
+  <section id="proyectos">
+    <div class="section-label fade-up">En construcción ahora</div>
+    <div class="proyectos-grid stagger">
+
+      <div class="proyecto-card exp">
+        <div class="proyecto-linea">NAVA Experiments</div>
+        <div class="proyecto-nombre">Refia</div>
+        <p class="proyecto-desc">
+          Convierte el inventario desordenado de un distribuidor de repuestos en un catálogo
+          digital profesional con códigos internacionales — usando IA para hacer en semanas
+          lo que hoy toma meses de trabajo manual.
+        </p>
+        <span class="proyecto-status">Demo lista · Primer piloto activo</span>
+      </div>
+
+      <div class="proyecto-card mlab">
+        <div class="proyecto-linea">NAVA Marketing Lab</div>
+        <div class="proyecto-nombre">Despensa Vital</div>
+        <p class="proyecto-desc">
+          Sistema de marca, contenido y crecimiento digital para Chef Nathalia Espitia —
+          construyendo el canal, la audiencia y la arquitectura comercial
+          de su propuesta gastronómica.
+        </p>
+        <span class="proyecto-status">En desarrollo · Colombia</span>
+      </div>
+
+      <div class="proyecto-card studio proyecto-wide">
+        <div class="proyecto-linea">NAVA Studio</div>
+        <div class="proyecto-nombre">App de Reservas</div>
+        <p class="proyecto-desc">
+          Sistema de reservas para estudios boutique de Pilates — sin app que descargar,
+          nativo en WhatsApp, con selección de máquina, gestión de paquetes y control
+          de acceso por PIN. Diseñado para el mercado latinoamericano: simple, directo
+          y adaptable a cada estudio.
+        </p>
+        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-top:4px;">
+          <span class="proyecto-status studio-color">Demo en vivo · Piloto con Fiore Studio, Bogotá</span>
+          <a href="https://fiore-reservas.netlify.app/" target="_blank" rel="noopener" class="demo-link">
+            Ver demo en vivo →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══ CASOS REALES ══ -->
+  <div class="casos-outer">
+    <div class="casos-inner">
+      <div class="section-label fade-up">Laboratorio en campo</div>
+      <p style="font-size:16px; opacity:0.62; max-width:560px; margin-bottom:52px; line-height:1.72;" class="fade-up">
+        Cada proyecto es un experimento real. Estos son los primeros negocios
+        que están probando los sistemas NAVA sobre el terreno.
+      </p>
+
+      <div class="casos-grid stagger">
+
+        <!-- Don Repuestos × Refia -->
+        <div class="caso-card">
+          <div class="caso-header">
+            <div class="caso-logo-area">
+              <div class="caso-cliente">Don Repuestos</div>
+              <div class="caso-sector">Distribución automotriz · Colombia</div>
+            </div>
+            <span class="caso-linea-badge" style="background:var(--c-exp)">Experiments</span>
+          </div>
+          <div class="caso-body">
+            <div class="caso-proyecto-label">Proyecto</div>
+            <div class="caso-proyecto-nombre">Refia — Digitalización de inventario con IA</div>
+            <p class="caso-desc">
+              Miles de referencias de repuestos físicos sin código ni estructura digital.
+              REFIA toma ese inventario y lo convierte en un catálogo profesional con
+              nomenclatura internacional — en semanas, no en meses. Don Repuestos es
+              el primer piloto activo.
+            </p>
+            <div class="caso-footer">
+              <span class="proyecto-status" style="color:var(--c-exp)">Demo en vivo · Don Repuestos</span>
+              <a href="/refia-buscador.html" target="_blank" rel="noopener" class="demo-link">
+                Abrir buscador →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fiore Studio × App de Reservas -->
+        <div class="caso-card">
+          <div class="caso-header">
+            <div class="caso-logo-area">
+              <div class="caso-cliente">Fiore Studio</div>
+              <div class="caso-sector">Pilates boutique · Bogotá</div>
+            </div>
+            <span class="caso-linea-badge" style="background:var(--c-studio)">Studio</span>
+          </div>
+          <div class="caso-body">
+            <div class="caso-proyecto-label">Proyecto</div>
+            <div class="caso-proyecto-nombre">App de Reservas — Sistema de gestión SaaS</div>
+            <p class="caso-desc">
+              Fiore Studio es el primer piloto de la App de Reservas NAVA: gestión
+              de clases, selección de máquina Reformer, paquetes y control de acceso
+              por PIN. Sin app que descargar, sin fricción, nativo en WhatsApp.
+            </p>
+            <div class="caso-footer">
+              <span class="proyecto-status studio-color">Demo en vivo · Recolectando datos reales</span>
+              <a href="https://fiore-reservas.netlify.app/" target="_blank" rel="noopener" class="demo-link">
+                Ver demo →
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DIFERENCIAL ══ -->
+  <div class="diferencial-outer">
+    <div class="diferencial-wrap fade-up">
+      <div class="diferencial-content">
+        <div class="section-label" style="color:var(--aqua);margin-bottom:40px">Lo que nos diferencia</div>
+        <h2 class="diferencial-headline">
+          Ciencia del comportamiento más IA aplicada más ejecución real.
+        </h2>
+        <p class="diferencial-sub">
+          No hay una sola categoría que nos describa porque no operamos dentro
+          de una existente. Tomamos lo que funciona de la behavioral science,
+          la estrategia de negocio y la inteligencia artificial —
+          y lo convertimos en sistemas ejecutables con resultados medibles.
+        </p>
+        <div class="formula stagger">
+          <div class="formula-item">Estrategia clara</div>
+          <div class="formula-op">+</div>
+          <div class="formula-item">Behavioral Science</div>
+          <div class="formula-op">+</div>
+          <div class="formula-item">IA aplicada</div>
+          <div class="formula-op">+</div>
+          <div class="formula-item">Ejecución medible</div>
+          <div class="formula-op">=</div>
+          <div class="formula-result">Crecimiento con intención</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONTACTO ══ -->
+  <div id="contacto" class="contacto-outer">
+    <div class="contacto-wrap fade-up">
+      <img src="nava-isotipo.png" alt="NAVA" class="contacto-isotipo">
+      <h2>¿Tienes una idea que necesita estructura?</h2>
+      <p>
+        No necesitamos un brief perfecto para empezar. Una conversación
+        de 30 minutos es suficiente para saber si podemos ayudarte.
+      </p>
+      <div class="contacto-btns">
+        <a href="https://wa.me/573186195434?text=Hola%2C+quiero+conocer+más+sobre+NAVA" class="btn-wa" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Agenda tu llamada
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <span>© 2026 NAVA · navalat.com · Laboratorio digital · Colombia</span>
+    <span>Behavioral Science + AI + Growth</span>
+  </footer>
+
+  <!-- ══ SCRIPTS ══ -->
+  <script>
+    // Nav scroll behavior
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // IntersectionObserver for scroll animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    document.querySelectorAll('.fade-up, .stagger').forEach(el => observer.observe(el));
+  </script>
+
+  <!-- ══ FLOATING BUSCADOR BUTTON ══ -->
+  <a href="/refia-buscador.html" target="_blank" rel="noopener" id="float-buscador"
+    style="
+      position:fixed;bottom:28px;right:28px;z-index:999;
+      display:inline-flex;align-items:center;gap:8px;
+      background:#003366;color:#fff;
+      border:1.5px solid rgba(201,161,90,.4);
+      border-radius:50px;padding:12px 22px;
+      font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.3px;
+      text-decoration:none;
+      box-shadow:0 4px 20px rgba(0,51,102,.35);
+      transition:transform .15s,box-shadow .15s;
+    "
+    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(0,51,102,.45)'"
+    onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,51,102,.35)'"
+  >
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    Abrir Buscador
+  </a>
+
 </body>
 </html>
