@@ -235,7 +235,7 @@
 </div>
 
 <script>
-// refia-build.py — 2026-06-04 02:24 — 1112 SKUs
+// refia-build.py — 2026-06-04 02:31 — 1112 SKUs
 const P = [
   // ── AMORTIGUADORES (32) ──
   {sku:"A G707127",d:"DRS Amortiguador delantero izquierdo Sonic - Onix",c:"Amortiguad",oem:"95917162",co:0,p:0,e:1,f:"Amortiguadores",compat:"Chevrolet Sonic | Chevrolet Onix",foto:"https://donrepuestos.com/wp-content/uploads/2022/11/Amortiguador-delantero-izquierdo-Chevrolet-Sonic-.webp",bodega:"CARTAGENA"},
@@ -1372,7 +1372,7 @@ function sTxt(e){return e===0?'Sin stock':e===1?'1 und.':e===2?'2 und.':e+' und.
 function hl(t,toks){if(!toks.length)return t;var re=new RegExp('('+toks.map(function(x){return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')','gi');return t.replace(re,'<mark>$1</mark>');}
 function wa(item){
   var precio=item.p>0?'$'+item.p.toLocaleString('es-CO'):'A consultar';
-  var msg='*'+item.d+'*\nSKU: '+item.sku+(item.oem?'\nRef. OEM: '+item.oem:'')+'\n💰 Precio: '+precio+'\n📦 Disponibilidad: '+item.e+' unidad(es)'+(item.bodega?'\n📍 Bodega: '+item.bodega:'')+'\n\n_Don Repuestos · Cotización RefIA_';
+  var msg='*'+item.d+'*\nSKU: '+item.sku+(item.oem?'\nRef. OEM: '+item.oem:'')+'\nPrecio: '+precio+'\nDisponibilidad: '+item.e+' unidad(es)'+(item.bodega?'\nBodega: '+item.bodega:'')+'\n\n_Don Repuestos · Cotización RefIA_';
   return'https://wa.me/573154134396?text='+encodeURIComponent(msg);}
 function wa_old(item){var msg='*'+item.d+'*\nSKU: '+item.sku+(item.oem?'\nRef. OEM: '+item.oem:'')+'\nDisponibilidad: '+item.e+' unidad(es)'+(item.bodega?'\nBodega: '+item.bodega:'')+'\n\n_Don Repuestos - cotización con RefIA_';return'https://wa.me/573154134396?text='+encodeURIComponent(msg);}
 function locBadge(b,cls){return b?'<span class="loc '+cls+'"><span class="loc-dot"></span>'+b+'</span>':'';}
@@ -1388,14 +1388,14 @@ function buildFB(){
   h+='<div class="chip '+(aC==='all'?'on':'')+'" onclick="setC(\'all\')">Todas <span class="cc">'+P.length+'</span></div>';
   Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" onclick="setC(\''+c.replace(/'/g,"\\'")+'\')">'+c+' <span class="cc">'+n+'</span></div>';});
   
-  // ── MARCAS DE VEHÍCULO ──
-  var marcas = ["Chevrolet", "Hyundai", "Toyota", "Renault", "Kia", "Mazda", "Nissan", "Ford", "Honda", "Volkswagen", "Mitsubishi", "Suzuki", "Jeep", "Fiat", "Great Wall", "Chery"];
+  // MARCAS DE VEHICULO
+  var marcas = ["Chevrolet","Hyundai","Toyota","Renault","Kia","Mazda","Nissan","Ford","Honda","Volkswagen","Mitsubishi","Suzuki","Jeep","Fiat","Great Wall","Chery"];
   h += '<div class="sep"></div>';
-  h += '<div class="chip-label">🚗 Marca vehículo</div>';
-  h += '<div class="chip ' + (aV==='all'?'on':'') + '" onclick="setV('all')">Todas <span class="cc">' + P.length + '</span></div>';
+  h += '<div class="chip-label">Marca</div>';
+  h += '<div class="chip ' + (aV==='all'?'on':'') + '" data-v="all" onclick="setV(this.dataset.v)">Todas <span class="cc">' + P.length + '</span></div>';
   marcas.forEach(function(m){
     var n = P.filter(function(x){ return x.compat && x.compat.indexOf(m)>=0; }).length;
-    if(n>0) h += '<div class="chip ' + (aV===m?'on':'') + '" onclick="setV(\'' + m + '\')">' + m + ' <span class="cc">' + n + '</span></div>';
+    if(n>0) h += '<div class="chip ' + (aV===m?'on':'') + '" data-v="' + m + '" onclick="setV(this.dataset.v)">' + m + ' <span class="cc">' + n + '</span></div>';
   });
   document.getElementById('fb').innerHTML=h;
 }
