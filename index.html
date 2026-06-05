@@ -3,902 +3,1128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NAVA — Laboratorio digital que convierte ideas en sistemas</title>
-  <meta name="description" content="No somos una agencia. Somos el laboratorio que toma tu idea, le da estructura, la prueba con IA y la convierte en algo que crece.">
-  <meta property="og:title" content="NAVA — Laboratorio digital">
-  <meta property="og:description" content="Convertimos ideas en sistemas que crecen. Behavioral Science + IA + Estrategia.">
-  <meta property="og:type" content="website">
+  <title>REFIA — El buscador de repuestos para el mostrador</title>
+  <meta name="description" content="REFIA da a tu equipo la pieza exacta, compatibilidad vehicular y precio piso en menos de 8 segundos. Aunque el sistema esté caído.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ── TOKENS ── */
+    /* ─── TOKENS ─── */
     :root {
-      --blue:        #003366;
-      --blue-deep:   #001833;
-      --teal:        #0F706E;
-      --emerald:     #1F9D7A;
-      --aqua:        #67C9D4;
-      --gold:        #C9A15A;
-      --ivory:       #F7F5EF;
-      --graphite:    #253138;
-      --c-exp:       #E3734A;
-      --c-mlab:      #0E858B;
-      --c-media:     #18A8A1;
-      --c-studio:    #2D6C90;
-      --fh: "Sora", system-ui, sans-serif;
-      --fb: "Inter", system-ui, sans-serif;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --blue:       #003366;
+      --blue-mid:   #0a4080;
+      --teal:       #0F706E;
+      --emerald:    #1F9D7A;
+      --gold:       #C9A15A;
+      --gold-light: #e8c88a;
+      --ivory:      #F7F5EF;
+      --ivory-dark: #ede9df;
+      --graphite:   #253138;
+      --orange:     #E3734A;
+      --white:      #ffffff;
+
+      --font-h: "Sora", system-ui, sans-serif;
+      --font-b: "Inter", system-ui, sans-serif;
+
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.10);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.18);
+      --transition: 0.3s ease;
     }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
+      font-family: var(--font-b);
       background: var(--ivory);
       color: var(--graphite);
-      font-family: var(--fb);
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
+      line-height: 1.65;
+      overflow-x: hidden;
     }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; }
 
-    /* ══ NAV ══ */
+    /* ─── UTILITIES ─── */
+    .container { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+    .tag {
+      display: inline-block;
+      font-family: var(--font-b);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 24px;
+    }
+    .tag-orange { background: rgba(227,115,74,0.15); color: var(--orange); }
+    .tag-gold   { background: rgba(201,161,90,0.18); color: #9a7420; }
+    .tag-white  { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+
+    /* fade-in animation */
+    .fade { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .fade.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── NAV ─── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 52px;
-      background: rgba(0, 24, 51, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(103, 201, 212, 0.1);
-      transition: background 0.3s;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(247,245,239,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,51,102,0.08);
+      padding: 14px 0;
+      transition: box-shadow var(--transition);
     }
-    nav.scrolled {
-      background: rgba(247, 245, 239, 0.95);
-      border-bottom-color: rgba(37,49,56,0.08);
+    nav.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,0.09); }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
-    .nav-logo img {
-      height: 50px; width: auto; object-fit: contain;
-      mix-blend-mode: screen;
-      transition: mix-blend-mode 0.3s;
+    .nav-logo {
+      font-family: var(--font-h);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: -0.01em;
     }
-    nav.scrolled .nav-logo img { mix-blend-mode: multiply; }
+    .nav-logo span { color: var(--orange); }
     .nav-cta {
-      font-family: var(--fb); font-size: 13px; font-weight: 600;
-      color: var(--aqua); text-decoration: none;
-      border: 1.5px solid rgba(103,201,212,0.4);
-      padding: 9px 22px; border-radius: 6px;
-      transition: all 0.2s;
+      background: var(--blue);
+      color: var(--white);
+      font-family: var(--font-b);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 8px;
+      transition: background var(--transition), transform var(--transition);
     }
-    .nav-cta:hover { background: var(--aqua); color: var(--blue-deep); border-color: var(--aqua); }
-    nav.scrolled .nav-cta { color: var(--blue); border-color: var(--blue); }
-    nav.scrolled .nav-cta:hover { background: var(--blue); color: var(--ivory); }
+    .nav-cta:hover { background: var(--blue-mid); transform: translateY(-1px); }
 
-    /* ══ HERO ══ */
+    /* ─── HERO ─── */
     .hero {
-      position: relative; min-height: 100vh; overflow: hidden;
-      background: var(--blue-deep);
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 130px 52px 100px;
-    }
-
-    /* Gradientes de profundidad */
-    .hero-glow {
-      position: absolute; inset: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 75% 60% at 10% 65%, rgba(15,112,110,0.22) 0%, transparent 65%),
-        radial-gradient(ellipse 50% 55% at 82% 22%, rgba(103,201,212,0.1) 0%, transparent 55%),
-        radial-gradient(ellipse 45% 40% at 55% 88%, rgba(201,161,90,0.07) 0%, transparent 50%);
-      animation: glow-pulse 14s ease-in-out infinite alternate;
-    }
-    @keyframes glow-pulse {
-      0%   { opacity: 0.75; transform: scale(1); }
-      100% { opacity: 1;    transform: scale(1.06); }
-    }
-
-    /* Grid sutil animado */
-    .hero-grid {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
-      background-size: 68px 68px;
-      animation: grid-drift 30s linear infinite;
-    }
-    @keyframes grid-drift {
-      0%   { transform: translateY(0) translateX(0); }
-      100% { transform: translateY(68px) translateX(34px); }
-    }
-
-    .hero-content {
-      position: relative; z-index: 1;
-      max-width: 900px; margin: 0 auto; width: 100%;
-    }
-    .hero-content > * {
-      opacity: 0; transform: translateY(26px);
-      animation: hero-in 0.8s var(--ease) forwards;
-    }
-    .hero-content .eyebrow      { animation-delay: 0.08s; }
-    .hero-content h1            { animation-delay: 0.22s; }
-    .hero-content .hero-sub     { animation-delay: 0.38s; }
-    .hero-content .hero-actions { animation-delay: 0.52s; }
-    .hero-content .hero-proof   { animation-delay: 0.64s; }
-
-    @keyframes hero-in {
-      from { opacity: 0; transform: translateY(26px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--aqua);
-      margin-bottom: 28px;
-    }
-    .eyebrow::before {
-      content: ''; display: block;
-      width: 28px; height: 1.5px; background: var(--aqua);
-    }
-
-    h1 {
-      font-family: var(--fh);
-      font-size: clamp(44px, 6.8vw, 82px);
-      font-weight: 600; line-height: 1.04; letter-spacing: -0.03em;
-      color: var(--ivory); margin-bottom: 28px;
-    }
-    h1 .accent {
-      background: linear-gradient(135deg, var(--aqua) 0%, var(--emerald) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-sub {
-      font-size: clamp(16px, 2vw, 19px);
-      color: rgba(247,245,239,0.65);
-      max-width: 580px; margin-bottom: 48px; line-height: 1.72;
-    }
-
-    .hero-actions {
-      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-      margin-bottom: 56px;
-    }
-
-    .btn-primary {
-      font-family: var(--fb); font-size: 14px; font-weight: 600;
-      color: var(--blue-deep); background: var(--aqua);
-      text-decoration: none; padding: 15px 32px; border-radius: 8px;
-      transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-primary:hover { background: #82D4DE; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(103,201,212,0.3); }
-
-    .btn-wa {
-      font-family: var(--fb); font-size: 14px; font-weight: 600;
-      color: white; background: #25D366; text-decoration: none;
-      padding: 15px 28px; border-radius: 8px;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: all 0.2s;
-    }
-    .btn-wa:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.25); }
-    .btn-wa svg { width: 18px; height: 18px; fill: white; flex-shrink: 0; }
-
-    .btn-ghost {
-      font-family: var(--fb); font-size: 14px; font-weight: 500;
-      color: rgba(247,245,239,0.45); text-decoration: none;
-      transition: color 0.2s;
-    }
-    .btn-ghost:hover { color: rgba(247,245,239,0.85); }
-
-    /* Proof strip en hero */
-    .hero-proof {
-      display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
-      padding-top: 48px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-    .proof-item {
-      display: flex; align-items: baseline; gap: 8px;
-    }
-    .proof-num {
-      font-family: var(--fh); font-size: 22px; font-weight: 600;
-      color: var(--gold);
-    }
-    .proof-label {
-      font-size: 12px; color: rgba(247,245,239,0.4);
-      letter-spacing: 0.04em;
-    }
-    .proof-sep {
-      width: 1px; height: 24px;
-      background: rgba(255,255,255,0.1);
-    }
-
-    /* Scroll hint */
-    .scroll-hint {
-      position: absolute; bottom: 36px; left: 52px;
-      display: flex; align-items: center; gap: 12px;
-      color: rgba(247,245,239,0.22);
-      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-      animation: hero-in 1s var(--ease) 0.9s both;
-    }
-    .scroll-line {
-      width: 1px; height: 36px;
-      background: linear-gradient(to bottom, rgba(247,245,239,0.35), transparent);
-      animation: line-pulse 2.5s ease-in-out infinite;
-    }
-    @keyframes line-pulse {
-      0%, 100% { opacity: 1; transform: scaleY(1); transform-origin: top; }
-      50%       { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
-    }
-
-    /* ══ FADE-UP SCROLL ANIMATION ══ */
-    .fade-up {
-      opacity: 0; transform: translateY(32px);
-      transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
-    }
-    .fade-up.visible { opacity: 1; transform: translateY(0); }
-
-    .stagger > * {
-      opacity: 0; transform: translateY(28px);
-      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
-    }
-    .stagger.visible > *:nth-child(1) { transition-delay: 0s; }
-    .stagger.visible > *:nth-child(2) { transition-delay: 0.09s; }
-    .stagger.visible > *:nth-child(3) { transition-delay: 0.18s; }
-    .stagger.visible > *:nth-child(4) { transition-delay: 0.27s; }
-    .stagger.visible > * { opacity: 1; transform: translateY(0); }
-
-    /* ══ DIVIDER ══ */
-    .divider {
-      width: calc(100% - 104px); max-width: 1100px; height: 1px;
-      background: rgba(37,49,56,0.09); margin: 0 auto;
-    }
-
-    /* ══ SECTION BASE ══ */
-    section {
-      padding: 96px 52px; max-width: 1100px; margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--teal);
-      margin-bottom: 52px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .section-label::after {
-      content: ''; flex: 1; height: 1px;
-      background: rgba(37,49,56,0.1);
-    }
-
-    /* ══ MANIFESTO ══ */
-    .manifesto-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 52px;
-    }
-    .manifesto-num {
-      font-family: var(--fh); font-size: 11px; font-weight: 700;
-      color: var(--gold); letter-spacing: 0.14em; margin-bottom: 14px;
-    }
-    .manifesto-title {
-      font-family: var(--fh); font-size: 18px; font-weight: 600;
-      color: var(--blue); margin-bottom: 12px; line-height: 1.25;
-    }
-    .manifesto-text { font-size: 14px; line-height: 1.78; opacity: 0.66; }
-
-    /* ══ LÍNEAS ══ */
-    .lineas-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 2px; background: rgba(37,49,56,0.08);
-      border-radius: 16px; overflow: hidden;
-    }
-    .linea-card {
-      background: var(--ivory); padding: 44px;
-      transition: background 0.25s;
-      position: relative; overflow: hidden;
-    }
-    .linea-card:hover { background: #fff; }
-    .linea-card::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-      height: 2px; transform: scaleX(0); transform-origin: left;
-      transition: transform 0.3s var(--ease);
-    }
-    .linea-card:hover::after { transform: scaleX(1); }
-    .linea-card:nth-child(1)::after { background: var(--c-mlab); }
-    .linea-card:nth-child(2)::after { background: var(--c-media); }
-    .linea-card:nth-child(3)::after { background: var(--c-studio); }
-    .linea-card:nth-child(4)::after { background: var(--c-exp); }
-
-    .linea-badge {
-      display: inline-block; padding: 5px 14px; border-radius: 24px;
-      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: white; margin-bottom: 22px;
-    }
-    .linea-title {
-      font-family: var(--fh); font-size: 20px; font-weight: 600;
-      color: var(--blue); margin-bottom: 12px; line-height: 1.22;
-    }
-    .linea-desc { font-size: 14px; line-height: 1.72; opacity: 0.68; margin-bottom: 18px; }
-    .linea-tag { font-size: 12px; font-weight: 500; font-style: italic; opacity: 0.45; }
-
-    /* ══ PROYECTOS ══ */
-    .proyectos-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
-    }
-    .proyecto-card {
-      border: 1px solid rgba(37,49,56,0.09);
-      border-radius: 16px; padding: 40px;
-      background: white; position: relative; overflow: hidden;
-      transition: box-shadow 0.25s, transform 0.25s;
-    }
-    .proyecto-card:hover {
-      box-shadow: 0 12px 40px rgba(37,49,56,0.1);
-      transform: translateY(-3px);
-    }
-    .proyecto-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    }
-    .proyecto-card.exp::before  { background: linear-gradient(90deg, var(--c-exp), #F09870); }
-    .proyecto-card.mlab::before { background: linear-gradient(90deg, var(--c-mlab), var(--emerald)); }
-    .proyecto-card.studio::before { background: linear-gradient(90deg, var(--c-studio), var(--aqua)); }
-
-    .proyecto-linea {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
-      text-transform: uppercase; margin-bottom: 16px;
-    }
-    .proyecto-card.exp   .proyecto-linea { color: var(--c-exp); }
-    .proyecto-card.mlab  .proyecto-linea { color: var(--c-mlab); }
-    .proyecto-card.studio .proyecto-linea { color: var(--c-studio); }
-
-    .proyecto-wide { grid-column: 1 / -1; }
-
-    .proyecto-nombre {
-      font-family: var(--fh); font-size: 26px; font-weight: 600;
-      color: var(--blue); margin-bottom: 12px;
-    }
-    .proyecto-desc {
-      font-size: 14px; line-height: 1.77; opacity: 0.68; margin-bottom: 24px;
-    }
-
-    .proyecto-status {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 12px; font-weight: 500; color: var(--teal);
-    }
-    .proyecto-status::before {
-      content: ''; width: 7px; height: 7px; border-radius: 50%;
-      background: var(--emerald);
-      animation: status-pulse 2.2s ease-in-out infinite;
-    }
-    @keyframes status-pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.3; transform: scale(0.8); }
-    }
-
-    .proyecto-status.studio-color { color: var(--c-studio); }
-    .proyecto-status.studio-color::before { background: var(--c-studio); }
-
-    .demo-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 13px; font-weight: 600; color: var(--c-studio);
-      text-decoration: none; margin-top: 10px;
-      transition: opacity 0.2s;
-    }
-    .demo-link:hover { opacity: 0.65; }
-
-    /* ══ CASOS REALES ══ */
-    .casos-outer {
-      background: #F1EFE9;
-      padding: 0;
-    }
-    .casos-inner {
-      padding: 96px 52px; max-width: 1100px; margin: 0 auto;
-    }
-
-    .casos-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
-    }
-    .caso-card {
-      background: white; border-radius: 16px; overflow: hidden;
-      transition: box-shadow 0.25s, transform 0.25s;
-    }
-    .caso-card:hover {
-      box-shadow: 0 12px 40px rgba(37,49,56,0.09);
-      transform: translateY(-2px);
-    }
-    .caso-header {
-      padding: 32px 36px 28px;
-      border-bottom: 1px solid rgba(37,49,56,0.07);
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
-    }
-    .caso-logo-area {
-      display: flex; flex-direction: column; gap: 4px;
-    }
-    .caso-cliente {
-      font-family: var(--fh); font-size: 20px; font-weight: 600;
-      color: var(--blue); line-height: 1.2;
-    }
-    .caso-sector {
-      font-size: 12px; opacity: 0.45; letter-spacing: 0.02em;
-    }
-    .caso-linea-badge {
-      display: inline-block; padding: 5px 14px; border-radius: 24px;
-      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: white; flex-shrink: 0;
-    }
-
-    .caso-body { padding: 28px 36px 32px; }
-    .caso-proyecto-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
-      text-transform: uppercase; margin-bottom: 8px; opacity: 0.45;
-    }
-    .caso-proyecto-nombre {
-      font-family: var(--fh); font-size: 16px; font-weight: 600;
-      color: var(--blue); margin-bottom: 12px;
-    }
-    .caso-desc {
-      font-size: 14px; line-height: 1.74; opacity: 0.65; margin-bottom: 20px;
-    }
-    .caso-footer {
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px;
-    }
-
-    /* ══ DIFERENCIAL ══ */
-    .diferencial-outer {
-      padding: 0 52px 96px; max-width: 1100px; margin: 0 auto;
-    }
-    .diferencial-wrap {
-      background: var(--blue-deep);
-      border-radius: 20px; padding: 80px;
-      color: var(--ivory); position: relative; overflow: hidden;
-    }
-    .diferencial-wrap::before {
-      content: ''; position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 60% 70% at 5% 50%, rgba(15,112,110,0.15) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 50% at 95% 20%, rgba(103,201,212,0.07) 0%, transparent 50%);
+      background: var(--blue);
+      padding: 140px 0 100px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%; right: -20%;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(201,161,90,0.08) 0%, transparent 70%);
       pointer-events: none;
     }
-    .diferencial-content { position: relative; z-index: 1; }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--ivory));
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .hero h1 {
+      font-family: var(--font-h);
+      font-size: clamp(36px, 5.5vw, 60px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--gold-light);
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: rgba(255,255,255,0.78);
+      max-width: 560px;
+      margin: 0 auto 44px;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: var(--blue);
+      font-family: var(--font-b);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 10px;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 4px 20px rgba(201,161,90,0.40);
+    }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(201,161,90,0.50);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.88);
+      font-family: var(--font-b);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      transition: background var(--transition), transform var(--transition);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.16);
+      transform: translateY(-2px);
+    }
+    .btn-icon { font-size: 18px; }
 
-    .diferencial-wrap .section-label {
-      color: var(--aqua);
+    /* ─── SCENE ─── */
+    .scene {
+      padding: 100px 0 80px;
+      background: var(--ivory);
     }
-    .diferencial-wrap .section-label::after {
-      background: rgba(247,245,239,0.12);
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
     }
-    .diferencial-headline {
-      font-family: var(--fh);
-      font-size: clamp(26px, 3.5vw, 44px);
-      font-weight: 600; line-height: 1.16; letter-spacing: -0.02em;
-      margin-bottom: 20px; max-width: 660px;
+    .section-header .tag { margin-bottom: 16px; }
+    .section-header h2 {
+      font-family: var(--font-h);
+      font-size: clamp(28px, 3.8vw, 42px);
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 16px;
     }
-    .diferencial-sub {
-      font-size: 16px; opacity: 0.64; max-width: 560px;
-      line-height: 1.74; margin-bottom: 52px;
-    }
-
-    .formula {
-      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    }
-    .formula-item {
-      background: rgba(247,245,239,0.07);
-      border: 1px solid rgba(247,245,239,0.14);
-      border-radius: 8px; padding: 12px 20px;
-      font-family: var(--fh); font-size: 13px; font-weight: 500;
-      color: var(--ivory);
-      transition: background 0.2s;
-    }
-    .formula-item:hover { background: rgba(247,245,239,0.12); }
-    .formula-op { font-size: 20px; color: var(--gold); font-weight: 300; opacity: 0.7; }
-    .formula-result {
-      background: var(--gold); border-radius: 8px; padding: 12px 20px;
-      font-family: var(--fh); font-size: 13px; font-weight: 700;
-      color: var(--blue-deep);
+    .section-header p {
+      font-size: 17px;
+      color: #5a6470;
+      max-width: 540px;
+      margin: 0 auto;
     }
 
-    /* ══ CONTACTO ══ */
-    .contacto-outer { padding: 0 52px 96px; max-width: 1100px; margin: 0 auto; }
-    .contacto-wrap {
-      text-align: center; max-width: 560px; margin: 0 auto; padding: 96px 0;
+    .scene-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
     }
-    .contacto-isotipo {
-      width: 68px; height: auto; margin: 0 auto 32px; display: block;
-      opacity: 0.85; mix-blend-mode: multiply;
+    .scene-card {
+      border-radius: var(--radius);
+      overflow: hidden;
     }
-    .contacto-wrap h2 {
-      font-family: var(--fh);
-      font-size: clamp(26px, 3.5vw, 40px);
-      font-weight: 600; color: var(--blue); margin-bottom: 16px;
-      letter-spacing: -0.02em; line-height: 1.2;
+    .scene-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 24px;
+      font-family: var(--font-h);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
     }
-    .contacto-wrap p {
-      font-size: 16px; opacity: 0.62; margin-bottom: 44px; line-height: 1.7;
+    .scene-before .scene-card-header {
+      background: #f0eae4;
+      color: #7a6555;
     }
-    .contacto-btns {
-      display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+    .scene-after .scene-card-header {
+      background: var(--teal);
+      color: var(--white);
+    }
+    .scene-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .scene-before .scene-dot { background: #c09070; }
+    .scene-after .scene-dot  { background: var(--gold-light); }
+
+    .scene-body { padding: 28px 24px; }
+    .scene-before .scene-body { background: #faf7f3; }
+    .scene-after .scene-body  { background: rgba(15,112,110,0.06); }
+
+    .scene-step {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 18px;
+      align-items: flex-start;
+    }
+    .scene-step:last-child { margin-bottom: 0; }
+    .step-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .scene-before .step-icon { background: rgba(192,144,112,0.15); }
+    .scene-after .step-icon  { background: rgba(15,112,110,0.12); }
+
+    .step-text { font-size: 14.5px; line-height: 1.5; }
+    .scene-before .step-text strong { color: #8a6040; }
+    .scene-after .step-text strong  { color: var(--teal); }
+
+    .scene-result {
+      margin-top: 24px;
+      padding: 16px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-h);
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .scene-before .scene-result {
+      background: rgba(192,100,80,0.10);
+      color: #a04030;
+    }
+    .scene-after .scene-result {
+      background: rgba(15,112,110,0.12);
+      color: var(--teal);
     }
 
-    /* ══ FOOTER ══ */
-    footer {
-      border-top: 1px solid rgba(37,49,56,0.09);
-      padding: 28px 52px;
-      display: flex; justify-content: space-between; align-items: center;
-      max-width: 1100px; margin: 0 auto;
-      font-size: 12px; opacity: 0.4;
+    .scene-vs {
+      display: none;
     }
 
-    /* ══ RESPONSIVE ══ */
+    /* ─── PARA EL DUEÑO ─── */
+    .for-owner {
+      padding: 100px 0;
+      background: var(--white);
+    }
+    .fears-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .fear-card {
+      background: var(--ivory);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      border: 1px solid rgba(0,51,102,0.07);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .fear-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+    .fear-top {
+      background: rgba(192,100,80,0.08);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin-bottom: 28px;
+    }
+    .fear-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a04030;
+      margin-bottom: 6px;
+    }
+    .fear-quote {
+      font-size: 14px;
+      color: #6a4030;
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .fear-arrow {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: var(--gold);
+    }
+    .fear-solution-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .fear-solution {
+      font-size: 15px;
+      color: var(--graphite);
+      line-height: 1.55;
+    }
+
+    /* ─── PARA LA VENDEDORA ─── */
+    .for-seller {
+      padding: 100px 0;
+      background: var(--blue);
+      position: relative;
+      overflow: hidden;
+    }
+    .for-seller::before {
+      content: '';
+      position: absolute;
+      top: -30%; left: -10%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(201,161,90,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .for-seller .section-header h2 { color: var(--white); }
+    .for-seller .section-header p  { color: rgba(255,255,255,0.65); }
+
+    .seller-quote {
+      max-width: 680px;
+      margin: 0 auto 64px;
+      text-align: center;
+      font-family: var(--font-h);
+      font-size: clamp(17px, 2.2vw, 22px);
+      color: var(--gold-light);
+      font-style: italic;
+      line-height: 1.55;
+      padding: 32px;
+      border: 1px solid rgba(201,161,90,0.25);
+      border-radius: var(--radius);
+      background: rgba(201,161,90,0.06);
+    }
+    .seller-quote cite {
+      display: block;
+      margin-top: 16px;
+      font-style: normal;
+      font-size: 13px;
+      font-family: var(--font-b);
+      color: rgba(255,255,255,0.55);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .feature-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: var(--radius-sm);
+      padding: 20px 22px;
+      transition: background var(--transition);
+    }
+    .feature-item:hover { background: rgba(255,255,255,0.10); }
+    .feature-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .feature-title {
+      font-family: var(--font-h);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .feature-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.60);
+      line-height: 1.5;
+    }
+
+    /* ─── CASO DON REPUESTOS ─── */
+    .case-study {
+      padding: 100px 0;
+      background: var(--ivory);
+    }
+    .case-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .case-left {
+      padding: 56px 48px;
+      background: var(--blue);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .case-pilot-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.80);
+      letter-spacing: 0.06em;
+      margin-bottom: 32px;
+    }
+    .pilot-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .case-company {
+      font-family: var(--font-h);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .case-location {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 36px;
+    }
+    .case-quote-block {
+      border-left: 3px solid var(--gold);
+      padding-left: 20px;
+      margin-bottom: 40px;
+    }
+    .case-quote {
+      font-family: var(--font-h);
+      font-size: 17px;
+      font-style: italic;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+    .case-author {
+      font-size: 13px;
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+    .case-open-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: var(--blue);
+      font-family: var(--font-b);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: 8px;
+      transition: background var(--transition), transform var(--transition);
+      align-self: flex-start;
+    }
+    .case-open-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .case-right {
+      padding: 56px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+    }
+    .stat-item {}
+    .stat-number {
+      font-family: var(--font-h);
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: #6a7580;
+      line-height: 1.45;
+    }
+    .stat-divider {
+      height: 1px;
+      background: var(--ivory-dark);
+    }
+    .stat-highlight {
+      background: rgba(15,112,110,0.07);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+      border-left: 3px solid var(--teal);
+    }
+    .stat-highlight-text {
+      font-size: 14px;
+      color: var(--teal);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* ─── CTA FINAL ─── */
+    .final-cta {
+      padding: 100px 0;
+      background: var(--blue);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      bottom: -20%; right: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201,161,90,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .final-cta-inner { position: relative; z-index: 1; }
+    .final-cta h2 {
+      font-family: var(--font-h);
+      font-size: clamp(26px, 3.8vw, 44px);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .final-cta h2 em {
+      font-style: normal;
+      color: var(--gold-light);
+    }
+    .final-cta-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.65);
+      max-width: 480px;
+      margin: 0 auto 48px;
+    }
+    .btn-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: var(--white);
+      font-family: var(--font-b);
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 32px;
+      border-radius: 10px;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 4px 24px rgba(37,211,102,0.30);
+    }
+    .btn-wa:hover {
+      background: #20c45a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(37,211,102,0.40);
+    }
+    .wa-icon {
+      width: 22px; height: 22px;
+      fill: currentColor;
+    }
+
+    .final-footer {
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .footer-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+    }
+    .footer-link {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      transition: color var(--transition);
+    }
+    .footer-link:hover { color: rgba(255,255,255,0.75); }
+    .footer-sep {
+      color: rgba(255,255,255,0.20);
+      font-size: 13px;
+    }
+
+    /* ─── FLOATING BUTTON ─── */
+    .float-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 90;
+      background: var(--blue);
+      color: var(--white);
+      font-family: var(--font-b);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 13px 22px;
+      border-radius: 50px;
+      box-shadow: 0 4px 20px rgba(0,51,102,0.35), 0 0 0 2px rgba(201,161,90,0.45);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform var(--transition), box-shadow var(--transition);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px);
+    }
+    .float-btn.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .float-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,51,102,0.45), 0 0 0 2px rgba(201,161,90,0.60);
+    }
+    .float-pulse {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 2s infinite;
+    }
+
+    /* ─── RESPONSIVE — tablet ─── */
     @media (max-width: 768px) {
-      nav { padding: 12px 20px; }
-      .nav-logo img { height: 42px; }
-      .hero { padding: 100px 24px 80px; }
-      .hero .hero-proof { gap: 20px; }
-      .scroll-hint { left: 24px; }
-      section { padding: 64px 24px; }
-      .manifesto-grid { grid-template-columns: 1fr; gap: 36px; }
-      .lineas-grid    { grid-template-columns: 1fr; }
-      .proyectos-grid { grid-template-columns: 1fr; }
-      .casos-inner    { padding: 64px 24px; }
-      .casos-grid     { grid-template-columns: 1fr; }
-      .diferencial-outer { padding: 0 24px 64px; }
-      .diferencial-wrap  { padding: 44px 28px; }
-      .formula { gap: 8px; }
-      .formula-item, .formula-result { font-size: 12px; padding: 10px 14px; }
-      .contacto-outer { padding: 0 24px 64px; }
-      .contacto-wrap  { padding: 64px 0; }
-      .contacto-btns  { flex-direction: column; align-items: center; }
-      footer { flex-direction: column; gap: 6px; text-align: center; padding: 24px; }
-      .divider { width: calc(100% - 48px); }
+      /* secciones */
+      .scene, .for-owner, .for-seller, .case-study, .final-cta {
+        padding: 64px 0;
+      }
+      .section-header { margin-bottom: 40px; }
+
+      /* hero */
+      .hero { padding: 110px 0 72px; }
+      .hero h1 { font-size: 30px; }
+      .hero-sub { font-size: 15px; margin-bottom: 36px; }
+      .hero-eyebrow { flex-wrap: wrap; justify-content: center; gap: 8px; }
+      .hero-actions { flex-direction: column; align-items: center; gap: 12px; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 320px; justify-content: center; }
+
+      /* escena */
+      .scene-grid { grid-template-columns: 1fr; gap: 12px; }
+
+      /* miedos */
+      .fears-grid { grid-template-columns: 1fr; gap: 16px; }
+
+      /* vendedora */
+      .seller-quote { padding: 24px 20px; margin-bottom: 40px; }
+      .features-grid { grid-template-columns: 1fr; }
+
+      /* caso */
+      .case-card { grid-template-columns: 1fr; }
+      .case-left  { padding: 36px 28px; }
+      .case-right { padding: 36px 28px; gap: 24px; }
+      .stat-number { font-size: 30px; }
+
+      /* cta final */
+      .final-footer { flex-direction: column; gap: 8px; }
+
+      /* flotante */
+      .float-btn { bottom: 20px; right: 16px; font-size: 13px; padding: 11px 18px; }
+    }
+
+    /* ─── RESPONSIVE — móvil pequeño ─── */
+    @media (max-width: 420px) {
+      .container { padding: 0 16px; }
+      nav .nav-inner { padding: 0 16px; }
+      .nav-logo { font-size: 16px; }
+      .nav-cta { font-size: 12px; padding: 8px 14px; }
+
+      .hero { padding: 100px 0 64px; }
+      .hero h1 { font-size: 26px; line-height: 1.18; }
+      .hero-sub { font-size: 14px; }
+      .btn-primary, .btn-secondary { font-size: 14px; padding: 13px 20px; }
+
+      .scene-card-header { padding: 14px 18px; }
+      .scene-body { padding: 22px 18px; }
+
+      .fear-card { padding: 28px 20px; }
+
+      .case-left, .case-right { padding: 28px 20px; }
+      .case-company { font-size: 22px; }
+      .case-quote { font-size: 15px; }
+
+      .final-cta h2 { font-size: 24px; }
+      .final-cta-sub { font-size: 15px; }
+      .btn-wa { font-size: 14px; padding: 14px 22px; }
+
+      .float-btn { right: 12px; bottom: 16px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ══ NAV ══ -->
+  <!-- ─── NAV ─── -->
   <nav id="nav">
-    <a href="#" class="nav-logo" aria-label="NAVA">
-      <img src="nava-logo.png" alt="NAVA — Laboratorio digital">
-    </a>
-    <a href="#contacto" class="nav-cta">Hablemos</a>
+    <div class="nav-inner">
+      <div class="nav-logo">REF<span>IA</span></div>
+      <a href="https://refia.app/refia-buscador.html" target="_blank" class="nav-cta">
+        Probar buscador →
+      </a>
+    </div>
   </nav>
 
-  <!-- ══ HERO ══ -->
-  <div class="hero" id="hero">
-    <div class="hero-glow"></div>
-    <div class="hero-grid"></div>
-
-    <div class="hero-content">
-      <div class="eyebrow">Laboratorio digital · Colombia</div>
-
-      <h1>
-        Convertimos ideas en<br>
-        <span class="accent">sistemas que crecen.</span>
-      </h1>
-
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-inner fade">
+      <div class="hero-eyebrow">
+        <span class="tag tag-orange">NAVA Experiments</span>
+        <span class="tag tag-white">Piloto activo · Don Repuestos</span>
+      </div>
+      <h1>Tu equipo tiene 60 segundos.<br><em>REFIA los hace rendir.</em></h1>
       <p class="hero-sub">
-        No somos una agencia. Somos el equipo que toma tu idea,
-        le da estructura, la valida con IA y la convierte en algo real —
-        un producto, un sistema, un canal o un experimento que avanza.
+        Pieza exacta, compatibilidad vehicular y precio piso — en menos de 8 segundos.
+        Aunque el sistema esté caído.
       </p>
-
       <div class="hero-actions">
-        <a href="https://wa.me/573186195434?text=Hola%2C+quiero+conocer+más+sobre+NAVA" class="btn-wa" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          Agenda una llamada
+        <a href="https://refia.app/refia-buscador.html" target="_blank" class="btn-primary">
+          <span class="btn-icon">🔍</span> Probar el buscador
         </a>
-        <a href="#proyectos" class="btn-ghost">Ver qué estamos construyendo ↓</a>
-      </div>
-
-      <div class="hero-proof">
-        <div class="proof-item">
-          <span class="proof-num">3</span>
-          <span class="proof-label">proyectos activos</span>
-        </div>
-        <div class="proof-sep"></div>
-        <div class="proof-item">
-          <span class="proof-num">2</span>
-          <span class="proof-label">demos en vivo</span>
-        </div>
-        <div class="proof-sep"></div>
-        <div class="proof-item">
-          <span class="proof-num">4</span>
-          <span class="proof-label">líneas de trabajo</span>
-        </div>
-        <div class="proof-sep"></div>
-        <div class="proof-item">
-          <span class="proof-num">2026</span>
-          <span class="proof-label">laboratorio en construcción</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="scroll-hint">
-      <div class="scroll-line"></div>
-      <span>Scroll</span>
-    </div>
-  </div>
-
-  <!-- ══ MANIFESTO ══ -->
-  <section>
-    <div class="section-label fade-up">Cómo pensamos</div>
-    <div class="manifesto-grid stagger">
-      <div class="manifesto-item">
-        <div class="manifesto-num">01</div>
-        <div class="manifesto-title">Con estructura antes de ejecutar</div>
-        <p class="manifesto-text">
-          Cada proyecto arranca con una promesa clara, métricas definidas y criterios
-          de éxito acordados. Sin eso no hay sprint — hay ruido.
-        </p>
-      </div>
-      <div class="manifesto-item">
-        <div class="manifesto-num">02</div>
-        <div class="manifesto-title">Con IA como infraestructura</div>
-        <p class="manifesto-text">
-          Automatizamos lo repetible para dedicar energía a lo que realmente mueve
-          el negocio. La IA no es un feature — es el sistema operativo de todo lo que construimos.
-        </p>
-      </div>
-      <div class="manifesto-item">
-        <div class="manifesto-num">03</div>
-        <div class="manifesto-title">Con comportamiento humano como guía</div>
-        <p class="manifesto-text">
-          Diseñamos sistemas, mensajes y experiencias basados en cómo las personas
-          realmente procesan, deciden y actúan — no en cómo creemos que deberían hacerlo.
-        </p>
+        <a href="#escena" class="btn-secondary">
+          Ver cómo funciona <span class="btn-icon">↓</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <div class="divider"></div>
+  <!-- ─── ESCENA ─── -->
+  <section class="scene" id="escena">
+    <div class="container">
+      <div class="section-header fade">
+        <span class="tag tag-gold">El momento de la verdad</span>
+        <h2>El cliente llegó. El carro está dañado.<br>El sistema se está cargando.</h2>
+        <p>Esto pasa en cada almacén. La diferencia está en lo que pasa después.</p>
+      </div>
 
-  <!-- ══ LÍNEAS ══ -->
-  <section id="lineas">
-    <div class="section-label fade-up">Las cuatro líneas</div>
-    <div class="lineas-grid stagger">
-      <div class="linea-card">
-        <div class="linea-badge" style="background:var(--c-mlab)">Marketing Lab</div>
-        <div class="linea-title">Sistemas de crecimiento para negocios</div>
-        <p class="linea-desc">Traducimos necesidades comerciales en sistemas ejecutables: diagnósticos, activos de conversión, automatización y orden operativo.</p>
-        <div class="linea-tag">Para empresas que necesitan crecer con más dirección y menos improvisación.</div>
-      </div>
-      <div class="linea-card">
-        <div class="linea-badge" style="background:var(--c-media)">Media</div>
-        <div class="linea-title">Canales y formatos con vocación de audiencia</div>
-        <p class="linea-desc">Diseñamos conceptos editoriales, arquitectura de canal y sistemas de publicación pensados para captar atención sostenida y monetizarla.</p>
-        <div class="linea-tag">Para marcas que quieren construir audiencia, no solo comprar alcance.</div>
-      </div>
-      <div class="linea-card">
-        <div class="linea-badge" style="background:var(--c-studio)">Studio</div>
-        <div class="linea-title">Productos y experiencias digitales</div>
-        <p class="linea-desc">Convertimos ideas en productos funcionales, prototipos y experiencias digitales listos para entenderse y ponerse a prueba.</p>
-        <div class="linea-tag">Para ideas que ya probaron tener demanda y merecen convertirse en producto.</div>
-      </div>
-      <div class="linea-card">
-        <div class="linea-badge" style="background:var(--c-exp)">Experiments</div>
-        <div class="linea-title">Validación de ideas nuevas</div>
-        <p class="linea-desc">Aquí viven las apuestas en exploración: pilotos, pruebas de concepto y validaciones tempranas con estructura suficiente para aprender.</p>
-        <div class="linea-tag">Para ideas que todavía no saben si valen la pena — antes de apostar en grande.</div>
+      <div class="scene-grid">
+        <!-- SIN REFIA -->
+        <div class="scene-card scene-before fade">
+          <div class="scene-card-header">
+            <div class="scene-dot"></div>
+            SIN REFIA
+          </div>
+          <div class="scene-body">
+            <div class="scene-step">
+              <div class="step-icon">🗂️</div>
+              <div class="step-text">
+                La vendedora abre <strong>4 pestañas:</strong> página web, Gestión Libra, catálogo Kotraco PDF, decodificador VIN.
+              </div>
+            </div>
+            <div class="scene-step">
+              <div class="step-icon">💻</div>
+              <div class="step-text">
+                <strong>Gestión Libra se cae.</strong> Sin ERP, no hay precios ni referencias. Toca adivinar o llamar a alguien.
+              </div>
+            </div>
+            <div class="scene-step">
+              <div class="step-icon">⏳</div>
+              <div class="step-text">
+                El cliente pregunta "¿ya saben si la tienen?". La vendedora responde: <strong>"Espéreme un momentico."</strong>
+              </div>
+            </div>
+            <div class="scene-step">
+              <div class="step-icon">🤔</div>
+              <div class="step-text">
+                No sabe si el precio que da incluye margen. <strong>¿Está vendiendo a pérdida?</strong> No hay forma de saberlo rápido.
+              </div>
+            </div>
+            <div class="scene-result">
+              ⚠️ Cliente se impacienta — venta en riesgo
+            </div>
+          </div>
+        </div>
+
+        <!-- CON REFIA -->
+        <div class="scene-card scene-after fade">
+          <div class="scene-card-header">
+            <div class="scene-dot"></div>
+            CON REFIA
+          </div>
+          <div class="scene-body">
+            <div class="scene-step">
+              <div class="step-icon">⚡</div>
+              <div class="step-text">
+                La vendedora escribe marca, línea y año en REFIA. <strong>Resultado en 8 segundos</strong> — sin esperar que cargue nada.
+              </div>
+            </div>
+            <div class="scene-step">
+              <div class="step-icon">✅</div>
+              <div class="step-text">
+                <strong>Compatibilidad vehicular verificada.</strong> Foto HD de la pieza. Sin ambigüedades, sin "creo que sí".
+              </div>
+            </div>
+            <div class="scene-step">
+              <div class="step-icon">💰</div>
+              <div class="step-text">
+                Ve el <strong>precio piso discretamente.</strong> Sabe exactamente cuánto puede negociar sin perder margen.
+              </div>
+            </div>
+            <div class="scene-step">
+              <div class="step-icon">📱</div>
+              <div class="step-text">
+                GL está caído — no importa. <strong>REFIA funciona independiente del ERP.</strong> La venta no se detiene.
+              </div>
+            </div>
+            <div class="scene-result">
+              ✓ Respuesta con certeza — venta cerrada en 8 segundos
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <div class="divider"></div>
-
-  <!-- ══ PROYECTOS ACTIVOS ══ -->
-  <section id="proyectos">
-    <div class="section-label fade-up">En construcción ahora</div>
-    <div class="proyectos-grid stagger">
-
-      <div class="proyecto-card exp">
-        <div class="proyecto-linea">NAVA Experiments</div>
-        <div class="proyecto-nombre">Refia</div>
-        <p class="proyecto-desc">
-          Convierte el inventario desordenado de un distribuidor de repuestos en un catálogo
-          digital profesional con códigos internacionales — usando IA para hacer en semanas
-          lo que hoy toma meses de trabajo manual.
-        </p>
-        <span class="proyecto-status">Demo lista · Primer piloto activo</span>
+  <!-- ─── PARA EL DUEÑO ─── -->
+  <section class="for-owner" id="dueno">
+    <div class="container">
+      <div class="section-header fade">
+        <span class="tag tag-gold">Para el dueño</span>
+        <h2>Tres dolores que todo dueño<br>de distribuidora conoce.</h2>
+        <p>REFIA los resuelve antes de que el cliente salga por la puerta.</p>
       </div>
 
-      <div class="proyecto-card mlab">
-        <div class="proyecto-linea">NAVA Marketing Lab</div>
-        <div class="proyecto-nombre">Despensa Vital</div>
-        <p class="proyecto-desc">
-          Sistema de marca, contenido y crecimiento digital para Chef Nathalia Espitia —
-          construyendo el canal, la audiencia y la arquitectura comercial
-          de su propuesta gastronómica.
-        </p>
-        <span class="proyecto-status">En desarrollo · Colombia</span>
+      <div class="fears-grid">
+        <!-- Miedo 1 -->
+        <div class="fear-card fade">
+          <div class="fear-top">
+            <div class="fear-label">El dolor más caro</div>
+            <div class="fear-quote">"Perdimos la venta porque no encontramos la referencia a tiempo."</div>
+          </div>
+          <div class="fear-arrow">↓</div>
+          <div class="fear-solution-label">Con REFIA</div>
+          <div class="fear-solution">
+            Tu equipo busca en el inventario y obtiene la pieza exacta con compatibilidad verificada — antes de que el cliente pierda la paciencia.
+          </div>
+        </div>
+
+        <!-- Miedo 2 -->
+        <div class="fear-card fade">
+          <div class="fear-top">
+            <div class="fear-label">El vendedor nuevo</div>
+            <div class="fear-quote">"El vendedor nuevo no sabe nada todavía — no lo puedo dejar solo."</div>
+          </div>
+          <div class="fear-arrow">↓</div>
+          <div class="fear-solution-label">Con REFIA</div>
+          <div class="fear-solution">
+            Una vendedora nueva rinde como una con años de experiencia desde el primer día. REFIA es el conocimiento que no se aprende de memoria.
+          </div>
+        </div>
+
+        <!-- Miedo 3 -->
+        <div class="fear-card fade">
+          <div class="fear-top">
+            <div class="fear-label">El error más costoso</div>
+            <div class="fear-quote">"Nos devolvieron la pieza — era la equivocada para ese carro."</div>
+          </div>
+          <div class="fear-arrow">↓</div>
+          <div class="fear-solution-label">Con REFIA</div>
+          <div class="fear-solution">
+            REFIA cruza marca, modelo, año y cilindraje antes de confirmar la pieza. La compatibilidad se verifica en el mostrador, no en el posventa.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PARA LA VENDEDORA ─── -->
+  <section class="for-seller" id="vendedora">
+    <div class="container">
+      <div class="section-header fade">
+        <span class="tag tag-white">Para la vendedora</span>
+        <h2>Responda con certeza.<br>No con suposiciones.</h2>
+        <p>Sin importar cuánto tiempo lleva en el mostrador.</p>
       </div>
 
-      <div class="proyecto-card studio proyecto-wide">
-        <div class="proyecto-linea">NAVA Studio</div>
-        <div class="proyecto-nombre">App de Reservas</div>
-        <p class="proyecto-desc">
-          Sistema de reservas para estudios boutique de Pilates — sin app que descargar,
-          nativo en WhatsApp, con selección de máquina, gestión de paquetes y control
-          de acceso por PIN. Diseñado para el mercado latinoamericano: simple, directo
-          y adaptable a cada estudio.
-        </p>
-        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-top:4px;">
-          <span class="proyecto-status studio-color">Demo en vivo · Piloto con Fiore Studio, Bogotá</span>
-          <a href="https://fiore-reservas.netlify.app/" target="_blank" rel="noopener" class="demo-link">
-            Ver demo en vivo →
+      <div class="seller-quote fade">
+        "REFIA es su vendedora que nunca se cansa, nunca depende de que el sistema esté arriba,
+        y siempre sabe cuánto puede negociar sin perder."
+        <cite>— Kim · Vendedora principal, Don Repuestos Bogotá</cite>
+      </div>
+
+      <div class="features-grid fade">
+        <div class="feature-item">
+          <div class="feature-icon">💵</div>
+          <div>
+            <div class="feature-title">Precio piso visible</div>
+            <div class="feature-desc">Sabe cuánto puede bajar sin perder margen. Solo lo ve usted — no el cliente.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📷</div>
+          <div>
+            <div class="feature-title">Foto HD con zoom</div>
+            <div class="feature-desc">Confirmás visualmente con el cliente antes de despachar. Sin dudas.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🚗</div>
+          <div>
+            <div class="feature-title">Compatibilidad vehicular</div>
+            <div class="feature-desc">Marca, línea, año, cilindraje. La pieza correcta para el carro correcto.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔗</div>
+          <div>
+            <div class="feature-title">Funciona aunque GL esté caído</div>
+            <div class="feature-desc">Independiente del ERP. Cuando el sistema falla, REFIA sigue respondiendo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CASO DON REPUESTOS ─── -->
+  <section class="case-study" id="caso">
+    <div class="container">
+      <div class="section-header fade">
+        <span class="tag tag-gold">Caso real</span>
+        <h2>Piloto activo en Don Repuestos.</h2>
+        <p>No es una promesa — es lo que ya está pasando en el mostrador.</p>
+      </div>
+
+      <div class="case-card fade">
+        <div class="case-left">
+          <div>
+            <div class="case-pilot-badge">
+              <div class="pilot-dot"></div>
+              DEMO EN VIVO
+            </div>
+            <div class="case-company">Don Repuestos</div>
+            <div class="case-location">Distribuidora · Bogotá y Cartagena, Colombia</div>
+            <div class="case-quote-block">
+              <div class="case-quote">
+                "Con REFIA se responde con certeza, no con suposiciones. Y cuando el sistema se cae,
+                uno tiene con qué seguir atendiendo al cliente."
+              </div>
+              <div class="case-author">Kim · Vendedora principal · Don Repuestos Bogotá</div>
+            </div>
+          </div>
+          <a href="https://refia.app/refia-buscador.html" target="_blank" class="case-open-btn">
+            Abrir buscador de demo →
           </a>
         </div>
-      </div>
 
+        <div class="case-right">
+          <div class="stat-item">
+            <div class="stat-number">744</div>
+            <div class="stat-label">SKUs indexados con foto, compatibilidad vehicular y precio piso</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">40–50</div>
+            <div class="stat-label">consultas por día en el mostrador. Cada segundo cuenta.</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">~50%</div>
+            <div class="stat-label">ahorro estimado en tiempo de búsqueda por consulta, según Kim</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-highlight">
+            <div class="stat-highlight-text">
+              ✓ Funciona aunque Gestión Libra esté caído — el punto de quiebre que más valoró el equipo.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <div class="divider"></div>
-
-  <!-- ══ CASOS REALES ══ -->
-  <div class="casos-outer">
-    <div class="casos-inner">
-      <div class="section-label fade-up">Laboratorio en campo</div>
-      <p style="font-size:16px; opacity:0.62; max-width:560px; margin-bottom:52px; line-height:1.72;" class="fade-up">
-        Cada proyecto es un experimento real. Estos son los primeros negocios
-        que están probando los sistemas NAVA sobre el terreno.
-      </p>
-
-      <div class="casos-grid stagger">
-
-        <!-- Don Repuestos × Refia -->
-        <div class="caso-card">
-          <div class="caso-header">
-            <div class="caso-logo-area">
-              <div class="caso-cliente">Don Repuestos</div>
-              <div class="caso-sector">Distribución automotriz · Colombia</div>
-            </div>
-            <span class="caso-linea-badge" style="background:var(--c-exp)">Experiments</span>
-          </div>
-          <div class="caso-body">
-            <div class="caso-proyecto-label">Proyecto</div>
-            <div class="caso-proyecto-nombre">Refia — Digitalización de inventario con IA</div>
-            <p class="caso-desc">
-              Miles de referencias de repuestos físicos sin código ni estructura digital.
-              REFIA toma ese inventario y lo convierte en un catálogo profesional con
-              nomenclatura internacional — en semanas, no en meses. Don Repuestos es
-              el primer piloto activo.
-            </p>
-            <div class="caso-footer">
-              <span class="proyecto-status" style="color:var(--c-exp)">Demo en vivo · Don Repuestos</span>
-              <a href="/refia-buscador.html" target="_blank" rel="noopener" class="demo-link">
-                Abrir buscador →
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Fiore Studio × App de Reservas -->
-        <div class="caso-card">
-          <div class="caso-header">
-            <div class="caso-logo-area">
-              <div class="caso-cliente">Fiore Studio</div>
-              <div class="caso-sector">Pilates boutique · Bogotá</div>
-            </div>
-            <span class="caso-linea-badge" style="background:var(--c-studio)">Studio</span>
-          </div>
-          <div class="caso-body">
-            <div class="caso-proyecto-label">Proyecto</div>
-            <div class="caso-proyecto-nombre">App de Reservas — Sistema de gestión SaaS</div>
-            <p class="caso-desc">
-              Fiore Studio es el primer piloto de la App de Reservas NAVA: gestión
-              de clases, selección de máquina Reformer, paquetes y control de acceso
-              por PIN. Sin app que descargar, sin fricción, nativo en WhatsApp.
-            </p>
-            <div class="caso-footer">
-              <span class="proyecto-status studio-color">Demo en vivo · Recolectando datos reales</span>
-              <a href="https://fiore-reservas.netlify.app/" target="_blank" rel="noopener" class="demo-link">
-                Ver demo →
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ DIFERENCIAL ══ -->
-  <div class="diferencial-outer">
-    <div class="diferencial-wrap fade-up">
-      <div class="diferencial-content">
-        <div class="section-label" style="color:var(--aqua);margin-bottom:40px">Lo que nos diferencia</div>
-        <h2 class="diferencial-headline">
-          Ciencia del comportamiento más IA aplicada más ejecución real.
-        </h2>
-        <p class="diferencial-sub">
-          No hay una sola categoría que nos describa porque no operamos dentro
-          de una existente. Tomamos lo que funciona de la behavioral science,
-          la estrategia de negocio y la inteligencia artificial —
-          y lo convertimos en sistemas ejecutables con resultados medibles.
+  <!-- ─── CTA FINAL ─── -->
+  <section class="final-cta">
+    <div class="container final-cta-inner">
+      <div class="fade">
+        <h2>¿Cuántas ventas perdió tu equipo hoy<br><em>por no encontrar la referencia a tiempo?</em></h2>
+        <p class="final-cta-sub">
+          REFIA es el sistema operativo del mostrador de repuestos.
+          Listo para pilotar en tu almacén esta semana.
         </p>
-        <div class="formula stagger">
-          <div class="formula-item">Estrategia clara</div>
-          <div class="formula-op">+</div>
-          <div class="formula-item">Behavioral Science</div>
-          <div class="formula-op">+</div>
-          <div class="formula-item">IA aplicada</div>
-          <div class="formula-op">+</div>
-          <div class="formula-item">Ejecución medible</div>
-          <div class="formula-op">=</div>
-          <div class="formula-result">Crecimiento con intención</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ CONTACTO ══ -->
-  <div id="contacto" class="contacto-outer">
-    <div class="contacto-wrap fade-up">
-      <img src="nava-isotipo.png" alt="NAVA" class="contacto-isotipo">
-      <h2>¿Tienes una idea que necesita estructura?</h2>
-      <p>
-        No necesitamos un brief perfecto para empezar. Una conversación
-        de 30 minutos es suficiente para saber si podemos ayudarte.
-      </p>
-      <div class="contacto-btns">
-        <a href="https://wa.me/573186195434?text=Hola%2C+quiero+conocer+más+sobre+NAVA" class="btn-wa" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        <a href="https://wa.me/573186195434?text=Hola%2C%20quiero%20conocer%20m%C3%A1s%20sobre%20REFIA%20para%20mi%20almac%C3%A9n"
+           target="_blank" class="btn-wa">
+          <svg class="wa-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.015-.57-.015-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-5.031 1.378L.436 22.5 5.2 19.7A9.878 9.878 0 0012.051 21.5c5.454 0 9.88-4.431 9.88-9.885.001-2.64-1.027-5.122-2.894-6.992A9.835 9.835 0 0012.051 2c-5.45 0-9.88 4.43-9.88 9.88 0 1.742.455 3.44 1.317 4.926L.5 23l8.353-2.19a9.867 9.867 0 003.198.533z"/>
           </svg>
-          Agenda tu llamada
+          Quiero esto para mi almacén
         </a>
       </div>
+
+      <div class="final-footer">
+        <span class="footer-text">Un experimento de</span>
+        <a href="https://nava.lat" target="_blank" class="footer-link">NAVA · Growth, AI & Human Behavior Lab</a>
+        <span class="footer-sep">·</span>
+        <a href="https://refia.app/refia-buscador.html" target="_blank" class="footer-link">Ver buscador de demo</a>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ══ FOOTER ══ -->
-  <footer>
-    <span>© 2026 NAVA · navalat.com · Laboratorio digital · Colombia</span>
-    <span>Behavioral Science + AI + Growth</span>
-  </footer>
-
-  <!-- ══ SCRIPTS ══ -->
-  <script>
-    // Nav scroll behavior
-    const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 60);
-    }, { passive: true });
-
-    // IntersectionObserver for scroll animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-    );
-
-    document.querySelectorAll('.fade-up, .stagger').forEach(el => observer.observe(el));
-  </script>
-
-  <!-- ══ FLOATING BUSCADOR BUTTON ══ -->
-  <a href="/refia-buscador.html" target="_blank" rel="noopener" id="float-buscador"
-    style="
-      position:fixed;bottom:28px;right:28px;z-index:999;
-      display:inline-flex;align-items:center;gap:8px;
-      background:#003366;color:#fff;
-      border:1.5px solid rgba(201,161,90,.4);
-      border-radius:50px;padding:12px 22px;
-      font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.3px;
-      text-decoration:none;
-      box-shadow:0 4px 20px rgba(0,51,102,.35);
-      transition:transform .15s,box-shadow .15s;
-    "
-    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(0,51,102,.45)'"
-    onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,51,102,.35)'"
-  >
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </svg>
-    Abrir Buscador
+  <!-- ─── FLOATING BUTTON ─── -->
+  <a href="https://refia.app/refia-buscador.html" target="_blank" class="float-btn" id="floatBtn">
+    <div class="float-pulse"></div>
+    Probar REFIA
   </a>
 
+  <!-- ─── JS ─── -->
+  <script>
+    // Sticky nav shadow
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Floating button visibility (show after hero)
+    const floatBtn = document.getElementById('floatBtn');
+    const heroEl = document.querySelector('.hero');
+    const observer = new IntersectionObserver((entries) => {
+      floatBtn.classList.toggle('show', !entries[0].isIntersecting);
+    }, { threshold: 0.1 });
+    observer.observe(heroEl);
+
+    // Fade-in on scroll
+    const fadeEls = document.querySelectorAll('.fade');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          fadeObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    fadeEls.forEach(el => fadeObserver.observe(el));
+
+    // First visible element trigger immediately
+    document.querySelectorAll('.hero .fade').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 100);
+    });
+  </script>
 </body>
 </html>
