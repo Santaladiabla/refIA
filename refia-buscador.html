@@ -256,9 +256,13 @@
     </div>
     <div class="mf">
       <span class="mf-note" id="m-note"></span>
+      <div class="mf-wa-row">
+        <input id="m-wa-num" type="tel" inputmode="numeric" autocomplete="off" placeholder="Número del cliente (ej. 300 123 4567)" style="width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #d9d9e3;border-radius:8px;font-size:13px;font-family:inherit;outline:none;">
+        <span style="display:block;font-size:10px;color:#8a8a99;margin-top:4px">Opcional. Vacío = abre WhatsApp para elegir el contacto.</span>
+      </div>
       <div class="mf-btns">
         <button class="btn-close-sec" onclick="closeModal()">Cerrar</button>
-        <a class="btn-wa" id="m-wa" href="#" target="_blank">
+        <a class="btn-wa" id="m-wa" href="#" onclick="return goWA()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Cotizar por WhatsApp
         </a>
@@ -269,7 +273,7 @@
 
 <script>
 // refia-build.py — 2026-06-14 02:13 — 744 SKUs
-// refia-build.py — 2026-06-19 19:14 — 744 SKUs
+// refia-build.py — 2026-06-19 21:11 — 744 SKUs
 const P = [
   // -- BODEGA P3 (74) --
   {sku:"B390739512",d:"Soporte Amortiguador Chevrolet Onix Turbo",c:"Amortiguadores",oem:"",co:78000,p:93600,e:4,f:"Bodega P3",compat:"Chevrolet | Onix",cr:"Chevrolet Onix (Turbo)",cs:"chevrolet onix turbo",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Soporte-amortiguador-Chevrolet-Onix-Turbo-1.webp",bodega:"Bogot\u00e1",m:"Homologado"},
@@ -1036,7 +1040,7 @@ function fmt(n){return n===0?'N/D':'$'+Math.round(n).toLocaleString('es-CO');}
 function sCls(e){return e===0?'sout':e<=2?'slow':'sok';}
 function sTxt(e){return e===0?'Sin stock':e===1?'1 und.':e===2?'2 und.':e+' und.';}
 function hl(t,toks){if(!toks.length)return t;var re=new RegExp('('+toks.map(function(x){return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')','gi');return t.replace(re,'<mark>$1</mark>');}
-function wa(item){
+function waMsg(item){
   var precio=item.p>0?'$'+item.p.toLocaleString('es-CO'):'A consultar';
   var dispo=item.e===0
     ?'Agotado — consultamos disponibilidad y te confirmamos'
@@ -1057,7 +1061,13 @@ function wa(item){
   L.push('Disponibilidad: '+dispo);
   if(item.bodega)L.push('Bodega: '+item.bodega);
   L.push('','_Don Repuestos · Cotización RefIA_');
-  return'https://wa.me/573154134396?text='+encodeURIComponent(L.join('\n'));}
+  return L.join('\n');}
+function waNum(n){n=(n||'').replace(/[^0-9]/g,'');if(n.length===10&&n.charAt(0)==='3')n='57'+n;return n;}
+function goWA(){
+  var item=window.__waItem;if(!item)return false;
+  var num=waNum(document.getElementById('m-wa-num').value);
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent(waMsg(item)),'_blank');
+  return false;}
 function locBadge(b,cls){return b?'<span class="loc '+cls+'"><span class="loc-dot"></span>'+b+'</span>':'';}
 function locClass(b){return b==='Bogotá'?'loc-bog':b==='Cartagena'?'loc-car':'';}
 function mLocClass(b){return b==='Bogotá'?'m-loc-bog':b==='Cartagena'?'m-loc-car':'';}
@@ -1227,7 +1237,7 @@ function openModal(idx){
       +(margen!==null?'<tr class="price-margen"><td>Margen</td><td>'+margen+'%</td></tr>':'');
   }
   document.getElementById('m-prices').innerHTML=priceHtml;
-  document.getElementById('m-wa').href=wa(item);
+  window.__waItem=item;document.getElementById('m-wa-num').value='';
   document.getElementById('overlay').style.display='flex';
   document.body.style.overflow='hidden';
 }
@@ -1237,7 +1247,7 @@ function closeModal(){
   document.body.style.overflow='';
 }
 
-/* -- INIT -- */
+/* -- INIT (v15 wa-num) -- */
 document.getElementById('q').addEventListener('input',render);
 document.getElementById('srt').addEventListener('change',render);
 document.getElementById('clr').addEventListener('click',function(){document.getElementById('q').value='';render();});
