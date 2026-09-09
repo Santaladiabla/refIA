@@ -1,5 +1,5 @@
-// REFIA service worker — generado por refia-build.py 2026-09-09 02:37
-const CACHE='refia-donrepuestos-202609090237';
+// REFIA service worker — generado por refia-build.py 2026-09-09 02:57
+const CACHE='refia-donrepuestos-202609090257';
 const CORE=['refia-buscador.html','manifest.webmanifest','icons/refia-192.png','icons/refia-512.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE).catch(()=>{})));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('refia-donrepuestos-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
