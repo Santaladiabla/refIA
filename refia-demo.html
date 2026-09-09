@@ -81,12 +81,12 @@
     .ss{font-size:12px;font-family:inherit;border:1.5px solid var(--border);background:#fff;color:var(--muted);padding:5px 10px;border-radius:8px;outline:none;cursor:pointer}
 
     /* GRID */
-    .grid{padding:4px 14px 28px;display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:560px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(min-width:860px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .grid{padding:4px 14px 28px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+    @media(min-width:560px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(min-width:860px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
     /* RESULT CARD */
-    .card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px 15px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .12s}
+    .card{min-width:0;overflow:hidden;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px 15px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .12s}
     .card:hover{border-color:var(--blue);box-shadow:var(--shadow-md);transform:translateY(-2px)}
     .card-thumb{width:64px;height:64px;object-fit:contain;border-radius:8px;background:var(--g1);flex-shrink:0}
     .card-thumb-ph{width:64px;height:64px;border-radius:8px;background:var(--g1);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--g4)}
@@ -137,11 +137,13 @@
     .mh-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
     .mh-close:hover{background:rgba(255,255,255,.25)}
     .mb{display:grid;grid-template-columns:200px 1fr}
+    .mb.has-vid{grid-template-columns:250px 1fr}
     @media(max-width:580px){.mb{grid-template-columns:1fr}}
     .mp{background:#f8fafc;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;gap:12px}
     @media(max-width:580px){.mp{border-right:none;border-bottom:1px solid var(--border);padding:20px}}
     .mp-img{width:160px;height:160px;object-fit:contain;border-radius:10px}
-    .mp-vid{width:160px;height:160px;object-fit:contain;border-radius:10px;background:var(--g1);display:block}
+    .mp-vid{width:100%;max-width:220px;height:auto;aspect-ratio:9/16;max-height:400px;object-fit:contain;border-radius:10px;background:#000;display:block}
+    .mp.has-vid{padding:16px 12px}
     .mp-ph{width:160px;height:160px;border-radius:10px;background:var(--g1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--g4)}
     .mp-ph-icon{font-size:40px}
     .mp-ph-txt{font-size:11px;color:var(--g4);text-align:center;line-height:1.4}
@@ -234,6 +236,8 @@
       .mh{border-radius:20px 20px 0 0;padding:12px 16px}
       .mh-close{width:36px;height:36px;font-size:18px}
       .mp{flex-direction:row;justify-content:flex-start;align-items:center;padding:14px 16px;gap:14px}
+      .mp.has-vid{flex-direction:column;align-items:center}
+      .mp.has-vid .mp-vid{max-width:200px;max-height:300px}
       @media(max-width:580px){.mp{border-bottom:1px solid var(--border)}}
       .mp-img,.mp-ph{width:72px;height:72px;flex-shrink:0}
       .mp-ph-icon{font-size:24px}
@@ -365,18 +369,18 @@
 
 <script>
 // refia-build.py — 2026-06-14 02:13 — 744 SKUs
-// refia-build.py — 2026-09-05 00:12 — 744 SKUs
+// refia-build.py — 2026-09-09 02:37 — 744 SKUs
 const P = [
   {"sku":"DM-1001","d":"Sensor ABS Trasero Derecho Tucson IX35 KIA +","c":"Sensores","oem":"243752E100","co":0,"p":35900,"e":1,"f":"Catálogo demo","compat":"Kia | Tucson","cr":"Hyundai Tucson · Hyundai IX-35 · Kia Sportage","cs":"hyundai tucson ix-35 ix35 kia sportage","ox":"SMP VVT117 · Wells TS1102 · 2T1102","y":"2010–2019","tec":"2 terminales","ka":"Tucson IX35 2.0L 13-18 Elantra 1.8L 10-16 KIA Carens 2.0L 13-18 Sportage 2.0L 1 4-18 Soul 2.0L 14-19 MULTIPLE DE ESCAPE 2 TERMINALES","bodega":"Sede Centro","m":"Homologado","pv":48500,"nt":[{"t":"La caja trae el soporte sin el tornillo largo: pedirlo aparte.","a":"Vendedora veterana","f":"2026-09-01"}],"vk":[{"v":"Hyundai Tucson","ok":true,"a":"Vendedora veterana","f":"2026-09-01"}]},
   {"sku":"DM-1002","d":"Sensor ABS Trasero Izquierdo Tucson IX35 KIA+","c":"Sensores","oem":"243752E100","co":0,"p":42900,"e":3,"f":"Catálogo demo","compat":"Kia | Tucson","cr":"Hyundai Tucson · Hyundai IX-35 · Kia Sportage","cs":"hyundai tucson ix-35 ix35 kia sportage","ox":"SMP VVT117 · Wells TS1102 · 2T1102","y":"2010–2019","tec":"2 terminales","ka":"Tucson IX35 2.0L 13-18 Elantra 1.8L 10-16 KIA Carens 2.0L 13-18 Sportage 2.0L 1 4-18 Soul 2.0L 14-19 MULTIPLE DE ESCAPE 2 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":57900},
   {"sku":"DM-1003","d":"Sensor CKP Chevrolet Swift/esteem/vitara","c":"Sensores","oem":"33400-65G00 · 33400-65G02","co":0,"p":24600,"e":3,"f":"Catálogo demo","compat":"Chevrolet | Swift | Vitara","cr":"Chevrolet Swift 1.3 · Chevrolet Vitara","cs":"chevrolet swift 1.3 chevrolet vitara","ox":"SMP UF280 · Wells C1200 · Delphi GN10390","y":"1996–2004","tec":"3 terminales","ka":"Esteem L41.3L 96-99 Swift L4 1.3L 98-00 Grand Vitara 1.6L 00-04 Jimny L4 2.0L 96-02 3 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":33200},
   {"sku":"DM-1004","d":"Sensor CKP Toyota Hilux VIGO 2.5/FORTUNER 2.5","c":"Sensores","oem":"90919A2001 · 90919T2001 · 90919T2008 · 9091902247 · 9091902248 · 9091902260","co":0,"p":32600,"e":1,"f":"Catálogo demo","compat":"Fortuner | Hilux | Toyota | Vigo","cr":"Toyota Hilux - 1Kd - 2Kd 2.5","cs":"toyota hilux - 1kd - 2kd 2.5","ox":"SMP UF495-323 · Wells . · SMP:UF495-323","y":"2006–2018","tec":"4 terminales","ka":"Hilux Vigo 2.7L 11-18 Prado TX 2.7L 2TR 10-15 Prado TX 4.0L 1GR 10-17 Fortuner 4.0L 06-14 4 Runner 4.0L 06-10 FJ Cruiser 4.0L 07-10 4 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":44000},
   {"sku":"DM-1005","d":"Sensor Cigueñal Honda Civic, Accord 1.8, 2.4","c":"Sensores","oem":"30520PNA007 · 30520RRA007","co":0,"p":45800,"e":2,"f":"Catálogo demo","compat":"Accord | Civic | Honda","cr":"Honda Civic 1.8 · Honda Accord 1.8","cs":"honda civic 1.8 honda accord 1.8","ox":"SMP UF393 · SMP UF311 · SMP UF583 · Wells C1382 · HCP208","y":"2003–2009","tec":"3 terminales","ka":"CR-V 2.4L 06-09 Civic 2.0L 05-08 Accord 2.4L 03-08 3 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":61800},
-  {"sku":"DM-1006","d":"Bocin Rueda Delantera Cruze 10-16","c":"Bocin","oem":"9333080k","co":0,"p":197100,"e":30,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze","cs":"chevrolet cruze","ox":"HA590402","y":"2010–2016","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":266100},
-  {"sku":"DM-1007","d":"Bocin Delantero Corsa - Daewoo Cielo","c":"Bocin","oem":"96176252","co":0,"p":64000,"e":40,"f":"Catálogo demo","compat":"Chevrolet Corsa","cr":"Chevrolet Corsa 1.4 · Daewoo Cielo","cs":"chevrolet corsa 1.4 daewoo cielo","ox":"90157724 · 95239667 · 90498610 · 93271759 · 326197 · 326169 · FEBEST 1082-001","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":86400},
-  {"sku":"DM-1008","d":"Bocin Rueda Delantera Gran Vitara C/abs 5 P","c":"Bocin","oem":"43401-65D00","co":0,"p":156600,"e":4,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Chevrolet grand Vitara","cs":"chevrolet grand vitara","ox":"43401-65D10 · 513193 · VKBA6873 · VKBA6872 · FW247 · FW248 · BR930308","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":211400},
-  {"sku":"DM-1009","d":"Bocin Rueda Delantera N300 Con ABS 4 Pernos","c":"Bocin","oem":"24510321","co":0,"p":102500,"e":30,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 (ABS)","cs":"chevrolet n300 abs","ox":"WHU63685 · VA-3103100A · DACF301347A","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":138400},
-  {"sku":"DM-1010","d":"Bocin Rueda Trasera Cruze Con ABS","c":"Bocin","oem":"13580090","co":0,"p":211300,"e":2,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (ABS)","cs":"chevrolet cruze abs","ox":"13591998 · 13577406 · MOOG 512507 · MOOG 512508 · SKF BR930860 · VKBA7659","bodega":"Sede Norte","m":"Marca propia","pv":285300},
+  {"sku":"DM-1006","d":"Bocin Trasero Kia Ion - I25 - Rio Spice S/abs","c":"Bocin","oem":"52750-IY000","co":0,"p":166400,"e":16,"f":"Catálogo demo","compat":"Kia Ion | Kia Rio","cr":"Kia Ion · Kia Rio Spice (ABS) · Hyundai I25","cs":"kia ion kia rio spice abs hyundai i25","vid":"media/200585520-IMP.mp4","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":224600},
+  {"sku":"DM-1007","d":"Bocin Rueda Delantera Cruze 10-16","c":"Bocin","oem":"9333080k","co":0,"p":191900,"e":30,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze","cs":"chevrolet cruze","ox":"HA590402","y":"2010–2016","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":259100},
+  {"sku":"DM-1008","d":"Bocin Delantero Corsa - Daewoo Cielo","c":"Bocin","oem":"96176252","co":0,"p":60200,"e":40,"f":"Catálogo demo","compat":"Chevrolet Corsa","cr":"Chevrolet Corsa 1.4 · Daewoo Cielo","cs":"chevrolet corsa 1.4 daewoo cielo","ox":"90157724 · 95239667 · 90498610 · 93271759 · 326197 · 326169 · FEBEST 1082-001","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":81300},
+  {"sku":"DM-1009","d":"Bocin Rueda Delantera Gran Vitara C/abs 5 P","c":"Bocin","oem":"43401-65D00","co":0,"p":153800,"e":4,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Chevrolet grand Vitara","cs":"chevrolet grand vitara","ox":"43401-65D10 · 513193 · VKBA6873 · VKBA6872 · FW247 · FW248 · BR930308","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":207600},
+  {"sku":"DM-1010","d":"Bocin Rueda Delantera N300 Con ABS 4 Pernos","c":"Bocin","oem":"24510321","co":0,"p":105700,"e":30,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 (ABS)","cs":"chevrolet n300 abs","ox":"WHU63685 · VA-3103100A · DACF301347A","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":142700},
   {"sku":"DM-1011","d":"Soporte Motor Delantero Traverse 11-17","c":"Soportes","oem":"25840452","co":0,"p":135500,"e":2,"f":"Catálogo demo","compat":"SOPORTE MOTOR DELANTERO TRAVERSE 11-17","cr":"Chevrolet Traverse","cs":"chevrolet traverse","ox":"A5549HY","y":"2011–2017","bodega":"Sede Norte","m":"Marca propia","pv":182900},
   {"sku":"DM-1012","d":"Soporte Motor Derecho Cruze Turbo 17-18","c":"Soportes","oem":"39096914","co":0,"p":201900,"e":5,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (Turbo)","cs":"chevrolet cruze turbo","ox":"39025861 · 39078186 · 3536 · GP3536 · S3062","y":"2017–2018","bodega":"Sede Norte","m":"Marca propia","pv":272600},
   {"sku":"DM-1013","d":"Soporte Motor Derecho Traverse 11-17","c":"Soportes","oem":"25840450","co":0,"p":133500,"e":15,"f":"Catálogo demo","compat":"SOPORTE MOTOR DERECHO TRAVERSE 11-17","cr":"Chevrolet Traverse","cs":"chevrolet traverse","ox":"215147744 · A5548HY · 3580HMX · EM3141","y":"2011–2017","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":180200},
@@ -397,24 +401,24 @@ const P = [
   {"sku":"DM-1028","d":"Bobina Encendido Hyundai I10 Picanto Rio 1.2","c":"Bobinas","oem":"27301-03000 · 27301-03010 · 27301-03015 · 27301-03030 · 27301-03035","co":0,"p":88600,"e":2,"f":"Catálogo demo","compat":"Hyundai | Picanto | Rio","cr":"Hyundai I-10","cs":"hyundai i-10","ox":"SMP UF926 · HYS1800133","y":"2010–2016","tec":"2 terminales","ka":"I-10 1.2L 16V 12-16 Santafe 2.7L 10-12 KIA Picanto 1.2L 16V 13-16 RIO Spice 1.25L 16V 13-16 2 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":119600},
   {"sku":"DM-1029","d":"Bobina Encendido Kia Rio Stylus 1.5 05 12","c":"Bobinas","oem":"0K30E1810X","co":0,"p":90900,"e":1,"f":"Catálogo demo","compat":"Kia | Rio","cr":"Kia Rio-Stylus","cs":"kia rio-stylus","ox":"SMP UF335 · Wells C1325 · Airtex 5C1184 · 0K30E1810XY · 0K30E1810XZ","y":"2004–2012","tec":"2 terminales","ka":"RIO Stylus 1.5L 04-12 2 CONECTORES DE 2 TERMINALES C/U 1 PACHA DE 1 CONECTOR","bodega":"Sede Centro","m":"Cema","pv":122700},
   {"sku":"DM-1030","d":"Bobina Encendido Nissan Murano 3.5 Pathfinder","c":"Bobinas","oem":"22443-8J115 · 22448-8J100 · 22448-4W010","co":0,"p":58100,"e":4,"f":"Catálogo demo","compat":"Murano | Nissan","cr":"Nissan Murano 3.5 · Nissan Xterra 2.5 · Nissan Pathfinder 3.5","cs":"nissan murano 3.5 nissan xterra 2.5 nissan pathfinder 3.5","ox":"SMP UF349 · Wells C1406 · Delphi GN10242","y":"2001–2015","tec":"3 terminales","ka":"Murano 3.5L 06-08 Xterra 2.5L 05-15 Pathfinder 3.5L 01-04 Pathfinder 4.0L 05-12 3 TERMINALES USA CONECTOR CS-SK2327","bodega":"Sede Centro","m":"Cema","pv":78400},
-  {"sku":"DM-1031","d":"DRS Amortiguador Delantero Izquierdo Sonic - Onix","c":"Amortiguadores","oem":"95917162","co":0,"p":242700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Sonic | Chevrolet Onix","cr":"Chevrolet Sonic","cs":"chevrolet sonic","ox":"95917163","bodega":"Sede Norte","m":"Gabriel","pv":327600},
-  {"sku":"DM-1032","d":"KIT Amortiguadores Delanteros Captiva 2.4","c":"Amortiguadores","oem":"96858479/80","co":0,"p":341700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva sport 3.0","cs":"chevrolet captiva sport 3.0","ox":"316761","bodega":"Sede Norte","m":"Gabriel","pv":461300},
-  {"sku":"DM-1033","d":"KIT Amortiguadores Delanteros Chevrolet N300","c":"Amortiguadores","oem":"24535866/70","co":0,"p":272400,"e":1,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300","cs":"chevrolet n300","ox":"924526130 · 24510165","bodega":"Sede Norte","m":"Gabriel","pv":367700},
-  {"sku":"DM-1034","d":"KIT Amortiguadores Delanteros Chevrolet Optra","c":"Amortiguadores","oem":"96407819/20","co":0,"p":213500,"e":2,"f":"Catálogo demo","compat":"Chevrolet Optra","cr":"Chevrolet Optra 1.8","cs":"chevrolet optra 1.8","ox":"96407820 · 96409541 · 1115100 · 339030","bodega":"Sede Norte","m":"Gabriel","pv":288200},
-  {"sku":"DM-1035","d":"KIT Amortiguadores Delanteros Cronos - Spark R/L","c":"Amortiguadores","oem":"96424026/25","co":0,"p":178900,"e":1,"f":"Catálogo demo","compat":"Chevrolet Spark","cr":"Chevrolet Spark Cronos","cs":"chevrolet spark cronos","ox":"96424025 · 332504 · 9994816","bodega":"Sede Norte","m":"Gabriel","pv":241500},
-  {"sku":"DM-1036","d":"Regulador Presion Combustible KIA RIO +","c":"Reguladores","oem":"0K30A-13-35ZB · 0K30A60960","co":0,"p":27300,"e":2,"f":"Catálogo demo","compat":"Kia | Rio","cr":"Kia Rio","cs":"kia rio","y":"2006–2010","tec":"5 terminales","ka":"RIO 1.5L Stylus 06-10 MODULO Y MEDIDOR COMBUSTIBLE 2 SALIDAS HORIZONTALES 5 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":36900},
-  {"sku":"DM-1037","d":"Regulador Presion Combustible ATOS CLIO Logan","c":"Reguladores","oem":"","co":0,"p":30800,"e":1,"f":"Catálogo demo","compat":"Hyundai Atos | Renault Clio | Renault Logan","cr":"Hyundai Atos · Renault Clio · Renault Logan · Renault Symbol","cs":"hyundai atos renault clio renault logan renault symbol","bodega":"Sede Centro","m":"Cema","pv":41600},
-  {"sku":"DM-1038","d":"Regulador Presion Combustible Accen, Verna +","c":"Reguladores","oem":"","co":0,"p":43100,"e":1,"f":"Catálogo demo","compat":"Hyundai Accent | Hyundai Verna","cr":"Hyundai Accent · Hyundai Verna","cs":"hyundai accent hyundai verna","bodega":"Sede Centro","m":"Cema","pv":58200},
-  {"sku":"DM-1039","d":"Regulador Presion Combustible Aveo, Optra +","c":"Reguladores","oem":"","co":0,"p":28600,"e":2,"f":"Catálogo demo","compat":"Aveo | Optra","cr":"Chevrolet Aveo - Optra","cs":"chevrolet aveo - optra","bodega":"Sede Centro","m":"Cema","pv":38600},
-  {"sku":"DM-1040","d":"Regulador Presion Combustible BT50 2.2, 2.5 +","c":"Reguladores","oem":"","co":0,"p":89100,"e":2,"f":"Catálogo demo","compat":"Mazda BT-50","cr":"Mazda BT-50 2.2","cs":"mazda bt-50 2.2","bodega":"Sede Centro","m":"Cema","pv":120300},
-  {"sku":"DM-1041","d":"Valvulas Admision N300 1.2 X JGO","c":"Motor","oem":"2829SN · 7152117","co":0,"p":28800,"e":3,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","ox":"8111746701 · 9002816","bodega":"Sede Norte","pv":38900},
-  {"sku":"DM-1042","d":"KIT Reparticion Captiva 2.4","c":"Motor","oem":"12680750 · 7021091","co":0,"p":234600,"e":2,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva 2.4","cs":"chevrolet captiva 2.4","bodega":"Sede Norte","m":"Marca propia","pv":316700},
-  {"sku":"DM-1043","d":"Polea Cigueñal N300 1.2 1.3","c":"Motor","oem":"9052774","co":0,"p":41500,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","bodega":"Sede Norte","m":"Marca propia","pv":56000},
-  {"sku":"DM-1044","d":"TAPA Valvulas Sonic/cruze/tracker","c":"Motor","oem":"96889998","co":0,"p":111800,"e":2,"f":"Catálogo demo","compat":"Cruze | Sonic | Tracker","cr":"Chevrolet Sonic · Chevrolet Tracker","cs":"chevrolet sonic chevrolet tracker","bodega":"Sede Norte","m":"Homologado","pv":150900},
-  {"sku":"DM-1045","d":"Valvulas Escape N300 1.2 X JGO","c":"Motor","oem":"2830ZN · 7152118","co":0,"p":29400,"e":3,"f":"Catálogo demo","compat":"Escape | N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","bodega":"Sede Norte","m":"Homologado","pv":39700},
-  {"sku":"DM-1046","d":"Tijera Inferior Izq Chevrolet Luv 2.3 4×2","c":"Suspensión","oem":"8-94246-420-0","co":0,"p":81800,"e":2,"f":"Catálogo demo","compat":"Chevrolet Luv","cr":"Chevrolet Luv 2.3 (4×2)","cs":"chevrolet luv 2.3 4×2","bodega":"Sede Centro","m":"Homologado","pv":110400},
-  {"sku":"DM-1047","d":"KIT Axial + Terminal + Fuelle Izquierdo N300","c":"Suspensión","oem":"B350623500","co":0,"p":33500,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N-300 (axial · Chevrolet terminal · Chevrolet fuelle)","cs":"chevrolet n-300 (axial chevrolet terminal chevrolet fuelle)","bodega":"Sede Norte","m":"Homologado","pv":45200},
-  {"sku":"DM-1048","d":"Kit Der.axial+terminal+fuelle Comp Chev N300","c":"Suspensión","oem":"","co":0,"p":30500,"e":2,"f":"Catálogo demo","compat":"Chevrolet | N300","cr":"Chevrolet Corsa","cs":"chevrolet corsa","bodega":"Sede Norte","m":"Homologado","pv":41200}
+  {"sku":"DM-1031","d":"KIT Amortiguadores Delanteros Chevrolet N200","c":"Amortiguadores","oem":"5496831/32","co":0,"p":236000,"e":3,"f":"Catálogo demo","compat":"Chevrolet N200","cr":"Chevrolet N200","cs":"chevrolet n200","vid":"media/A%20G707058.mp4","bodega":"Sede Norte","m":"Gabriel","sw":1,"pv":318600},
+  {"sku":"DM-1032","d":"DRS Amortiguador Delantero Izquierdo Sonic - Onix","c":"Amortiguadores","oem":"95917162","co":0,"p":251600,"e":1,"f":"Catálogo demo","compat":"Chevrolet Sonic | Chevrolet Onix","cr":"Chevrolet Sonic","cs":"chevrolet sonic","ox":"95917163","bodega":"Sede Norte","m":"Gabriel","pv":339700},
+  {"sku":"DM-1033","d":"KIT Amortiguadores Delanteros Captiva 2.4","c":"Amortiguadores","oem":"96858479/80","co":0,"p":355100,"e":1,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva sport 3.0","cs":"chevrolet captiva sport 3.0","ox":"316761","bodega":"Sede Norte","m":"Gabriel","pv":479400},
+  {"sku":"DM-1034","d":"KIT Amortiguadores Delanteros Chevrolet N300","c":"Amortiguadores","oem":"24535866/70","co":0,"p":283900,"e":1,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300","cs":"chevrolet n300","ox":"924526130 · 24510165","bodega":"Sede Norte","m":"Gabriel","pv":383300},
+  {"sku":"DM-1035","d":"KIT Amortiguadores Delanteros Chevrolet Optra","c":"Amortiguadores","oem":"96407819/20","co":0,"p":197200,"e":2,"f":"Catálogo demo","compat":"Chevrolet Optra","cr":"Chevrolet Optra 1.8","cs":"chevrolet optra 1.8","ox":"96407820 · 96409541 · 1115100 · 339030","bodega":"Sede Norte","m":"Gabriel","pv":266200},
+  {"sku":"DM-1036","d":"Regulador Presion Combustible Tucson 2.7 KIA+","c":"Reguladores","oem":"","co":0,"p":21300,"e":3,"f":"Catálogo demo","compat":"Kia | Tucson","cr":"Hyundai Tucson Kia 2.7","cs":"hyundai tucson kia 2.7","vid":"media/8628005.mp4","bodega":"Sede Centro","m":"Cema","pv":28800},
+  {"sku":"DM-1037","d":"Regulador Presion Combustible KIA RIO +","c":"Reguladores","oem":"0K30A-13-35ZB · 0K30A60960","co":0,"p":25100,"e":2,"f":"Catálogo demo","compat":"Kia | Rio","cr":"Kia Rio","cs":"kia rio","y":"2006–2010","tec":"5 terminales","ka":"RIO 1.5L Stylus 06-10 MODULO Y MEDIDOR COMBUSTIBLE 2 SALIDAS HORIZONTALES 5 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":33900},
+  {"sku":"DM-1038","d":"Regulador Presion Combustible ATOS CLIO Logan","c":"Reguladores","oem":"","co":0,"p":33900,"e":1,"f":"Catálogo demo","compat":"Hyundai Atos | Renault Clio | Renault Logan","cr":"Hyundai Atos · Renault Clio · Renault Logan · Renault Symbol","cs":"hyundai atos renault clio renault logan renault symbol","bodega":"Sede Centro","m":"Cema","pv":45800},
+  {"sku":"DM-1039","d":"Regulador Presion Combustible Accen, Verna +","c":"Reguladores","oem":"","co":0,"p":43000,"e":1,"f":"Catálogo demo","compat":"Hyundai Accent | Hyundai Verna","cr":"Hyundai Accent · Hyundai Verna","cs":"hyundai accent hyundai verna","bodega":"Sede Centro","m":"Cema","pv":58100},
+  {"sku":"DM-1040","d":"Regulador Presion Combustible Aveo, Optra +","c":"Reguladores","oem":"","co":0,"p":29100,"e":2,"f":"Catálogo demo","compat":"Aveo | Optra","cr":"Chevrolet Aveo - Optra","cs":"chevrolet aveo - optra","bodega":"Sede Centro","m":"Cema","pv":39300},
+  {"sku":"DM-1041","d":"Valvulas Admision N300 1.2 X JGO","c":"Motor","oem":"2829SN · 7152117","co":0,"p":28800,"e":3,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","ox":"8111746701 · 9002816","vid":"media/350029600-IMP.mp4","bodega":"Sede Norte","pv":38900},
+  {"sku":"DM-1042","d":"Polea Cigueñal N300 1.2 1.3","c":"Motor","oem":"9052774","co":0,"p":41800,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","vid":"media/350065900-IMP.mp4","bodega":"Sede Norte","m":"Marca propia","pv":56400},
+  {"sku":"DM-1043","d":"TAPA Valvulas Sonic/cruze/tracker","c":"Motor","oem":"96889998","co":0,"p":122700,"e":2,"f":"Catálogo demo","compat":"Cruze | Sonic | Tracker","cr":"Chevrolet Sonic · Chevrolet Tracker","cs":"chevrolet sonic chevrolet tracker","vid":"media/440042210-IMP.mp4","bodega":"Sede Norte","m":"Homologado","pv":165600},
+  {"sku":"DM-1044","d":"Valvulas Escape N300 1.2 X JGO","c":"Motor","oem":"2830ZN · 7152118","co":0,"p":26700,"e":3,"f":"Catálogo demo","compat":"Escape | N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","vid":"media/350029700-IMP.mp4","bodega":"Sede Norte","m":"Homologado","pv":36000},
+  {"sku":"DM-1045","d":"Juego Válvulas Admisión Chevrolet N300 1.2","c":"Motor","oem":"","co":0,"p":31600,"e":3,"f":"Catálogo demo","compat":"Chevrolet | N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","vid":"media/B350029600-I.mp4","bodega":"Sede Centro","m":"Homologado","pv":42700},
+  {"sku":"DM-1046","d":"KIT Axial + Terminal + Fuelle Izquierdo N300","c":"Suspensión","oem":"B350623500","co":0,"p":31000,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N-300 (axial · Chevrolet terminal · Chevrolet fuelle)","cs":"chevrolet n-300 (axial chevrolet terminal chevrolet fuelle)","vid":"media/350623500-IMP.mp4","bodega":"Sede Norte","m":"Homologado","pv":41900},
+  {"sku":"DM-1047","d":"Kit Der.axial+terminal+fuelle Comp Chev N300","c":"Suspensión","oem":"","co":0,"p":34600,"e":2,"f":"Catálogo demo","compat":"Chevrolet | N300","cr":"Chevrolet Corsa","cs":"chevrolet corsa","vid":"media/B350623400-I.mp4","bodega":"Sede Norte","m":"Homologado","pv":46700},
+  {"sku":"DM-1048","d":"KIT Axial + Terminal + Fuelle Derecho N300","c":"Suspensión","oem":"","co":0,"p":29600,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet Corsa","cs":"chevrolet corsa","vid":"media/350623400-IMP.mp4","bodega":"Sede Norte","m":"Homologado","pv":40000}
 ];
 var CFG={"slug":"demo","nombre":"Distribuidora Demo","pin":"1234","kEndpoint":"","placaEndpoint":"","firma":"Distribuidora Demo · Cotización RefIA","sedes":{"Sede Centro":"bog","Sede Norte":"car"}};
 CFG=Object.assign({slug:'almacen',nombre:'Mi almacén',pin:'',kEndpoint:'',placaEndpoint:'',firma:'',sedes:{}},CFG||{});
@@ -593,6 +597,8 @@ function buildFB(){
     h+='<div class="sep"></div>';
   }
   var cats={};P.forEach(function(x){cats[x.c]=(cats[x.c]||0)+1;});
+  var nv=P.filter(function(x){return x.vid;}).length;
+  if(nv)h+='<div class="chip '+(aC==='__vid'?'on':'')+'" onclick="setC(\'__vid\')">&#127909; Con video <span class="cc">'+nv+'</span></div>';
   h+='<div class="chip '+(aC==='all'?'on':'')+'" onclick="setC(\'all\')">Todas <span class="cc">'+P.length+'</span></div>';
   Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" data-c="'+esc(c)+'" onclick="setC(this.dataset.c)">'+esc(c)+' <span class="cc">'+n+'</span></div>';});
   h+='<div class="sep"></div>';
@@ -616,7 +622,7 @@ function render(){
   document.getElementById('clr').classList.toggle('vis',q.length>0);
   var res=P.filter(function(item){
     if(aF!=='all'&&item.f!==aF)return false;
-    if(aC!=='all'&&item.c!==aC)return false;
+    if(aC==='__vid'){if(!item.vid)return false;}else if(aC!=='all'&&item.c!==aC)return false;
     if(aV!=='all'&&!compatHas(item,aV))return false;
     if(!toks.length)return true;
     var k=K[item.sku];var kx=k?(k.n.map(function(e){return e.t;}).join(' ')+' '+k.v.filter(function(e){return e.ok;}).map(function(e){return e.v;}).join(' ')):'';
@@ -708,6 +714,7 @@ function openModal(idx){
   document.getElementById('m-sku').textContent='SKU: '+item.sku;
 
   var fotoEl=document.getElementById('m-foto');
+  fotoEl.parentNode.classList.toggle('has-vid',!!item.vid);fotoEl.parentNode.parentNode.classList.toggle('has-vid',!!item.vid);
   if(item.vid){
     fotoEl.innerHTML='<video class="mp-vid" autoplay muted loop playsinline controls poster="'+(item.foto||'')+'" '
       +'onerror="this.outerHTML=\''+(item.foto?'<img class=mp-img src='+item.foto+'>':'<div class=mp-ph><div class=mp-ph-icon>'+catIcon(item.c)+'</div><div class=mp-ph-txt>Foto próximamente</div></div>')+'\'">'

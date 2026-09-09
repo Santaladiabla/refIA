@@ -81,12 +81,12 @@
     .ss{font-size:12px;font-family:inherit;border:1.5px solid var(--border);background:#fff;color:var(--muted);padding:5px 10px;border-radius:8px;outline:none;cursor:pointer}
 
     /* GRID */
-    .grid{padding:4px 14px 28px;display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:560px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(min-width:860px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .grid{padding:4px 14px 28px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+    @media(min-width:560px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(min-width:860px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
     /* RESULT CARD */
-    .card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px 15px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .12s}
+    .card{min-width:0;overflow:hidden;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px 15px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .12s}
     .card:hover{border-color:var(--blue);box-shadow:var(--shadow-md);transform:translateY(-2px)}
     .card-thumb{width:64px;height:64px;object-fit:contain;border-radius:8px;background:var(--g1);flex-shrink:0}
     .card-thumb-ph{width:64px;height:64px;border-radius:8px;background:var(--g1);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--g4)}
@@ -137,11 +137,13 @@
     .mh-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
     .mh-close:hover{background:rgba(255,255,255,.25)}
     .mb{display:grid;grid-template-columns:200px 1fr}
+    .mb.has-vid{grid-template-columns:250px 1fr}
     @media(max-width:580px){.mb{grid-template-columns:1fr}}
     .mp{background:#f8fafc;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;gap:12px}
     @media(max-width:580px){.mp{border-right:none;border-bottom:1px solid var(--border);padding:20px}}
     .mp-img{width:160px;height:160px;object-fit:contain;border-radius:10px}
-    .mp-vid{width:160px;height:160px;object-fit:contain;border-radius:10px;background:var(--g1);display:block}
+    .mp-vid{width:100%;max-width:220px;height:auto;aspect-ratio:9/16;max-height:400px;object-fit:contain;border-radius:10px;background:#000;display:block}
+    .mp.has-vid{padding:16px 12px}
     .mp-ph{width:160px;height:160px;border-radius:10px;background:var(--g1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--g4)}
     .mp-ph-icon{font-size:40px}
     .mp-ph-txt{font-size:11px;color:var(--g4);text-align:center;line-height:1.4}
@@ -234,6 +236,8 @@
       .mh{border-radius:20px 20px 0 0;padding:12px 16px}
       .mh-close{width:36px;height:36px;font-size:18px}
       .mp{flex-direction:row;justify-content:flex-start;align-items:center;padding:14px 16px;gap:14px}
+      .mp.has-vid{flex-direction:column;align-items:center}
+      .mp.has-vid .mp-vid{max-width:200px;max-height:300px}
       @media(max-width:580px){.mp{border-bottom:1px solid var(--border)}}
       .mp-img,.mp-ph{width:72px;height:72px;flex-shrink:0}
       .mp-ph-icon{font-size:24px}
@@ -361,7 +365,7 @@
 
 <script>
 // refia-build.py — 2026-06-14 02:13 — 744 SKUs
-// refia-build.py — 2026-09-05 00:12 — 744 SKUs
+// refia-build.py — 2026-09-09 02:37 — 744 SKUs
 const P = [
   // -- BODEGA P3 (74) --
   {sku:"B390739512",d:"Soporte Amortiguador Chevrolet Onix Turbo",c:"Amortiguadores",oem:"",co:78000,p:93600,e:4,f:"Bodega P3",compat:"Chevrolet | Onix",cr:"Chevrolet Onix (Turbo)",cs:"chevrolet onix turbo",foto:"https://donrepuestos.com/wp-content/uploads/2025/02/Soporte-amortiguador-Chevrolet-Onix-Turbo-1.webp",bodega:"Bogot\u00e1",m:"Homologado",pv:170000},
@@ -1298,6 +1302,8 @@ function buildFB(){
     h+='<div class="sep"></div>';
   }
   var cats={};P.forEach(function(x){cats[x.c]=(cats[x.c]||0)+1;});
+  var nv=P.filter(function(x){return x.vid;}).length;
+  if(nv)h+='<div class="chip '+(aC==='__vid'?'on':'')+'" onclick="setC(\'__vid\')">&#127909; Con video <span class="cc">'+nv+'</span></div>';
   h+='<div class="chip '+(aC==='all'?'on':'')+'" onclick="setC(\'all\')">Todas <span class="cc">'+P.length+'</span></div>';
   Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" data-c="'+esc(c)+'" onclick="setC(this.dataset.c)">'+esc(c)+' <span class="cc">'+n+'</span></div>';});
   h+='<div class="sep"></div>';
@@ -1321,7 +1327,7 @@ function render(){
   document.getElementById('clr').classList.toggle('vis',q.length>0);
   var res=P.filter(function(item){
     if(aF!=='all'&&item.f!==aF)return false;
-    if(aC!=='all'&&item.c!==aC)return false;
+    if(aC==='__vid'){if(!item.vid)return false;}else if(aC!=='all'&&item.c!==aC)return false;
     if(aV!=='all'&&!compatHas(item,aV))return false;
     if(!toks.length)return true;
     var k=K[item.sku];var kx=k?(k.n.map(function(e){return e.t;}).join(' ')+' '+k.v.filter(function(e){return e.ok;}).map(function(e){return e.v;}).join(' ')):'';
@@ -1413,6 +1419,7 @@ function openModal(idx){
   document.getElementById('m-sku').textContent='SKU: '+item.sku;
 
   var fotoEl=document.getElementById('m-foto');
+  fotoEl.parentNode.classList.toggle('has-vid',!!item.vid);fotoEl.parentNode.parentNode.classList.toggle('has-vid',!!item.vid);
   if(item.vid){
     fotoEl.innerHTML='<video class="mp-vid" autoplay muted loop playsinline controls poster="'+(item.foto||'')+'" '
       +'onerror="this.outerHTML=\''+(item.foto?'<img class=mp-img src='+item.foto+'>':'<div class=mp-ph><div class=mp-ph-icon>'+catIcon(item.c)+'</div><div class=mp-ph-txt>Foto próximamente</div></div>')+'\'">'
