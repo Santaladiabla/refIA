@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>REFia — Demo interactivo</title>
+  <meta name="theme-color" content="#003366">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="REFIA">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/refia-192.png">
+  <link rel="icon" href="icons/refia-192.png">
   <style>
     :root{
       --blue:#003366;--blue-lt:#0A4D8C;--gold:#C9A15A;
@@ -20,11 +27,14 @@
 
     /* HEADER */
     .hdr{background:var(--blue);padding:14px 20px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 16px rgba(0,0,0,.25)}
-    .hdr-top{display:flex;align-items:center;margin-bottom:14px}
-    .logo{font-size:24px;font-weight:700;color:#fff;letter-spacing:-.5px}
+    .hdr-top{display:flex;align-items:center;margin-bottom:14px;gap:8px}
+    .logo{font-size:24px;font-weight:700;color:#fff;letter-spacing:-.5px;white-space:nowrap}
     .logo span{color:var(--gold)}
     .logo-sub{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-left:3px;align-self:flex-end;margin-bottom:4px}
-    .hdr-badge{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:11px;padding:4px 12px;border-radius:20px}
+    .hdr-cli{font-size:12px;color:rgba(255,255,255,.75);font-weight:600;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+    .hdr-badge{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:11px;padding:4px 12px;border-radius:20px;white-space:nowrap}
+    .hdr-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:12px;padding:5px 11px;border-radius:20px;cursor:pointer;font-family:inherit;white-space:nowrap}
+    .hdr-btn.on{background:var(--gold);color:var(--blue);border-color:var(--gold);font-weight:700}
     .sw{position:relative;margin-bottom:-1px}
     .si{width:100%;padding:13px 44px;border:2px solid transparent;border-radius:12px 12px 0 0;font-size:16px;font-family:inherit;background:#fff;color:var(--graph);outline:none;transition:border-color .15s}
     .si:focus{border-color:var(--gold)}
@@ -33,12 +43,31 @@
     .sclear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:var(--g2);border:none;color:var(--g6);width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;display:none;align-items:center;justify-content:center}
     .sclear.vis{display:flex}
 
+    /* PLACA */
+    .placa-box{background:#fff;border-bottom:1px solid var(--border);padding:10px 16px;display:none;gap:8px;flex-wrap:wrap;align-items:center}
+    .placa-box.open{display:flex}
+    .placa-box input,.placa-box select{padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none}
+    .placa-box input:focus{border-color:var(--blue)}
+    .placa-box .pl{width:110px;text-transform:uppercase;font-weight:700;letter-spacing:1px;font-family:'Courier New',monospace}
+    .placa-box .doc{width:150px}
+    .btn-p{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
+    .btn-p:disabled{opacity:.5;cursor:default}
+    .placa-msg{font-size:12px;color:var(--muted);width:100%}
+    .veh-banner{background:#e0f2fe;color:#0369a1;border-bottom:1px solid #bae6fd;padding:8px 16px;font-size:13px;font-weight:600;display:none;align-items:center;gap:10px;flex-wrap:wrap}
+    .veh-banner.open{display:flex}
+    .veh-banner button{margin-left:auto;background:transparent;border:1px solid #0369a1;color:#0369a1;border-radius:20px;padding:3px 10px;font-size:11px;cursor:pointer;font-family:inherit}
+
+    /* VENDEDORA BAR */
+    .vbar{background:#fff7e6;border-bottom:1px solid #f0d9a8;padding:7px 16px;font-size:12px;color:#7a5200;display:none;align-items:center;gap:10px;flex-wrap:wrap}
+    .vbar.open{display:flex}
+    .vbar b{color:#5a3c00}
+    .vbar button{background:#fff;border:1px solid #d9b96a;color:#7a5200;border-radius:20px;padding:3px 10px;font-size:11px;cursor:pointer;font-family:inherit}
+
     /* FILTERS */
     .fb{background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;padding:10px 16px;display:flex;gap:7px;align-items:center;white-space:nowrap}
     .fb::-webkit-scrollbar{display:none}
-    
-.chip-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:4px 0;align-self:center;}
-.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 13px;border-radius:20px;font-size:12.5px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--g6);transition:all .12s;user-select:none}
+    .chip-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:4px 0;align-self:center;}
+    .chip{display:inline-flex;align-items:center;gap:4px;padding:5px 13px;border-radius:20px;font-size:12.5px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--g6);transition:all .12s;user-select:none}
     .chip:hover{border-color:var(--blue);color:var(--blue)}
     .chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
     .cc{font-size:10.5px;background:rgba(0,0,0,.08);border-radius:10px;padding:0 5px}
@@ -75,6 +104,8 @@
     .sok{background:var(--green-bg);color:var(--green)}
     .slow{background:var(--amber-bg);color:var(--amber)}
     .sout{background:var(--red-bg);color:var(--red)}
+    .card-know{font-size:11px;color:#7a5200;background:#fff7e6;border:1px solid #f0d9a8;border-radius:6px;padding:3px 7px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .k-badge{font-size:10px;font-weight:700;color:#166534;background:#dcfce7;border-radius:20px;padding:2px 7px;white-space:nowrap}
 
     /* LOCATION BADGE */
     .loc{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;letter-spacing:.3px;padding:2px 8px;border-radius:20px;white-space:nowrap}
@@ -83,15 +114,12 @@
     .loc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
     .loc-bog .loc-dot{background:#0369a1}
     .loc-car .loc-dot{background:#b45309}
-    /* Modal location */
     .m-loc{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:4px}
     .m-loc-bog{background:rgba(3,105,161,.1);color:#0369a1}
     .m-loc-car{background:rgba(180,83,9,.1);color:#b45309}
 
-    /* HIGHLIGHT */
     mark{background:#fff0b3;color:inherit;border-radius:2px;padding:0 1px}
 
-    /* EMPTY */
     .empty{grid-column:1/-1;text-align:center;padding:56px 20px;color:var(--g4)}
     .empty .ei{font-size:44px;margin-bottom:12px}
     .empty h3{font-size:15px;color:var(--g6);margin-bottom:6px}
@@ -100,23 +128,16 @@
     /* MODAL */
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
     .overlay.open{display:flex}
-
     .modal{background:#fff;border-radius:16px;width:100%;max-width:720px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;animation:slideUp .25s ease}
     @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-
-    /* Modal header */
     .mh{background:var(--blue);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:16px 16px 0 0;flex-shrink:0}
     .mh-left{display:flex;align-items:center;gap:10px}
     .mh-cat{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.6);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:3px 9px;border-radius:4px}
     .mh-fuente{font-size:10px;color:rgba(255,255,255,.4)}
     .mh-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
     .mh-close:hover{background:rgba(255,255,255,.25)}
-
-    /* Modal body */
     .mb{display:grid;grid-template-columns:200px 1fr}
     @media(max-width:580px){.mb{grid-template-columns:1fr}}
-
-    /* Photo panel */
     .mp{background:#f8fafc;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;gap:12px}
     @media(max-width:580px){.mp{border-right:none;border-bottom:1px solid var(--border);padding:20px}}
     .mp-img{width:160px;height:160px;object-fit:contain;border-radius:10px}
@@ -125,13 +146,9 @@
     .mp-ph-icon{font-size:40px}
     .mp-ph-txt{font-size:11px;color:var(--g4);text-align:center;line-height:1.4}
     .mp-sku{font-family:'Courier New',monospace;font-size:11px;color:var(--muted);background:var(--g1);border:1px solid var(--border);padding:4px 10px;border-radius:6px;text-align:center;word-break:break-all}
-
-    /* Detail panel */
     .md{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
     .md-name{font-size:18px;font-weight:700;color:var(--graph);line-height:1.25}
     .md-sub{font-size:12px;color:var(--muted);margin-top:3px}
-
-    /* SKU / OEM box */
     .sku-box{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:11px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .sku-col{display:flex;flex-direction:column;gap:2px}
     .sku-lbl{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
@@ -139,14 +156,33 @@
     .sku-arrow{font-size:18px;color:var(--teal);flex-shrink:0}
     .oem-lbl{color:var(--teal)}
     .oem-val{color:var(--teal)}
-
-    /* Compat chips */
-    .compat-section{}
+    .verify-links{display:flex;gap:6px;flex-wrap:wrap;width:100%;margin-top:4px}
+    .vlink{font-size:11px;font-weight:600;color:var(--blue);border:1px solid rgba(0,51,102,.25);border-radius:20px;padding:3px 10px;text-decoration:none;background:#fff}
+    .vlink:hover{background:rgba(0,51,102,.06)}
     .compat-head{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
     .compat-chips{display:flex;flex-wrap:wrap;gap:6px}
     .compat-chip{font-size:11px;font-weight:500;color:var(--blue);background:rgba(0,51,102,.06);border:1px solid rgba(0,51,102,.15);border-radius:20px;padding:4px 11px}
+    .compat-chip.ok{background:#dcfce7;border-color:#86efac;color:#166534;font-weight:700}
+    .compat-chip.no{background:#fee2e2;border-color:#fca5a5;color:#991b1b;text-decoration:line-through}
+    .compat-chip.link{cursor:pointer;background:#fff;border-style:dashed}
+    .compat-chip.link:hover{background:rgba(0,51,102,.06)}
     .card-compat{font-size:11px;color:var(--blue);margin-top:3px;opacity:.9;line-height:1.3}
     .compat-count{font-size:10px;font-weight:700;color:var(--gold);margin-left:6px}
+
+    /* KNOWLEDGE (Épica 0) */
+    .know{background:#fffbf0;border:1px solid #f0d9a8;border-radius:10px;padding:12px 14px}
+    .know-head{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7a5200;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .note{background:#fff;border:1px solid #f0d9a8;border-left:3px solid var(--gold);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--graph);margin-bottom:6px;line-height:1.4}
+    .note small{display:block;font-size:10.5px;color:#8a6a1c;margin-top:3px}
+    .know-empty{font-size:12px;color:#8a6a1c;font-style:italic}
+    .know-form{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+    .know-form textarea{width:100%;min-height:58px;padding:8px 10px;border:1px solid #d9b96a;border-radius:8px;font-family:inherit;font-size:13px;resize:vertical;outline:none}
+    .know-form input{padding:8px 10px;border:1px solid #d9b96a;border-radius:8px;font-family:inherit;font-size:13px;outline:none;flex:1;min-width:140px}
+    .know-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+    .btn-k{background:var(--gold);color:var(--blue);border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer}
+    .btn-ok{background:#16a34a;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer}
+    .btn-no{background:#dc2626;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer}
+    .btn-lite{background:#fff;color:#7a5200;border:1px solid #d9b96a;border-radius:8px;padding:7px 11px;font-size:12px;font-family:inherit;cursor:pointer}
 
     /* Price section */
     .price-section{background:var(--blue);border-radius:10px;overflow:hidden}
@@ -162,6 +198,9 @@
     .price-piso td:last-child{color:var(--gold) !important}
     .price-margen td:last-child{color:#86efac !important}
     .price-web td:last-child{color:#67e8f9 !important}
+    .price-lock{padding:12px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .price-lock input{width:110px;padding:8px 10px;border:none;border-radius:8px;font-size:15px;letter-spacing:3px;font-family:inherit;text-align:center}
+    .price-lock .hint{font-size:11px;color:rgba(255,255,255,.55);width:100%}
 
     /* Modal footer */
     .mf{background:#f8fafc;border-top:1px solid var(--border);padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;border-radius:0 0 16px 16px;flex-wrap:wrap}
@@ -172,7 +211,23 @@
     .btn-close-sec{background:transparent;color:var(--blue);border:1.5px solid rgba(0,51,102,.3);border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;padding:10px 18px;cursor:pointer;transition:background .15s}
     .btn-close-sec:hover{background:rgba(0,51,102,.06)}
 
-    /* MOBILE (<=480px) — bottom sheet + touch optimizations */
+    /* ADMIN PANEL */
+    .adm{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+    .adm.open{display:flex}
+    .adm-box{background:#fff;border-radius:14px;max-width:520px;width:100%;padding:20px 22px;max-height:88vh;overflow:auto}
+    .adm-box h3{font-size:16px;color:var(--blue);margin-bottom:12px}
+    .adm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+    .adm-stat{background:var(--ivory);border-radius:10px;padding:10px;text-align:center}
+    .adm-stat b{display:block;font-size:22px;color:var(--blue)}
+    .adm-stat span{font-size:11px;color:var(--muted)}
+    .adm-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .adm-row button,.adm-row label{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:inherit;cursor:pointer;color:var(--blue);font-weight:600}
+    .adm-p{font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px}
+
+    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1f2937;color:#fff;font-size:13px;padding:10px 16px;border-radius:10px;z-index:400;display:none;max-width:90vw;text-align:center}
+    .toast.show{display:block}
+
+    /* MOBILE */
     @media(max-width:480px){
       .overlay{padding:0;align-items:flex-end}
       .modal{border-radius:20px 20px 0 0;max-height:88vh}
@@ -194,19 +249,24 @@
       .card{padding:13px 14px}
       .price-table td{padding:10px 14px}
       .hdr-badge{display:none}
+      .hdr-cli{display:none}
+      .adm-grid{grid-template-columns:repeat(2,1fr)}
     }
   </style>
 </head>
 <body>
 <div style="background:#C9A15A;color:#003366;font-weight:600;font-size:12.5px;text-align:center;padding:8px 14px;letter-spacing:.3px">
-  MODO DEMO · datos de muestra anonimizados — así se ve REFIA con el inventario de un almacén real.
+  MODO DEMO · datos de muestra anonimizados — así se ve REFIA con el inventario de un almacén real. PIN de vendedora para la demo: <b>1234</b>.
   <a href="https://wa.me/573186195434?text=Hola%2C%20vi%20el%20demo%20de%20REFIA%20y%20quiero%20verlo%20con%20mi%20inventario" target="_blank" rel="noopener" style="color:#003366;text-decoration:underline;font-weight:700;margin-left:6px">Quiero esto con mi inventario →</a>
 </div>
 
 <header class="hdr">
   <div class="hdr-top">
     <div class="logo">REF<span>ia</span><span class="logo-sub">beta</span></div>
-    <div class="hdr-badge" id="badge">-- SKUs</div>
+    <div class="hdr-cli" id="hdr-cli"></div>
+    <div class="hdr-badge" id="badge">DEMO · Distribuidora Demo</div>
+    <button class="hdr-btn" id="btn-placa" onclick="togglePlaca()" title="Buscar por placa">&#128663; Placa</button>
+    <button class="hdr-btn" id="btn-vend" onclick="toggleVend()" title="Modo vendedora">&#128274;</button>
   </div>
   <div class="sw">
     <span class="sicon">&#128269;</span>
@@ -214,6 +274,16 @@
     <button class="sclear" id="clr" onclick="clearQ()">&#x2715;</button>
   </div>
 </header>
+
+<div class="placa-box" id="placa-box">
+  <input class="pl" id="pl-placa" maxlength="7" placeholder="ABC123" autocomplete="off">
+  <select id="pl-doctype"><option value="CC">CC</option><option value="NIT">NIT</option><option value="CE">CE</option><option value="PA">Pasaporte</option></select>
+  <input class="doc" id="pl-doc" inputmode="numeric" placeholder="Documento del dueño" autocomplete="off">
+  <button class="btn-p" id="pl-go" onclick="placaLookup()">Buscar</button>
+  <div class="placa-msg" id="pl-msg">El RUNT exige placa + documento del propietario. Si el cliente no lo tiene, busque a mano por marca y línea.</div>
+</div>
+<div class="veh-banner" id="veh-banner"></div>
+<div class="vbar" id="vbar"></div>
 
 <div class="fb" id="fb"></div>
 <div class="tb">
@@ -228,7 +298,7 @@
 <div class="grid" id="grid"></div>
 
 <!-- MODAL -->
-<div class="overlay" id="overlay" onclick="closeModal(event)">
+<div class="overlay" id="overlay">
   <div class="modal" id="modal">
     <div class="mh">
       <div class="mh-left">
@@ -248,13 +318,15 @@
           <div class="md-sub" id="m-sub"></div>
         </div>
         <div class="sku-box" id="m-skubox"></div>
+        <div class="know" id="m-know"></div>
         <div class="compat-section" id="m-compat"></div>
+        <div id="m-also"></div>
         <div class="price-section">
           <div class="price-hdr">
             <span class="price-title" id="m-price-title">Precios internos</span>
             <span class="price-badge" id="m-price-badge">&#128274; Solo vendedora</span>
           </div>
-          <table class="price-table" id="m-prices"></table>
+          <div id="m-prices-wrap"><table class="price-table" id="m-prices"></table></div>
         </div>
       </div>
     </div>
@@ -262,100 +334,129 @@
       <span class="mf-note" id="m-note"></span>
       <div class="mf-wa-row">
         <input id="m-wa-num" type="tel" inputmode="numeric" autocomplete="off" placeholder="Número del cliente (ej. 300 123 4567)" style="width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #d9d9e3;border-radius:8px;font-size:13px;font-family:inherit;outline:none;">
-        <span style="display:block;font-size:10px;color:#8a8a99;margin-top:4px">Opcional. Vacío = abre WhatsApp para elegir el contacto.</span>
+        <span style="display:block;font-size:10px;color:#8a8a99;margin-top:4px">Opcional. Vacío = abre WhatsApp para elegir el contacto. La ficha lleva precio de venta, nunca el precio piso.</span>
       </div>
       <div class="mf-btns">
         <button class="btn-close-sec" onclick="closeModal()">Cerrar</button>
         <a class="btn-wa" id="m-wa" href="#" onclick="return goWA()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Cotizar por WhatsApp
+          Enviar ficha por WhatsApp
         </a>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ADMIN / CONOCIMIENTO -->
+<div class="adm" id="adm" onclick="if(event.target===this)closeAdm()">
+  <div class="adm-box">
+    <h3>Conocimiento del mostrador</h3>
+    <div class="adm-grid" id="adm-stats"></div>
+    <div class="adm-row">
+      <button onclick="kExport()">&#11015; Descargar conocimiento.json</button>
+      <label>&#11014; Importar JSON<input type="file" accept=".json,application/json" style="display:none" onchange="kImport(this)"></label>
+      <button onclick="kSyncNow()">&#8635; Sincronizar</button>
+      <button onclick="closeAdm()">Cerrar</button>
+    </div>
+    <div class="adm-p" id="adm-p"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
 <script>
 // refia-build.py — 2026-06-14 02:13 — 744 SKUs
-// refia-build.py — 2026-06-24 20:40 — 744 SKUs
+// refia-build.py — 2026-09-05 00:12 — 744 SKUs
 const P = [
-  {"sku":"DM-1001","d":"Sensor ABS Trasero Derecho Tucson IX35 KIA +","c":"Sensores","oem":"243752E100","co":0,"p":35900,"e":1,"f":"Catálogo demo","compat":"Kia | Tucson","cr":"Hyundai Tucson · Hyundai IX-35 · Kia Sportage","cs":"hyundai tucson ix-35 ix35 kia sportage","ox":"SMP VVT117 · Wells TS1102 · 2T1102","y":"2010–2019","tec":"2 terminales","ka":"Tucson IX35 2.0L 13-18 Elantra 1.8L 10-16 KIA Carens 2.0L 13-18 Sportage 2.0L 1 4-18 Soul 2.0L 14-19 MULTIPLE DE ESCAPE 2 TERMINALES","bodega":"Sede Centro","m":"Homologado"},
-  {"sku":"DM-1002","d":"Sensor ABS Trasero Izquierdo Tucson IX35 KIA+","c":"Sensores","oem":"243752E100","co":0,"p":42900,"e":3,"f":"Catálogo demo","compat":"Kia | Tucson","cr":"Hyundai Tucson · Hyundai IX-35 · Kia Sportage","cs":"hyundai tucson ix-35 ix35 kia sportage","ox":"SMP VVT117 · Wells TS1102 · 2T1102","y":"2010–2019","tec":"2 terminales","ka":"Tucson IX35 2.0L 13-18 Elantra 1.8L 10-16 KIA Carens 2.0L 13-18 Sportage 2.0L 1 4-18 Soul 2.0L 14-19 MULTIPLE DE ESCAPE 2 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1003","d":"Sensor CKP Chevrolet Swift/esteem/vitara","c":"Sensores","oem":"33400-65G00 · 33400-65G02","co":0,"p":24600,"e":3,"f":"Catálogo demo","compat":"Chevrolet | Swift | Vitara","cr":"Chevrolet Swift 1.3 · Chevrolet Vitara","cs":"chevrolet swift 1.3 chevrolet vitara","ox":"SMP UF280 · Wells C1200 · Delphi GN10390","y":"1996–2004","tec":"3 terminales","ka":"Esteem L41.3L 96-99 Swift L4 1.3L 98-00 Grand Vitara 1.6L 00-04 Jimny L4 2.0L 96-02 3 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1004","d":"Sensor CKP Toyota Hilux VIGO 2.5/FORTUNER 2.5","c":"Sensores","oem":"90919A2001 · 90919T2001 · 90919T2008 · 9091902247 · 9091902248 · 9091902260","co":0,"p":32600,"e":1,"f":"Catálogo demo","compat":"Fortuner | Hilux | Toyota | Vigo","cr":"Toyota Hilux - 1Kd - 2Kd 2.5","cs":"toyota hilux - 1kd - 2kd 2.5","ox":"SMP UF495-323 · Wells . · SMP:UF495-323","y":"2006–2018","tec":"4 terminales","ka":"Hilux Vigo 2.7L 11-18 Prado TX 2.7L 2TR 10-15 Prado TX 4.0L 1GR 10-17 Fortuner 4.0L 06-14 4 Runner 4.0L 06-10 FJ Cruiser 4.0L 07-10 4 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1005","d":"Sensor Cigueñal Honda Civic, Accord 1.8, 2.4","c":"Sensores","oem":"30520PNA007 · 30520RRA007","co":0,"p":45800,"e":2,"f":"Catálogo demo","compat":"Accord | Civic | Honda","cr":"Honda Civic 1.8 · Honda Accord 1.8","cs":"honda civic 1.8 honda accord 1.8","ox":"SMP UF393 · SMP UF311 · SMP UF583 · Wells C1382 · HCP208","y":"2003–2009","tec":"3 terminales","ka":"CR-V 2.4L 06-09 Civic 2.0L 05-08 Accord 2.4L 03-08 3 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1006","d":"Bocin Rueda Delantera Cruze 10-16","c":"Bocin","oem":"9333080k","co":0,"p":197100,"e":30,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze","cs":"chevrolet cruze","ox":"HA590402","y":"2010–2016","bodega":"Sede Norte","m":"Marca propia","sw":1},
-  {"sku":"DM-1007","d":"Bocin Delantero Corsa - Daewoo Cielo","c":"Bocin","oem":"96176252","co":0,"p":64000,"e":40,"f":"Catálogo demo","compat":"Chevrolet Corsa","cr":"Chevrolet Corsa 1.4 · Daewoo Cielo","cs":"chevrolet corsa 1.4 daewoo cielo","ox":"90157724 · 95239667 · 90498610 · 93271759 · 326197 · 326169 · FEBEST 1082-001","bodega":"Sede Norte","m":"Marca propia","sw":1},
-  {"sku":"DM-1008","d":"Bocin Rueda Delantera Gran Vitara C/abs 5 P","c":"Bocin","oem":"43401-65D00","co":0,"p":156600,"e":4,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Chevrolet grand Vitara","cs":"chevrolet grand vitara","ox":"43401-65D10 · 513193 · VKBA6873 · VKBA6872 · FW247 · FW248 · BR930308","bodega":"Sede Norte","m":"Marca propia","sw":1},
-  {"sku":"DM-1009","d":"Bocin Rueda Delantera N300 Con ABS 4 Pernos","c":"Bocin","oem":"24510321","co":0,"p":102500,"e":30,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 (ABS)","cs":"chevrolet n300 abs","ox":"WHU63685 · VA-3103100A · DACF301347A","bodega":"Sede Norte","m":"Marca propia","sw":1},
-  {"sku":"DM-1010","d":"Bocin Rueda Trasera Cruze Con ABS","c":"Bocin","oem":"13580090","co":0,"p":211300,"e":2,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (ABS)","cs":"chevrolet cruze abs","ox":"13591998 · 13577406 · MOOG 512507 · MOOG 512508 · SKF BR930860 · VKBA7659","bodega":"Sede Norte","m":"Marca propia"},
-  {"sku":"DM-1011","d":"Soporte Motor Delantero Traverse 11-17","c":"Soportes","oem":"25840452","co":0,"p":135500,"e":2,"f":"Catálogo demo","compat":"SOPORTE MOTOR DELANTERO TRAVERSE 11-17","cr":"Chevrolet Traverse","cs":"chevrolet traverse","ox":"A5549HY","y":"2011–2017","bodega":"Sede Norte","m":"Marca propia"},
-  {"sku":"DM-1012","d":"Soporte Motor Derecho Cruze Turbo 17-18","c":"Soportes","oem":"39096914","co":0,"p":201900,"e":5,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (Turbo)","cs":"chevrolet cruze turbo","ox":"39025861 · 39078186 · 3536 · GP3536 · S3062","y":"2017–2018","bodega":"Sede Norte","m":"Marca propia"},
-  {"sku":"DM-1013","d":"Soporte Motor Derecho Traverse 11-17","c":"Soportes","oem":"25840450","co":0,"p":133500,"e":15,"f":"Catálogo demo","compat":"SOPORTE MOTOR DERECHO TRAVERSE 11-17","cr":"Chevrolet Traverse","cs":"chevrolet traverse","ox":"215147744 · A5548HY · 3580HMX · EM3141","y":"2011–2017","bodega":"Sede Norte","m":"Marca propia","sw":1},
-  {"sku":"DM-1014","d":"Soporte Amortiguador DEL GRAN Vitara","c":"Soportes","oem":"41810-65d11-","co":0,"p":74300,"e":6,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Grand Vitara","cs":"grand vitara","ox":"41810-65D10 · 41810-65D00 · 41810-65DB0 · 91174728 · FEBEST SZSS-002","bodega":"Sede Norte","m":"Marca propia"},
-  {"sku":"DM-1015","d":"Soporte Amortiguador DEL Vitara 1.6","c":"Soportes","oem":"41810-60A00","co":0,"p":48200,"e":2,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Chevrolet Vitara 1.6","cs":"chevrolet vitara 1.6","ox":"41810-60A01 · RIDEX 1180S0350 · KYB SM5082 · BLUE PRINT ADK88031 · 514133","bodega":"Sede Norte","m":"Marca propia"},
-  {"sku":"DM-1016","d":"Valvula IAC Chevrolet LUV 2.2, D-max 2.4 +","c":"Válvulas","oem":"9625355 · 96363483 · 19005265","co":0,"p":20400,"e":2,"f":"Catálogo demo","compat":"Chevrolet | D-Max | Luv","cr":"Chevrolet Luv 2200 2.2 · Chevrolet D-Max 2.4","cs":"chevrolet luv 2200 2.2 chevrolet d-max 2.4","ox":"SMP UF503 · Wells C1480 · Delphi GN10280","y":"2003–2018","tec":"3 pines","ka":"Aveo 1.4L 1.5L 06-14 Spark 7:24 Spark GT 1.25L 12-18 Corsa Evolution 1.4 1.8 03-07 Optra LUV.2.2L D-MAX.2.4L 3 PINES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1017","d":"Valvula IAC Chevrolet Rodeo 2.6, Trooper 960+","c":"Válvulas","oem":"10497771 · 1103608 · 10467067","co":0,"p":13800,"e":2,"f":"Catálogo demo","compat":"Chevrolet | Rodeo","cr":"Chevrolet Rodeo 2.6 · Chevrolet Trooper 960","cs":"chevrolet rodeo 2.6 chevrolet trooper 960","ox":"SMP DR39 · Wells C849 · Delphi GN10123","y":"1987–2002","ka":"Cavalier 2.0L 2.2L 87-02 Luv 2.2L 94-00 Rodeo 3.2L 92-99 Trooper 3.2L 92-95","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1018","d":"Valvula IAC FORD Ecosport 2.0, Focus, MAZDA3+","c":"Válvulas","oem":"4M5G12A366BC · 4M5G12A366BB","co":0,"p":120900,"e":1,"f":"Catálogo demo","compat":"Ford | Mazda3","cr":"Ford Ecosport 2.0 · Ford Focus · Mazda 3","cs":"ford ecosport 2.0 ford focus mazda 3","ox":"Motorcraft DG541 · SMP UF621 · Wells FD505","y":"2003–2011","tec":"2 terminales","ka":"Escape 2.0L 05-07 Ecosport 2.0L 07-11 Focus 2.0L 03-07 2 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1019","d":"Valvula IAC Hyundai Accent/tucson/k. RIO +","c":"Válvulas","oem":"3925026600","co":0,"p":81300,"e":1,"f":"Catálogo demo","compat":"Accent | Hyundai | Rio | Tucson","cr":"Hyundai Accent · Hyundai Tucson · Kia Rio","cs":"hyundai accent hyundai tucson kia rio","ox":"SMP KS218 · Wells SU5886 · Airtex 5S2241 · ERA 550396","y":"2002–2014","tec":"2 terminales","ka":"Atos 1.0L 1.1L - I10 1.1 L 08-14 Accent Verna 1.6L 04-08 Getz 1.4L 1.6L 02-10 Tucson 2.0L 06-10 KIA RIO Cerato 1.6L 05-08 CONECTOR CUADRADO 27.5 CM - 2 TERMINAL","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1020","d":"Valvula IAC Hyundai Tucson 2.7/S.FE/ KIA +","c":"Válvulas","oem":"3140227010 · 3140227000","co":0,"p":52400,"e":1,"f":"Catálogo demo","compat":"Hyundai | Kia | Tucson","cr":"Hyundai Tucson 2.7 · Hyundai Santa Fe","cs":"hyundai tucson 2.7 hyundai santa fe","ox":"Bosch 0281002718 · 0281002732 · 0281002445","y":"2004–2014","tec":"2 terminales","ka":"Tucson 2.0L 04-10 DIESEL KIA Sportage 2.0L 04-14 DIESEL VALVULA SUCCION RIEL INYECCION 2 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1021","d":"Soporte Motor (der) Chev.cruze Turbo M17-18","c":"Soportes Motor","oem":"","co":0,"p":91700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (Turbo)","cs":"chevrolet cruze turbo","y":"2017–2018","bodega":"Sede Centro","m":"Marca propia"},
-  {"sku":"DM-1022","d":"Soporte Motor Del Chev.captiva 2.4 M11-16","c":"Soportes Motor","oem":"","co":0,"p":64800,"e":3,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva 2.4","cs":"chevrolet captiva 2.4","y":"2011–2016","bodega":"Sede Centro","m":"Marca propia"},
-  {"sku":"DM-1023","d":"Soporte Motor Del Chevrolet Traverse M11-17","c":"Soportes Motor","oem":"","co":0,"p":68300,"e":2,"f":"Catálogo demo","compat":"2011-17 | Chevrolet | Traverse","cr":"Chevrolet Traverse","cs":"chevrolet traverse","y":"2011–2017","bodega":"Sede Centro"},
-  {"sku":"DM-1024","d":"Soporte Motor Der Dodge Journey 2.4 M11-19","c":"Soportes Motor","oem":"","co":0,"p":119100,"e":1,"f":"Catálogo demo","compat":"2011-19 | Dodge | Journey","cr":"Dodge Journey 2.4","cs":"dodge journey 2.4","y":"2011–2019","bodega":"Sede Centro","m":"Marca propia"},
-  {"sku":"DM-1025","d":"Soporte Motor Der Dodge Journey 3.6 M07-11","c":"Soportes Motor","oem":"","co":0,"p":52500,"e":1,"f":"Catálogo demo","compat":"2007-11 | Dodge | Journey","cr":"Dodge Journey 3.6","cs":"dodge journey 3.6","y":"2007–2011","bodega":"Sede Centro"},
-  {"sku":"DM-1026","d":"Bobina Encendido Chevrolet Blazer Cheyenne","c":"Bobinas","oem":"10489421 · 8104894210","co":0,"p":38100,"e":2,"f":"Catálogo demo","compat":"Blazer | Chevrolet | Cheyenne","cr":"Chevrolet Blazer · Chevrolet Cheyenne","cs":"chevrolet blazer cheyenne","ox":"SMP DR49 · Wells C1098 · Delphi CE20003","y":"1992–2006","tec":"3 terminales","ka":"Blazer 4.3L 92-06 Blazer 5.7L 98-06 Cheyenne 99-04 MOTORES VORTEC 3 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1027","d":"Bobina Encendido Chevrolet Equinox Turbo","c":"Bobinas","oem":"12698064 · 12635672 · 12697989 · 12670053","co":0,"p":111600,"e":1,"f":"Catálogo demo","compat":"Chevrolet | Equinox","cr":"Chevrolet Equinox (Turbo)","cs":"chevrolet equinox turbo","ox":"SMP UF802 · Delphi GN10797 · Airtex 5C2095","y":"2017–2020","tec":"4 terminales","ka":"Cruze Turbo 1.4L 17-20 Equinox Turbo1.5L 18-20 4 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1028","d":"Bobina Encendido Hyundai I10 Picanto Rio 1.2","c":"Bobinas","oem":"27301-03000 · 27301-03010 · 27301-03015 · 27301-03030 · 27301-03035","co":0,"p":88600,"e":2,"f":"Catálogo demo","compat":"Hyundai | Picanto | Rio","cr":"Hyundai I-10","cs":"hyundai i-10","ox":"SMP UF926 · HYS1800133","y":"2010–2016","tec":"2 terminales","ka":"I-10 1.2L 16V 12-16 Santafe 2.7L 10-12 KIA Picanto 1.2L 16V 13-16 RIO Spice 1.25L 16V 13-16 2 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1029","d":"Bobina Encendido Kia Rio Stylus 1.5 05 12","c":"Bobinas","oem":"0K30E1810X","co":0,"p":90900,"e":1,"f":"Catálogo demo","compat":"Kia | Rio","cr":"Kia Rio-Stylus","cs":"kia rio-stylus","ox":"SMP UF335 · Wells C1325 · Airtex 5C1184 · 0K30E1810XY · 0K30E1810XZ","y":"2004–2012","tec":"2 terminales","ka":"RIO Stylus 1.5L 04-12 2 CONECTORES DE 2 TERMINALES C/U 1 PACHA DE 1 CONECTOR","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1030","d":"Bobina Encendido Nissan Murano 3.5 Pathfinder","c":"Bobinas","oem":"22443-8J115 · 22448-8J100 · 22448-4W010","co":0,"p":58100,"e":4,"f":"Catálogo demo","compat":"Murano | Nissan","cr":"Nissan Murano 3.5 · Nissan Xterra 2.5 · Nissan Pathfinder 3.5","cs":"nissan murano 3.5 nissan xterra 2.5 nissan pathfinder 3.5","ox":"SMP UF349 · Wells C1406 · Delphi GN10242","y":"2001–2015","tec":"3 terminales","ka":"Murano 3.5L 06-08 Xterra 2.5L 05-15 Pathfinder 3.5L 01-04 Pathfinder 4.0L 05-12 3 TERMINALES USA CONECTOR CS-SK2327","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1031","d":"DRS Amortiguador Delantero Izquierdo Sonic - Onix","c":"Amortiguadores","oem":"95917162","co":0,"p":242700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Sonic | Chevrolet Onix","cr":"Chevrolet Sonic","cs":"chevrolet sonic","ox":"95917163","bodega":"Sede Norte","m":"Gabriel"},
-  {"sku":"DM-1032","d":"KIT Amortiguadores Delanteros Captiva 2.4","c":"Amortiguadores","oem":"96858479/80","co":0,"p":341700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva sport 3.0","cs":"chevrolet captiva sport 3.0","ox":"316761","bodega":"Sede Norte","m":"Gabriel"},
-  {"sku":"DM-1033","d":"KIT Amortiguadores Delanteros Chevrolet N300","c":"Amortiguadores","oem":"24535866/70","co":0,"p":272400,"e":1,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300","cs":"chevrolet n300","ox":"924526130 · 24510165","bodega":"Sede Norte","m":"Gabriel"},
-  {"sku":"DM-1034","d":"KIT Amortiguadores Delanteros Chevrolet Optra","c":"Amortiguadores","oem":"96407819/20","co":0,"p":213500,"e":2,"f":"Catálogo demo","compat":"Chevrolet Optra","cr":"Chevrolet Optra 1.8","cs":"chevrolet optra 1.8","ox":"96407820 · 96409541 · 1115100 · 339030","bodega":"Sede Norte","m":"Gabriel"},
-  {"sku":"DM-1035","d":"KIT Amortiguadores Delanteros Cronos - Spark R/L","c":"Amortiguadores","oem":"96424026/25","co":0,"p":178900,"e":1,"f":"Catálogo demo","compat":"Chevrolet Spark","cr":"Chevrolet Spark Cronos","cs":"chevrolet spark cronos","ox":"96424025 · 332504 · 9994816","bodega":"Sede Norte","m":"Gabriel"},
-  {"sku":"DM-1036","d":"Regulador Presion Combustible KIA RIO +","c":"Reguladores","oem":"0K30A-13-35ZB · 0K30A60960","co":0,"p":27300,"e":2,"f":"Catálogo demo","compat":"Kia | Rio","cr":"Kia Rio","cs":"kia rio","y":"2006–2010","tec":"5 terminales","ka":"RIO 1.5L Stylus 06-10 MODULO Y MEDIDOR COMBUSTIBLE 2 SALIDAS HORIZONTALES 5 TERMINALES","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1037","d":"Regulador Presion Combustible ATOS CLIO Logan","c":"Reguladores","oem":"","co":0,"p":30800,"e":1,"f":"Catálogo demo","compat":"Hyundai Atos | Renault Clio | Renault Logan","cr":"Hyundai Atos · Renault Clio · Renault Logan · Renault Symbol","cs":"hyundai atos renault clio renault logan renault symbol","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1038","d":"Regulador Presion Combustible Accen, Verna +","c":"Reguladores","oem":"","co":0,"p":43100,"e":1,"f":"Catálogo demo","compat":"Hyundai Accent | Hyundai Verna","cr":"Hyundai Accent · Hyundai Verna","cs":"hyundai accent hyundai verna","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1039","d":"Regulador Presion Combustible Aveo, Optra +","c":"Reguladores","oem":"","co":0,"p":28600,"e":2,"f":"Catálogo demo","compat":"Aveo | Optra","cr":"Chevrolet Aveo - Optra","cs":"chevrolet aveo - optra","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1040","d":"Regulador Presion Combustible BT50 2.2, 2.5 +","c":"Reguladores","oem":"","co":0,"p":89100,"e":2,"f":"Catálogo demo","compat":"Mazda BT-50","cr":"Mazda BT-50 2.2","cs":"mazda bt-50 2.2","bodega":"Sede Centro","m":"Cema"},
-  {"sku":"DM-1041","d":"Valvulas Admision N300 1.2 X JGO","c":"Motor","oem":"2829SN · 7152117","co":0,"p":28800,"e":3,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","ox":"8111746701 · 9002816","bodega":"Sede Norte"},
-  {"sku":"DM-1042","d":"KIT Reparticion Captiva 2.4","c":"Motor","oem":"12680750 · 7021091","co":0,"p":234600,"e":2,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva 2.4","cs":"chevrolet captiva 2.4","bodega":"Sede Norte","m":"Marca propia"},
-  {"sku":"DM-1043","d":"Polea Cigueñal N300 1.2 1.3","c":"Motor","oem":"9052774","co":0,"p":41500,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","bodega":"Sede Norte","m":"Marca propia"},
-  {"sku":"DM-1044","d":"TAPA Valvulas Sonic/cruze/tracker","c":"Motor","oem":"96889998","co":0,"p":111800,"e":2,"f":"Catálogo demo","compat":"Cruze | Sonic | Tracker","cr":"Chevrolet Sonic · Chevrolet Tracker","cs":"chevrolet sonic chevrolet tracker","bodega":"Sede Norte","m":"Homologado"},
-  {"sku":"DM-1045","d":"Valvulas Escape N300 1.2 X JGO","c":"Motor","oem":"2830ZN · 7152118","co":0,"p":29400,"e":3,"f":"Catálogo demo","compat":"Escape | N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","bodega":"Sede Norte","m":"Homologado"},
-  {"sku":"DM-1046","d":"Tijera Inferior Izq Chevrolet Luv 2.3 4×2","c":"Suspensión","oem":"8-94246-420-0","co":0,"p":81800,"e":2,"f":"Catálogo demo","compat":"Chevrolet Luv","cr":"Chevrolet Luv 2.3 (4×2)","cs":"chevrolet luv 2.3 4×2","bodega":"Sede Centro","m":"Homologado"},
-  {"sku":"DM-1047","d":"KIT Axial + Terminal + Fuelle Izquierdo N300","c":"Suspensión","oem":"B350623500","co":0,"p":33500,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N-300 (axial · Chevrolet terminal · Chevrolet fuelle)","cs":"chevrolet n-300 (axial chevrolet terminal chevrolet fuelle)","bodega":"Sede Norte","m":"Homologado"},
-  {"sku":"DM-1048","d":"Bocin Rda Del.toyota Rav4 2.0/2.5 4×2/4 M13-9","c":"Suspensión","oem":"","co":0,"p":88200,"e":3,"f":"Catálogo demo","compat":"2013 | Rav4 | Toyota","cr":"Rav4 2.0","cs":"rav4 2.0","bodega":"Sede Centro"}
+  {"sku":"DM-1001","d":"Sensor ABS Trasero Derecho Tucson IX35 KIA +","c":"Sensores","oem":"243752E100","co":0,"p":35900,"e":1,"f":"Catálogo demo","compat":"Kia | Tucson","cr":"Hyundai Tucson · Hyundai IX-35 · Kia Sportage","cs":"hyundai tucson ix-35 ix35 kia sportage","ox":"SMP VVT117 · Wells TS1102 · 2T1102","y":"2010–2019","tec":"2 terminales","ka":"Tucson IX35 2.0L 13-18 Elantra 1.8L 10-16 KIA Carens 2.0L 13-18 Sportage 2.0L 1 4-18 Soul 2.0L 14-19 MULTIPLE DE ESCAPE 2 TERMINALES","bodega":"Sede Centro","m":"Homologado","pv":48500,"nt":[{"t":"La caja trae el soporte sin el tornillo largo: pedirlo aparte.","a":"Vendedora veterana","f":"2026-09-01"}],"vk":[{"v":"Hyundai Tucson","ok":true,"a":"Vendedora veterana","f":"2026-09-01"}]},
+  {"sku":"DM-1002","d":"Sensor ABS Trasero Izquierdo Tucson IX35 KIA+","c":"Sensores","oem":"243752E100","co":0,"p":42900,"e":3,"f":"Catálogo demo","compat":"Kia | Tucson","cr":"Hyundai Tucson · Hyundai IX-35 · Kia Sportage","cs":"hyundai tucson ix-35 ix35 kia sportage","ox":"SMP VVT117 · Wells TS1102 · 2T1102","y":"2010–2019","tec":"2 terminales","ka":"Tucson IX35 2.0L 13-18 Elantra 1.8L 10-16 KIA Carens 2.0L 13-18 Sportage 2.0L 1 4-18 Soul 2.0L 14-19 MULTIPLE DE ESCAPE 2 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":57900},
+  {"sku":"DM-1003","d":"Sensor CKP Chevrolet Swift/esteem/vitara","c":"Sensores","oem":"33400-65G00 · 33400-65G02","co":0,"p":24600,"e":3,"f":"Catálogo demo","compat":"Chevrolet | Swift | Vitara","cr":"Chevrolet Swift 1.3 · Chevrolet Vitara","cs":"chevrolet swift 1.3 chevrolet vitara","ox":"SMP UF280 · Wells C1200 · Delphi GN10390","y":"1996–2004","tec":"3 terminales","ka":"Esteem L41.3L 96-99 Swift L4 1.3L 98-00 Grand Vitara 1.6L 00-04 Jimny L4 2.0L 96-02 3 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":33200},
+  {"sku":"DM-1004","d":"Sensor CKP Toyota Hilux VIGO 2.5/FORTUNER 2.5","c":"Sensores","oem":"90919A2001 · 90919T2001 · 90919T2008 · 9091902247 · 9091902248 · 9091902260","co":0,"p":32600,"e":1,"f":"Catálogo demo","compat":"Fortuner | Hilux | Toyota | Vigo","cr":"Toyota Hilux - 1Kd - 2Kd 2.5","cs":"toyota hilux - 1kd - 2kd 2.5","ox":"SMP UF495-323 · Wells . · SMP:UF495-323","y":"2006–2018","tec":"4 terminales","ka":"Hilux Vigo 2.7L 11-18 Prado TX 2.7L 2TR 10-15 Prado TX 4.0L 1GR 10-17 Fortuner 4.0L 06-14 4 Runner 4.0L 06-10 FJ Cruiser 4.0L 07-10 4 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":44000},
+  {"sku":"DM-1005","d":"Sensor Cigueñal Honda Civic, Accord 1.8, 2.4","c":"Sensores","oem":"30520PNA007 · 30520RRA007","co":0,"p":45800,"e":2,"f":"Catálogo demo","compat":"Accord | Civic | Honda","cr":"Honda Civic 1.8 · Honda Accord 1.8","cs":"honda civic 1.8 honda accord 1.8","ox":"SMP UF393 · SMP UF311 · SMP UF583 · Wells C1382 · HCP208","y":"2003–2009","tec":"3 terminales","ka":"CR-V 2.4L 06-09 Civic 2.0L 05-08 Accord 2.4L 03-08 3 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":61800},
+  {"sku":"DM-1006","d":"Bocin Rueda Delantera Cruze 10-16","c":"Bocin","oem":"9333080k","co":0,"p":197100,"e":30,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze","cs":"chevrolet cruze","ox":"HA590402","y":"2010–2016","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":266100},
+  {"sku":"DM-1007","d":"Bocin Delantero Corsa - Daewoo Cielo","c":"Bocin","oem":"96176252","co":0,"p":64000,"e":40,"f":"Catálogo demo","compat":"Chevrolet Corsa","cr":"Chevrolet Corsa 1.4 · Daewoo Cielo","cs":"chevrolet corsa 1.4 daewoo cielo","ox":"90157724 · 95239667 · 90498610 · 93271759 · 326197 · 326169 · FEBEST 1082-001","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":86400},
+  {"sku":"DM-1008","d":"Bocin Rueda Delantera Gran Vitara C/abs 5 P","c":"Bocin","oem":"43401-65D00","co":0,"p":156600,"e":4,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Chevrolet grand Vitara","cs":"chevrolet grand vitara","ox":"43401-65D10 · 513193 · VKBA6873 · VKBA6872 · FW247 · FW248 · BR930308","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":211400},
+  {"sku":"DM-1009","d":"Bocin Rueda Delantera N300 Con ABS 4 Pernos","c":"Bocin","oem":"24510321","co":0,"p":102500,"e":30,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 (ABS)","cs":"chevrolet n300 abs","ox":"WHU63685 · VA-3103100A · DACF301347A","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":138400},
+  {"sku":"DM-1010","d":"Bocin Rueda Trasera Cruze Con ABS","c":"Bocin","oem":"13580090","co":0,"p":211300,"e":2,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (ABS)","cs":"chevrolet cruze abs","ox":"13591998 · 13577406 · MOOG 512507 · MOOG 512508 · SKF BR930860 · VKBA7659","bodega":"Sede Norte","m":"Marca propia","pv":285300},
+  {"sku":"DM-1011","d":"Soporte Motor Delantero Traverse 11-17","c":"Soportes","oem":"25840452","co":0,"p":135500,"e":2,"f":"Catálogo demo","compat":"SOPORTE MOTOR DELANTERO TRAVERSE 11-17","cr":"Chevrolet Traverse","cs":"chevrolet traverse","ox":"A5549HY","y":"2011–2017","bodega":"Sede Norte","m":"Marca propia","pv":182900},
+  {"sku":"DM-1012","d":"Soporte Motor Derecho Cruze Turbo 17-18","c":"Soportes","oem":"39096914","co":0,"p":201900,"e":5,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (Turbo)","cs":"chevrolet cruze turbo","ox":"39025861 · 39078186 · 3536 · GP3536 · S3062","y":"2017–2018","bodega":"Sede Norte","m":"Marca propia","pv":272600},
+  {"sku":"DM-1013","d":"Soporte Motor Derecho Traverse 11-17","c":"Soportes","oem":"25840450","co":0,"p":133500,"e":15,"f":"Catálogo demo","compat":"SOPORTE MOTOR DERECHO TRAVERSE 11-17","cr":"Chevrolet Traverse","cs":"chevrolet traverse","ox":"215147744 · A5548HY · 3580HMX · EM3141","y":"2011–2017","bodega":"Sede Norte","m":"Marca propia","sw":1,"pv":180200},
+  {"sku":"DM-1014","d":"Soporte Amortiguador DEL GRAN Vitara","c":"Soportes","oem":"41810-65d11-","co":0,"p":74300,"e":6,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Grand Vitara","cs":"grand vitara","ox":"41810-65D10 · 41810-65D00 · 41810-65DB0 · 91174728 · FEBEST SZSS-002","bodega":"Sede Norte","m":"Marca propia","pv":100300},
+  {"sku":"DM-1015","d":"Soporte Amortiguador DEL Vitara 1.6","c":"Soportes","oem":"41810-60A00","co":0,"p":48200,"e":2,"f":"Catálogo demo","compat":"Chevrolet Vitara","cr":"Chevrolet Vitara 1.6","cs":"chevrolet vitara 1.6","ox":"41810-60A01 · RIDEX 1180S0350 · KYB SM5082 · BLUE PRINT ADK88031 · 514133","bodega":"Sede Norte","m":"Marca propia","pv":65100},
+  {"sku":"DM-1016","d":"Valvula IAC Chevrolet LUV 2.2, D-max 2.4 +","c":"Válvulas","oem":"9625355 · 96363483 · 19005265","co":0,"p":20400,"e":2,"f":"Catálogo demo","compat":"Chevrolet | D-Max | Luv","cr":"Chevrolet Luv 2200 2.2 · Chevrolet D-Max 2.4","cs":"chevrolet luv 2200 2.2 chevrolet d-max 2.4","ox":"SMP UF503 · Wells C1480 · Delphi GN10280","y":"2003–2018","tec":"3 pines","ka":"Aveo 1.4L 1.5L 06-14 Spark 7:24 Spark GT 1.25L 12-18 Corsa Evolution 1.4 1.8 03-07 Optra LUV.2.2L D-MAX.2.4L 3 PINES","bodega":"Sede Centro","m":"Cema","pv":27500},
+  {"sku":"DM-1017","d":"Valvula IAC Chevrolet Rodeo 2.6, Trooper 960+","c":"Válvulas","oem":"10497771 · 1103608 · 10467067","co":0,"p":13800,"e":2,"f":"Catálogo demo","compat":"Chevrolet | Rodeo","cr":"Chevrolet Rodeo 2.6 · Chevrolet Trooper 960","cs":"chevrolet rodeo 2.6 chevrolet trooper 960","ox":"SMP DR39 · Wells C849 · Delphi GN10123","y":"1987–2002","ka":"Cavalier 2.0L 2.2L 87-02 Luv 2.2L 94-00 Rodeo 3.2L 92-99 Trooper 3.2L 92-95","bodega":"Sede Centro","m":"Cema","pv":18600},
+  {"sku":"DM-1018","d":"Valvula IAC FORD Ecosport 2.0, Focus, MAZDA3+","c":"Válvulas","oem":"4M5G12A366BC · 4M5G12A366BB","co":0,"p":120900,"e":1,"f":"Catálogo demo","compat":"Ford | Mazda3","cr":"Ford Ecosport 2.0 · Ford Focus · Mazda 3","cs":"ford ecosport 2.0 ford focus mazda 3","ox":"Motorcraft DG541 · SMP UF621 · Wells FD505","y":"2003–2011","tec":"2 terminales","ka":"Escape 2.0L 05-07 Ecosport 2.0L 07-11 Focus 2.0L 03-07 2 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":163200},
+  {"sku":"DM-1019","d":"Valvula IAC Hyundai Accent/tucson/k. RIO +","c":"Válvulas","oem":"3925026600","co":0,"p":81300,"e":1,"f":"Catálogo demo","compat":"Accent | Hyundai | Rio | Tucson","cr":"Hyundai Accent · Hyundai Tucson · Kia Rio","cs":"hyundai accent hyundai tucson kia rio","ox":"SMP KS218 · Wells SU5886 · Airtex 5S2241 · ERA 550396","y":"2002–2014","tec":"2 terminales","ka":"Atos 1.0L 1.1L - I10 1.1 L 08-14 Accent Verna 1.6L 04-08 Getz 1.4L 1.6L 02-10 Tucson 2.0L 06-10 KIA RIO Cerato 1.6L 05-08 CONECTOR CUADRADO 27.5 CM - 2 TERMINAL","bodega":"Sede Centro","m":"Cema","pv":109800},
+  {"sku":"DM-1020","d":"Valvula IAC Hyundai Tucson 2.7/S.FE/ KIA +","c":"Válvulas","oem":"3140227010 · 3140227000","co":0,"p":52400,"e":1,"f":"Catálogo demo","compat":"Hyundai | Kia | Tucson","cr":"Hyundai Tucson 2.7 · Hyundai Santa Fe","cs":"hyundai tucson 2.7 hyundai santa fe","ox":"Bosch 0281002718 · 0281002732 · 0281002445","y":"2004–2014","tec":"2 terminales","ka":"Tucson 2.0L 04-10 DIESEL KIA Sportage 2.0L 04-14 DIESEL VALVULA SUCCION RIEL INYECCION 2 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":70700},
+  {"sku":"DM-1021","d":"Soporte Motor (der) Chev.cruze Turbo M17-18","c":"Soportes Motor","oem":"","co":0,"p":91700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze (Turbo)","cs":"chevrolet cruze turbo","y":"2017–2018","bodega":"Sede Centro","m":"Marca propia","pv":123800},
+  {"sku":"DM-1022","d":"Soporte Motor Del Chev.captiva 2.4 M11-16","c":"Soportes Motor","oem":"","co":0,"p":64800,"e":3,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva 2.4","cs":"chevrolet captiva 2.4","y":"2011–2016","bodega":"Sede Centro","m":"Marca propia","pv":87500},
+  {"sku":"DM-1023","d":"Soporte Motor Der Dodge Journey 2.4 M11-19","c":"Soportes Motor","oem":"","co":0,"p":135400,"e":1,"f":"Catálogo demo","compat":"2011-19 | Dodge | Journey","cr":"Dodge Journey 2.4","cs":"dodge journey 2.4","y":"2011–2019","bodega":"Sede Centro","m":"Marca propia","pv":182800},
+  {"sku":"DM-1024","d":"Soporte Motor Izq/caja Chev. Traverse M11-16","c":"Soportes Motor","oem":"","co":0,"p":49000,"e":2,"f":"Catálogo demo","compat":"2011-16 | Chevrolet | Traverse","cr":"Chevrolet Traverse","cs":"chevrolet traverse","y":"2011–2016","bodega":"Sede Centro","m":"Marca propia","pv":66200},
+  {"sku":"DM-1025","d":"Soporte Motor Izq/caja Chev.cruze M11-16 Meca","c":"Soportes Motor","oem":"","co":0,"p":73800,"e":1,"f":"Catálogo demo","compat":"Chevrolet Cruze","cr":"Chevrolet Cruze","cs":"chevrolet cruze","y":"2011–2016","bodega":"Sede Norte","m":"Marca propia","pv":99600},
+  {"sku":"DM-1026","d":"Bobina Encendido Chevrolet Blazer Cheyenne","c":"Bobinas","oem":"10489421 · 8104894210","co":0,"p":38100,"e":2,"f":"Catálogo demo","compat":"Blazer | Chevrolet | Cheyenne","cr":"Chevrolet Blazer · Chevrolet Cheyenne","cs":"chevrolet blazer cheyenne","ox":"SMP DR49 · Wells C1098 · Delphi CE20003","y":"1992–2006","tec":"3 terminales","ka":"Blazer 4.3L 92-06 Blazer 5.7L 98-06 Cheyenne 99-04 MOTORES VORTEC 3 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":51400},
+  {"sku":"DM-1027","d":"Bobina Encendido Chevrolet Equinox Turbo","c":"Bobinas","oem":"12698064 · 12635672 · 12697989 · 12670053","co":0,"p":111600,"e":1,"f":"Catálogo demo","compat":"Chevrolet | Equinox","cr":"Chevrolet Equinox (Turbo)","cs":"chevrolet equinox turbo","ox":"SMP UF802 · Delphi GN10797 · Airtex 5C2095","y":"2017–2020","tec":"4 terminales","ka":"Cruze Turbo 1.4L 17-20 Equinox Turbo1.5L 18-20 4 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":150700},
+  {"sku":"DM-1028","d":"Bobina Encendido Hyundai I10 Picanto Rio 1.2","c":"Bobinas","oem":"27301-03000 · 27301-03010 · 27301-03015 · 27301-03030 · 27301-03035","co":0,"p":88600,"e":2,"f":"Catálogo demo","compat":"Hyundai | Picanto | Rio","cr":"Hyundai I-10","cs":"hyundai i-10","ox":"SMP UF926 · HYS1800133","y":"2010–2016","tec":"2 terminales","ka":"I-10 1.2L 16V 12-16 Santafe 2.7L 10-12 KIA Picanto 1.2L 16V 13-16 RIO Spice 1.25L 16V 13-16 2 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":119600},
+  {"sku":"DM-1029","d":"Bobina Encendido Kia Rio Stylus 1.5 05 12","c":"Bobinas","oem":"0K30E1810X","co":0,"p":90900,"e":1,"f":"Catálogo demo","compat":"Kia | Rio","cr":"Kia Rio-Stylus","cs":"kia rio-stylus","ox":"SMP UF335 · Wells C1325 · Airtex 5C1184 · 0K30E1810XY · 0K30E1810XZ","y":"2004–2012","tec":"2 terminales","ka":"RIO Stylus 1.5L 04-12 2 CONECTORES DE 2 TERMINALES C/U 1 PACHA DE 1 CONECTOR","bodega":"Sede Centro","m":"Cema","pv":122700},
+  {"sku":"DM-1030","d":"Bobina Encendido Nissan Murano 3.5 Pathfinder","c":"Bobinas","oem":"22443-8J115 · 22448-8J100 · 22448-4W010","co":0,"p":58100,"e":4,"f":"Catálogo demo","compat":"Murano | Nissan","cr":"Nissan Murano 3.5 · Nissan Xterra 2.5 · Nissan Pathfinder 3.5","cs":"nissan murano 3.5 nissan xterra 2.5 nissan pathfinder 3.5","ox":"SMP UF349 · Wells C1406 · Delphi GN10242","y":"2001–2015","tec":"3 terminales","ka":"Murano 3.5L 06-08 Xterra 2.5L 05-15 Pathfinder 3.5L 01-04 Pathfinder 4.0L 05-12 3 TERMINALES USA CONECTOR CS-SK2327","bodega":"Sede Centro","m":"Cema","pv":78400},
+  {"sku":"DM-1031","d":"DRS Amortiguador Delantero Izquierdo Sonic - Onix","c":"Amortiguadores","oem":"95917162","co":0,"p":242700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Sonic | Chevrolet Onix","cr":"Chevrolet Sonic","cs":"chevrolet sonic","ox":"95917163","bodega":"Sede Norte","m":"Gabriel","pv":327600},
+  {"sku":"DM-1032","d":"KIT Amortiguadores Delanteros Captiva 2.4","c":"Amortiguadores","oem":"96858479/80","co":0,"p":341700,"e":1,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva sport 3.0","cs":"chevrolet captiva sport 3.0","ox":"316761","bodega":"Sede Norte","m":"Gabriel","pv":461300},
+  {"sku":"DM-1033","d":"KIT Amortiguadores Delanteros Chevrolet N300","c":"Amortiguadores","oem":"24535866/70","co":0,"p":272400,"e":1,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300","cs":"chevrolet n300","ox":"924526130 · 24510165","bodega":"Sede Norte","m":"Gabriel","pv":367700},
+  {"sku":"DM-1034","d":"KIT Amortiguadores Delanteros Chevrolet Optra","c":"Amortiguadores","oem":"96407819/20","co":0,"p":213500,"e":2,"f":"Catálogo demo","compat":"Chevrolet Optra","cr":"Chevrolet Optra 1.8","cs":"chevrolet optra 1.8","ox":"96407820 · 96409541 · 1115100 · 339030","bodega":"Sede Norte","m":"Gabriel","pv":288200},
+  {"sku":"DM-1035","d":"KIT Amortiguadores Delanteros Cronos - Spark R/L","c":"Amortiguadores","oem":"96424026/25","co":0,"p":178900,"e":1,"f":"Catálogo demo","compat":"Chevrolet Spark","cr":"Chevrolet Spark Cronos","cs":"chevrolet spark cronos","ox":"96424025 · 332504 · 9994816","bodega":"Sede Norte","m":"Gabriel","pv":241500},
+  {"sku":"DM-1036","d":"Regulador Presion Combustible KIA RIO +","c":"Reguladores","oem":"0K30A-13-35ZB · 0K30A60960","co":0,"p":27300,"e":2,"f":"Catálogo demo","compat":"Kia | Rio","cr":"Kia Rio","cs":"kia rio","y":"2006–2010","tec":"5 terminales","ka":"RIO 1.5L Stylus 06-10 MODULO Y MEDIDOR COMBUSTIBLE 2 SALIDAS HORIZONTALES 5 TERMINALES","bodega":"Sede Centro","m":"Cema","pv":36900},
+  {"sku":"DM-1037","d":"Regulador Presion Combustible ATOS CLIO Logan","c":"Reguladores","oem":"","co":0,"p":30800,"e":1,"f":"Catálogo demo","compat":"Hyundai Atos | Renault Clio | Renault Logan","cr":"Hyundai Atos · Renault Clio · Renault Logan · Renault Symbol","cs":"hyundai atos renault clio renault logan renault symbol","bodega":"Sede Centro","m":"Cema","pv":41600},
+  {"sku":"DM-1038","d":"Regulador Presion Combustible Accen, Verna +","c":"Reguladores","oem":"","co":0,"p":43100,"e":1,"f":"Catálogo demo","compat":"Hyundai Accent | Hyundai Verna","cr":"Hyundai Accent · Hyundai Verna","cs":"hyundai accent hyundai verna","bodega":"Sede Centro","m":"Cema","pv":58200},
+  {"sku":"DM-1039","d":"Regulador Presion Combustible Aveo, Optra +","c":"Reguladores","oem":"","co":0,"p":28600,"e":2,"f":"Catálogo demo","compat":"Aveo | Optra","cr":"Chevrolet Aveo - Optra","cs":"chevrolet aveo - optra","bodega":"Sede Centro","m":"Cema","pv":38600},
+  {"sku":"DM-1040","d":"Regulador Presion Combustible BT50 2.2, 2.5 +","c":"Reguladores","oem":"","co":0,"p":89100,"e":2,"f":"Catálogo demo","compat":"Mazda BT-50","cr":"Mazda BT-50 2.2","cs":"mazda bt-50 2.2","bodega":"Sede Centro","m":"Cema","pv":120300},
+  {"sku":"DM-1041","d":"Valvulas Admision N300 1.2 X JGO","c":"Motor","oem":"2829SN · 7152117","co":0,"p":28800,"e":3,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","ox":"8111746701 · 9002816","bodega":"Sede Norte","pv":38900},
+  {"sku":"DM-1042","d":"KIT Reparticion Captiva 2.4","c":"Motor","oem":"12680750 · 7021091","co":0,"p":234600,"e":2,"f":"Catálogo demo","compat":"Chevrolet Captiva","cr":"Chevrolet Captiva 2.4","cs":"chevrolet captiva 2.4","bodega":"Sede Norte","m":"Marca propia","pv":316700},
+  {"sku":"DM-1043","d":"Polea Cigueñal N300 1.2 1.3","c":"Motor","oem":"9052774","co":0,"p":41500,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","bodega":"Sede Norte","m":"Marca propia","pv":56000},
+  {"sku":"DM-1044","d":"TAPA Valvulas Sonic/cruze/tracker","c":"Motor","oem":"96889998","co":0,"p":111800,"e":2,"f":"Catálogo demo","compat":"Cruze | Sonic | Tracker","cr":"Chevrolet Sonic · Chevrolet Tracker","cs":"chevrolet sonic chevrolet tracker","bodega":"Sede Norte","m":"Homologado","pv":150900},
+  {"sku":"DM-1045","d":"Valvulas Escape N300 1.2 X JGO","c":"Motor","oem":"2830ZN · 7152118","co":0,"p":29400,"e":3,"f":"Catálogo demo","compat":"Escape | N300","cr":"Chevrolet N300 1.2","cs":"chevrolet n300 1.2","bodega":"Sede Norte","m":"Homologado","pv":39700},
+  {"sku":"DM-1046","d":"Tijera Inferior Izq Chevrolet Luv 2.3 4×2","c":"Suspensión","oem":"8-94246-420-0","co":0,"p":81800,"e":2,"f":"Catálogo demo","compat":"Chevrolet Luv","cr":"Chevrolet Luv 2.3 (4×2)","cs":"chevrolet luv 2.3 4×2","bodega":"Sede Centro","m":"Homologado","pv":110400},
+  {"sku":"DM-1047","d":"KIT Axial + Terminal + Fuelle Izquierdo N300","c":"Suspensión","oem":"B350623500","co":0,"p":33500,"e":2,"f":"Catálogo demo","compat":"Chevrolet N300","cr":"Chevrolet N-300 (axial · Chevrolet terminal · Chevrolet fuelle)","cs":"chevrolet n-300 (axial chevrolet terminal chevrolet fuelle)","bodega":"Sede Norte","m":"Homologado","pv":45200},
+  {"sku":"DM-1048","d":"Kit Der.axial+terminal+fuelle Comp Chev N300","c":"Suspensión","oem":"","co":0,"p":30500,"e":2,"f":"Catálogo demo","compat":"Chevrolet | N300","cr":"Chevrolet Corsa","cs":"chevrolet corsa","bodega":"Sede Norte","m":"Homologado","pv":41200}
 ];
+var CFG={"slug":"demo","nombre":"Distribuidora Demo","pin":"1234","kEndpoint":"","placaEndpoint":"","firma":"Distribuidora Demo · Cotización RefIA","sedes":{"Sede Centro":"bog","Sede Norte":"car"}};
+CFG=Object.assign({slug:'almacen',nombre:'Mi almacén',pin:'',kEndpoint:'',placaEndpoint:'',firma:'',sedes:{}},CFG||{});
 var aC='all',aF='all',aV='all';
+var VEND=false, AUTOR='';
 
 function norm(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\/\s]/g,' ');}
 function fmt(n){return n===0?'N/D':'$'+Math.round(n).toLocaleString('es-CO');}
 function sCls(e){return e===0?'sout':e<=2?'slow':'sok';}
 function sTxt(e){return e===0?'Sin stock':e===1?'1 und.':e===2?'2 und.':e+' und.';}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function hl(t,toks){if(!toks.length)return t;var re=new RegExp('('+toks.map(function(x){return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}).join('|')+')','gi');return t.replace(re,'<mark>$1</mark>');}
+function toast(m,ms){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},ms||2600);}
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function today(){return new Date().toISOString().slice(0,10);}
+
+/* ---------- WHATSAPP (4.1: ficha al cliente, NUNCA precio piso ni costo) ---------- */
 function waMsg(item){
-  var precio=item.p>0?'$'+item.p.toLocaleString('es-CO'):'A consultar';
+  var precio=item.pv>0?'$'+item.pv.toLocaleString('es-CO'):'A consultar';
   var dispo=item.e===0
     ?'Agotado — consultamos disponibilidad y te confirmamos'
     :item.e<=2
       ?item.e+' unidad'+(item.e>1?'es':'')+' — te confirmamos antes de despachar'
       :item.e+' unidades disponibles';
   var L=['Hola, ¿cómo estás?','',
-    'Te saluda el equipo de Distribuidora Demo. Te compartimos los datos del repuesto que nos solicitaste:','',
+    'Te saluda el equipo de '+CFG.nombre+'. Te compartimos los datos del repuesto que nos solicitaste:','',
     '*'+item.d+'*','SKU: '+item.sku];
   if(item.oem)L.push('Ref. OEM: '+item.oem);
-  if(item.ox)L.push('Equivalencias: '+item.ox.replace(/ \u00b7 /g,', '));
+  if(item.ox)L.push('Equivalencias: '+item.ox.replace(/ · /g,', '));
   if(item.m)L.push('Marca: '+item.m);
   if(item.org)L.push('Origen ref. original: '+item.org);
-  if(item.cr)L.push('Compatible con: '+item.cr.replace(/ \u00b7 /g,', '));
-  if(item.y)L.push('A\u00f1os: '+item.y);
-  if(item.tec)L.push('Datos f\u00edsicos: '+item.tec);
-  L.push((item.pw?'Precio web':'Precio')+': '+precio);
+  var okv=kOk(item.sku);
+  if(okv.length)L.push('Verificado en mostrador para: '+okv.join(', '));
+  if(item.cr)L.push('Compatible con: '+item.cr.replace(/ · /g,', '));
+  if(item.y)L.push('Años: '+item.y);
+  if(item.tec)L.push('Datos físicos: '+item.tec);
+  L.push('Precio: '+precio);
   L.push('Disponibilidad: '+dispo);
-  if(item.bodega)L.push('Bodega: '+item.bodega);
-  L.push('','_Distribuidora Demo · Cotización RefIA_');
+  if(item.bodega)L.push('Sede: '+item.bodega);
+  if(item.foto)L.push('Foto: '+item.foto);
+  L.push('','_'+(CFG.firma||CFG.nombre+' · Cotización RefIA')+'_');
   return L.join('\n');}
 function waNum(n){n=(n||'').replace(/[^0-9]/g,'');if(n.length===10&&n.charAt(0)==='3')n='57'+n;return n;}
 function goWA(){
@@ -364,24 +465,140 @@ function goWA(){
   window.open('https://wa.me/'+num+'?text='+encodeURIComponent(waMsg(item)),'_blank');
   return false;}
 function locBadge(b,cls){return b?'<span class="loc '+cls+'"><span class="loc-dot"></span>'+b+'</span>':'';}
-function locClass(b){return b==='Sede Centro'?'loc-bog':b==='Sede Norte'?'loc-car':'';}
-function mLocClass(b){return b==='Sede Centro'?'m-loc-bog':b==='Sede Norte'?'m-loc-car':'';}
-function compatHas(x,m){var s=((x.cr||'')+' '+(x.compat||'')).toLowerCase();return s.indexOf(m.toLowerCase())>=0;}
-function cardCompat(cr){var a=cr.split(' \u00b7 ');var s=a.slice(0,2).join(' \u00b7 ');if(a.length>2)s+='<span class="compat-count">+'+(a.length-2)+' más</span>';return s;}
+function locClass(b){return 'loc-'+(CFG.sedes[b]||'bog');}
+function mLocClass(b){return 'm-loc-'+(CFG.sedes[b]||'bog');}
+function compatHas(x,m){var s=((x.cr||'')+' '+(x.compat||'')+' '+kOk(x.sku).join(' ')).toLowerCase();return s.indexOf(m.toLowerCase())>=0;}
+function cardCompat(cr){var a=cr.split(' · ');var s=a.slice(0,2).join(' · ');if(a.length>2)s+='<span class="compat-count">+'+(a.length-2)+' más</span>';return s;}
 
-/* FILTERS */
+/* ---------- CONOCIMIENTO DEL MOSTRADOR (Épica 0) ----------
+   K[sku] = {n:[{id,t,a,f}], v:[{id,v,ok,a,f}]}
+   Capas: build (nt/vk en P) → localStorage → nube (Worker+KV, si CFG.kEndpoint).
+   Regla de oro: lo firmado por la vendedora gana sobre WC/parser/catálogo. Solo GL queda arriba. */
+var K={}, PENDING=[];
+var KKEY='refia_k_'+CFG.slug, PKEY='refia_kp_'+CFG.slug;
+function kGet(sku){return K[sku]||{n:[],v:[]};}
+function kOk(sku){var k=K[sku];if(!k)return[];return k.v.filter(function(x){return x.ok;}).map(function(x){return x.v;});}
+function kNo(sku){var k=K[sku];if(!k)return[];return k.v.filter(function(x){return !x.ok;}).map(function(x){return x.v;});}
+function kId(e){return (e.f||'')+'|'+(e.a||'')+'|'+(e.t||e.v||'')+'|'+(e.ok===undefined?'':(e.ok?'1':'0'));}
+function kMerge(blob){
+  if(!blob)return 0;var n=0;
+  Object.keys(blob).forEach(function(sku){
+    var src=blob[sku]||{};var dst=K[sku]||(K[sku]={n:[],v:[]});
+    ['n','v'].forEach(function(t){(src[t]||[]).forEach(function(e){if(!e)return;e.id=e.id||kId(e);if(!dst[t].some(function(x){return x.id===e.id;})){dst[t].push(e);n++;}});});
+  });
+  return n;}
+function kSaveLocal(){lsSet(KKEY,K);lsSet(PKEY,PENDING);}
+function kLoad(){
+  P.forEach(function(p){if(p.nt||p.vk){K[p.sku]={n:(p.nt||[]).map(function(e){e.id=e.id||kId(e);return e;}),v:(p.vk||[]).map(function(e){e.id=e.id||kId(e);return e;})};}});
+  kMerge(lsGet(KKEY));PENDING=lsGet(PKEY)||[];
+  kPull();}
+function kPull(){
+  if(!CFG.kEndpoint||!navigator.onLine)return;
+  fetch(CFG.kEndpoint.replace(/\/$/,'')+'/k/'+CFG.slug,{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(d){var n=kMerge(d.k||d);kSaveLocal();if(n){render();}}
+    kPush();
+  }).catch(function(){});}
+function kPush(){
+  if(!CFG.kEndpoint||!navigator.onLine||!PENDING.length)return;
+  var batch=PENDING.slice();
+  fetch(CFG.kEndpoint.replace(/\/$/,'')+'/k/'+CFG.slug,{method:'POST',headers:{'content-type':'application/json','x-refia-pin':CFG.pin||''},body:JSON.stringify({entries:batch})})
+    .then(function(r){if(!r.ok)throw 0;PENDING=PENDING.filter(function(e){return batch.indexOf(e)<0;});kSaveLocal();updVbar();})
+    .catch(function(){});}
+function kAdd(sku,entry){
+  entry.a=AUTOR||'vendedora';entry.f=entry.f||today();entry.id=kId(entry);
+  var dst=K[sku]||(K[sku]={n:[],v:[]});var t=entry.t!==undefined?'n':'v';
+  if(dst[t].some(function(x){return x.id===entry.id;})){toast('Ya estaba guardado');return;}
+  dst[t].push(entry);PENDING.push({sku:sku,type:t,e:entry});kSaveLocal();kPush();updVbar();
+  toast(t==='n'?'Nota guardada':'Validación guardada');}
+function kStats(){var s={skus:0,n:0,v:0,ok:0,no:0,autores:{}};Object.keys(K).forEach(function(sku){var k=K[sku];if(k.n.length||k.v.length)s.skus++;s.n+=k.n.length;s.v+=k.v.length;k.v.forEach(function(x){if(x.ok)s.ok++;else s.no++;});k.n.concat(k.v).forEach(function(x){s.autores[x.a]=(s.autores[x.a]||0)+1;});});return s;}
+function kExport(){
+  var blob=new Blob([JSON.stringify({slug:CFG.slug,exportado:new Date().toISOString(),k:K},null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='conocimiento_'+CFG.slug+'_'+today()+'.json';document.body.appendChild(a);a.click();a.remove();}
+function kImport(inp){var f=inp.files&&inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);var n=kMerge(d.k||d);kSaveLocal();render();openAdm();toast(n+' entradas nuevas importadas');}catch(e){toast('Archivo no válido');}};r.readAsText(f);inp.value='';}
+function kSyncNow(){if(!CFG.kEndpoint){toast('Sin nube configurada: use Descargar/Importar');return;}kPull();toast('Sincronizando…');setTimeout(openAdm,1500);}
+
+/* ---------- MODO VENDEDORA (PIN, 3.1) ---------- */
+function vendActive(){if(!CFG.pin)return true;var s=lsGet('refia_vend_'+CFG.slug);return !!(s&&s.exp>Date.now());}
+function toggleVend(){
+  if(VEND){if(confirm('¿Salir del modo vendedora en este dispositivo?')){lsSet('refia_vend_'+CFG.slug,null);VEND=false;updVbar();render();}return;}
+  var pin=CFG.pin?prompt('PIN de vendedora de '+CFG.nombre+':'):'';
+  if(pin===null)return;
+  if(CFG.pin&&pin.trim()!==String(CFG.pin)){toast('PIN incorrecto');return;}
+  var a=prompt('¿Su nombre? (queda firmado en cada nota)',AUTOR||'');if(a===null)return;
+  AUTOR=(a||'vendedora').trim();lsSet('refia_autor',AUTOR);
+  lsSet('refia_vend_'+CFG.slug,{exp:Date.now()+12*3600*1000});VEND=true;updVbar();render();toast('Modo vendedora activo por 12 h');}
+function updVbar(){
+  var b=document.getElementById('vbar'),btn=document.getElementById('btn-vend');
+  btn.classList.toggle('on',VEND);btn.innerHTML=VEND?'&#128275; '+esc(AUTOR||'vendedora'):'&#128274;';
+  if(!VEND){b.classList.remove('open');return;}
+  var s=kStats();
+  b.innerHTML='<b>Modo vendedora</b> · '+esc(AUTOR)+' · '+s.n+' nota'+(s.n!==1?'s':'')+' · '+s.v+' validaci'+(s.v!==1?'ones':'ón')+(PENDING.length?' · <span style="color:#b45309">'+PENDING.length+' por sincronizar</span>':(CFG.kEndpoint?' · nube ✓':' · solo este dispositivo'))
+    +'<button onclick="openAdm()">Conocimiento</button>';
+  b.classList.add('open');}
+function openAdm(){
+  var s=kStats();var g=document.getElementById('adm-stats');
+  g.innerHTML='<div class="adm-stat"><b>'+s.skus+'</b><span>piezas con saber</span></div><div class="adm-stat"><b>'+s.n+'</b><span>notas</span></div><div class="adm-stat"><b>'+s.ok+'/'+s.no+'</b><span>sirve / no sirve</span></div>';
+  var au=Object.keys(s.autores).map(function(a){return esc(a)+' ('+s.autores[a]+')';}).join(', ');
+  document.getElementById('adm-p').innerHTML=(au?'<b>Por vendedora:</b> '+au+'<br>':'')
+    +(CFG.kEndpoint?'Nube: '+esc(CFG.kEndpoint)+' · pendientes: '+PENDING.length:'<b>Sin nube configurada.</b> Lo guardado vive en este navegador. Descargue el JSON y envíelo a REFIA para que entre al próximo build; o active el Worker (ver runbook).')
+    +'<br>Placas consultadas este mes: '+placaCount();
+  document.getElementById('adm').classList.add('open');}
+function closeAdm(){document.getElementById('adm').classList.remove('open');}
+
+/* ---------- BÚSQUEDA POR PLACA (Épica 1) ---------- */
+var VEH=null;
+function togglePlaca(){var b=document.getElementById('placa-box');b.classList.toggle('open');document.getElementById('btn-placa').classList.toggle('on',b.classList.contains('open'));if(b.classList.contains('open'))document.getElementById('pl-placa').focus();}
+function placaCount(){var c=lsGet('refia_placa_cnt')||{};return c[today().slice(0,7)]||0;}
+function placaBump(){var c=lsGet('refia_placa_cnt')||{};var m=today().slice(0,7);c[m]=(c[m]||0)+1;lsSet('refia_placa_cnt',c);}
+function plMsg(m){document.getElementById('pl-msg').innerHTML=m;}
+function placaLookup(){
+  var placa=document.getElementById('pl-placa').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var docType=document.getElementById('pl-doctype').value,doc=document.getElementById('pl-doc').value.replace(/[^0-9A-Za-z]/g,'');
+  if(placa.length<5){plMsg('Escriba la placa (ej. ABC123).');return;}
+  var cache=lsGet('refia_placa_'+placa);
+  if(cache&&cache.exp>Date.now()){applyVeh(cache.v,placa,true);return;}
+  if(!CFG.placaEndpoint){plMsg('<b>Búsqueda por placa no activada en este almacén.</b> Mientras tanto, escriba marca y línea arriba (ej. "Chevrolet Onix").');return;}
+  if(!doc){plMsg('El RUNT exige el documento del propietario. Sin documento, busque a mano.');return;}
+  var btn=document.getElementById('pl-go');btn.disabled=true;
+  plMsg('Consultando RUNT… la <b>primera vez puede tardar hasta 1 minuto</b>. Puede seguir buscando a mano mientras tanto.');
+  var ctrl=('AbortController' in window)?new AbortController():null;var to=setTimeout(function(){if(ctrl)ctrl.abort();},95000);
+  fetch(CFG.placaEndpoint.replace(/\/$/,'')+'/placa',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({placa:placa,docType:docType,docNumber:doc}),signal:ctrl?ctrl.signal:undefined})
+    .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+    .then(function(x){clearTimeout(to);btn.disabled=false;
+      if(!x.ok||!x.j||!x.j.marca){plMsg('No hubo respuesta para esa placa'+(x.j&&x.j.error?' ('+esc(x.j.error)+')':'')+'. Busque a mano.');return;}
+      lsSet('refia_placa_'+placa,{v:x.j,exp:Date.now()+7*86400*1000});placaBump();applyVeh(x.j,placa,false);})
+    .catch(function(){clearTimeout(to);btn.disabled=false;plMsg('Sin respuesta del servicio de placas. Busque a mano.');});}
+function applyVeh(v,placa,cached){
+  VEH=v;var txt=[cap(v.marca),cap(v.linea),v.modelo,v.cilindraje?(v.cilindraje+(String(v.cilindraje).length<=4&&/^\d+$/.test(String(v.cilindraje))?' cc':'')):''].filter(Boolean).join(' · ');
+  var b=document.getElementById('veh-banner');
+  b.innerHTML='&#128663; <b>'+esc(placa)+'</b> · '+esc(txt)+(cached?' <span style="font-weight:400;opacity:.7">(caché)</span>':'')+'<button onclick="clearVeh()">Quitar</button>';
+  b.classList.add('open');
+  var marca=cap(v.marca||''),linea=cap(v.linea||'');
+  var chip=MARCAS.filter(function(m){return m.toLowerCase()===marca.toLowerCase();})[0];
+  aV=chip||'all';
+  document.getElementById('q').value=(chip?'':marca+' ')+linea;
+  buildFB();render();plMsg('Vehículo cargado. Ajuste la búsqueda si hace falta.');}
+function clearVeh(){VEH=null;document.getElementById('veh-banner').classList.remove('open');aV='all';document.getElementById('q').value='';buildFB();render();}
+function cap(s){return String(s||'').toLowerCase().replace(/(^|\s)\S/g,function(c){return c.toUpperCase();});}
+
+/* ---------- FILTERS ---------- */
+var MARCAS=['Chevrolet','Hyundai','Toyota','Renault','Kia','Mazda','Nissan','Ford','Honda','Volkswagen','Mitsubishi','Suzuki','Jeep','Fiat','Great Wall','Chery'];
 function buildFB(){
-  var fuentes=['all','Importación','Bodega P3'],flbl={all:'Todos','Importación':'Importación','Bodega P3':'Bodega P3'};
-  var h=fuentes.map(function(f){var n=f==='all'?P.length:P.filter(function(x){return x.f===f;}).length;return'<div class="chip '+(aF===f?'on':'')+'" onclick="setF(\''+f+'\')">'+flbl[f]+' <span class="cc">'+n+'</span></div>';}).join('');
-  h+='<div class="sep"></div>';
+  var fuentes={};P.forEach(function(x){fuentes[x.f]=(fuentes[x.f]||0)+1;});
+  var fl=Object.keys(fuentes).sort(function(a,b){return fuentes[b]-fuentes[a];});
+  var h='';
+  if(fl.length>1){
+    h+='<div class="chip '+(aF==='all'?'on':'')+'" onclick="setF(\'all\')">Todos <span class="cc">'+P.length+'</span></div>';
+    fl.forEach(function(f){h+='<div class="chip '+(aF===f?'on':'')+'" data-f="'+esc(f)+'" onclick="setF(this.dataset.f)">'+esc(f)+' <span class="cc">'+fuentes[f]+'</span></div>';});
+    h+='<div class="sep"></div>';
+  }
   var cats={};P.forEach(function(x){cats[x.c]=(cats[x.c]||0)+1;});
   h+='<div class="chip '+(aC==='all'?'on':'')+'" onclick="setC(\'all\')">Todas <span class="cc">'+P.length+'</span></div>';
-  Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" onclick="setC(\''+c.replace(/'/g,"\\'")+'\')">'+c+' <span class="cc">'+n+'</span></div>';});
-  var marcas=['Chevrolet','Hyundai','Toyota','Renault','Kia','Mazda','Nissan','Ford','Honda','Volkswagen','Mitsubishi','Suzuki','Jeep','Fiat','Great Wall','Chery'];
+  Object.entries(cats).sort(function(a,b){return b[1]-a[1];}).forEach(function(e){var c=e[0],n=e[1];h+='<div class="chip '+(aC===c?'on':'')+'" data-c="'+esc(c)+'" onclick="setC(this.dataset.c)">'+esc(c)+' <span class="cc">'+n+'</span></div>';});
   h+='<div class="sep"></div>';
   h+='<div class="chip-label">Marca</div>';
   h+='<div class="chip '+(aV==='all'?'on':'')+'" data-v="all" onclick="setV(this.dataset.v)">Todas <span class="cc">'+P.length+'</span></div>';
-  marcas.forEach(function(m){
+  MARCAS.forEach(function(m){
     var n=P.filter(function(x){return compatHas(x,m);}).length;
     if(n>0)h+='<div class="chip '+(aV===m?'on':'')+'" data-v="'+m+'" onclick="setV(this.dataset.v)">'+m+' <span class="cc">'+n+'</span></div>';
   });
@@ -390,8 +607,9 @@ function buildFB(){
 function setF(f){aF=f;buildFB();render();}
 function setV(v){aV=v;buildFB();render();}
 function setC(c){aC=c;buildFB();render();}
+function clearQ(){document.getElementById('q').value='';render();}
 
-/* RENDER LIST */
+/* ---------- RENDER LIST ---------- */
 function render(){
   var q=document.getElementById('q').value.trim();
   var toks=norm(q).split(/\s+/).filter(function(t){return t.length>1;});
@@ -401,7 +619,8 @@ function render(){
     if(aC!=='all'&&item.c!==aC)return false;
     if(aV!=='all'&&!compatHas(item,aV))return false;
     if(!toks.length)return true;
-    return toks.every(function(t){return norm(item.d+' '+(item.oem||'')+' '+item.c+' '+item.sku+' '+(item.compat||'')+' '+(item.cs||'')+' '+(item.m||'')+' '+(item.ox||'')+' '+(item.mt||'')+' '+(item.y||'')+' '+(item.tec||'')+' '+(item.ka||'')).indexOf(t)>=0;});
+    var k=K[item.sku];var kx=k?(k.n.map(function(e){return e.t;}).join(' ')+' '+k.v.filter(function(e){return e.ok;}).map(function(e){return e.v;}).join(' ')):'';
+    return toks.every(function(t){return norm(item.d+' '+(item.oem||'')+' '+item.c+' '+item.sku+' '+(item.compat||'')+' '+(item.cs||'')+' '+(item.m||'')+' '+(item.ox||'')+' '+(item.mt||'')+' '+(item.y||'')+' '+(item.tec||'')+' '+(item.ka||'')+' '+kx).indexOf(t)>=0;});
   });
   var srt=document.getElementById('srt').value;
   if(srt==='pa')res.sort(function(a,b){return a.p-b.p;});
@@ -409,9 +628,10 @@ function render(){
   else if(srt==='st')res.sort(function(a,b){return b.e-a.e;});
   document.getElementById('rl').innerHTML=res.length?'<strong>'+res.length+'</strong> producto'+(res.length!==1?'s':'')+' — toca para ver detalle':'Sin resultados';
   var grid=document.getElementById('grid');
-  if(!res.length){grid.innerHTML='<div class="empty"><div class="ei">&#128270;</div><h3>Sin resultados para "'+q+'"</h3><p>Prueba con el vehículo, categoría o código OEM</p></div>';return;}
+  if(!res.length){grid.innerHTML='<div class="empty"><div class="ei">&#128270;</div><h3>Sin resultados para "'+esc(q)+'"</h3><p>Prueba con el vehículo, categoría o código OEM</p></div>';return;}
+  var showPrice=vendActive();
   grid.innerHTML=res.map(function(item,i){
-    var dh=hl(item.d,toks),oh=item.oem?hl(item.oem,toks):'';
+    var dh=hl(esc(item.d),toks),oh=item.oem?hl(esc(item.oem),toks):'';
     var thumb;
     if(item.vid){
       thumb='<div class="card-thumb-wrap">'
@@ -427,48 +647,64 @@ function render(){
     } else {
       thumb='<div class="card-thumb-ph">'+catIcon(item.c)+'</div>';
     }
+    var k=K[item.sku];var kh='';
+    if(k&&k.n.length){var ln=k.n[k.n.length-1];kh+='<div class="card-know">&#128221; '+esc(ln.a)+': '+esc(ln.t)+'</div>';}
+    var okv=kOk(item.sku);
+    var priceHtml=showPrice?fmt(item.p):(item.pv>0?'<span style="font-size:12px;color:#5a6b7b">Venta '+fmt(item.pv)+'</span>':'<span style="font-size:12px;color:#9b9890">&#128274;</span>');
     return '<div class="card" onclick="openModal('+item._idx+')">'
       +thumb
       +'<div class="card-body">'
-        +'<div class="card-cat">'+item.c+'</div>'
+        +'<div class="card-cat">'+esc(item.c)+(okv.length?' <span class="k-badge">&#10003; validada</span>':'')+'</div>'
         +'<div class="card-name">'+dh+'</div>'
         +(item.oem?'<div class="card-oem">'+oh+'</div>':'')
-        +(item.m?'<div class="card-marca">Marca: '+item.m+'</div>':'')
-        +(item.cr?'<div class="card-compat">'+(item.cv?'&#9888; ':'&#128663; ')+cardCompat(item.cr)+'</div>':'')
-        +(item.y?'<div class="card-compat" style="color:#5a6b7b;font-weight:600">&#128197; '+item.y+'</div>':'')
-        +(item.tec?'<div class="card-compat" style="color:#8a5a00;font-weight:700">&#128297; '+item.tec+'</div>':'')
+        +(item.m?'<div class="card-marca">Marca: '+esc(item.m)+'</div>':'')
+        +(item.cr?'<div class="card-compat">'+(item.cv?'&#9888; ':'&#128663; ')+cardCompat(esc(item.cr))+'</div>':'')
+        +(item.y?'<div class="card-compat" style="color:#5a6b7b;font-weight:600">&#128197; '+esc(item.y)+'</div>':'')
+        +(item.tec?'<div class="card-compat" style="color:#8a5a00;font-weight:700">&#128297; '+esc(item.tec)+'</div>':'')
+        +kh
       +'</div>'
       +'<div class="card-right">'
-        +'<div class="card-price">'+fmt(item.p)+'</div>'
+        +'<div class="card-price">'+priceHtml+'</div>'
         +'<span class="card-stock '+sCls(item.e)+'">'+sTxt(item.e)+'</span>'
-        +(item.bodega?locBadge(item.bodega,locClass(item.bodega)):'')
+        +(item.bodega?locBadge(esc(item.bodega),locClass(item.bodega)):'')
       +'</div>'
     +'</div>';
   }).join('');
 }
 
-/* CATEGORY ICONS */
 function catIcon(c){
   var icons={'Amortiguadores':'&#128664;','Bujías':'&#9889;','Bombas':'&#128722;','Suspensión':'&#128663;','Soportes Motor':'&#9881;','Alternadores':'&#9889;','Transmisión':'&#9881;','Motor':'&#9881;','Dirección':'&#9696;'};
   return icons[c]||'&#128295;';
 }
 
-/* MODAL */
+/* ---------- EQUIVALENCIAS EN INVENTARIO (5.1) ---------- */
+var OXIDX={};
+function refCore(s){var t=String(s||'').split(/\s+/).filter(function(x){return /\d/.test(x);}).map(function(x){return x.replace(/[^A-Za-z0-9]/g,'').toUpperCase();}).join('');return t||String(s||'').replace(/[^A-Za-z0-9]/g,'').toUpperCase();}
+function buildOX(){
+  P.forEach(function(p,i){
+    (p.oem||'').split(' · ').concat((p.ox||'').split(' · ')).forEach(function(r){var c=refCore(r);if(c.length>=4){(OXIDX[c]=OXIDX[c]||[]);if(OXIDX[c].indexOf(i)<0)OXIDX[c].push(i);}});
+  });}
+function alsoServes(item){
+  var seen={};var out=[];
+  (item.oem||'').split(' · ').concat((item.ox||'').split(' · ')).forEach(function(r){var c=refCore(r);if(c.length<4)return;(OXIDX[c]||[]).forEach(function(i){if(i!==item._idx&&!seen[i]){seen[i]=1;out.push(P[i]);}});});
+  return out;}
+
+/* ---------- MODAL ---------- */
+var CUR=null;
 function openModal(idx){
   var item=P[idx];
-  if(!item)return;
-
+  if(!item)return;CUR=item;
   document.getElementById('m-cat').textContent=item.c;
   document.getElementById('m-fuente').textContent=(item.f&&item.f!==item.c)?item.f:'';
   document.getElementById('m-name').textContent=item.d;
-  var locHtml=item.bodega?'<span class="m-loc '+mLocClass(item.bodega)+'">📍 '+item.bodega+'</span>':'';
+  var locHtml=item.bodega?'<span class="m-loc '+mLocClass(item.bodega)+'">📍 '+esc(item.bodega)+'</span>':'';
   var stockCls=item.e===0?'sout':item.e<=2?'slow':'sok';
   var stockTxt=sTxt(item.e)+(item.sw?' *':'');
   var stockBadge='<span class="card-stock '+stockCls+'" style="font-size:10px;padding:2px 7px">'+stockTxt+'</span>';
   var lowNote=item.e<=2?'<span style="font-size:10px;color:#b8860b;font-weight:700;margin-left:6px">&#9888; Verificar antes de confirmar</span>':'';
-  var marcaStr=item.m?' · <span style="font-weight:600">'+item.m+'</span>':'';
-  var fuenteStr=(item.f&&item.f!==item.c)?' · '+item.f:'';
-  document.getElementById('m-sub').innerHTML='Distribuidora Demo'+fuenteStr+(locHtml?' · '+locHtml:'')+marcaStr+' · '+stockBadge+lowNote;
+  var marcaStr=item.m?' · <span style="font-weight:600">'+esc(item.m)+'</span>':'';
+  var fuenteStr=(item.f&&item.f!==item.c)?' · '+esc(item.f):'';
+  document.getElementById('m-sub').innerHTML=esc(CFG.nombre)+fuenteStr+(locHtml?' · '+locHtml:'')+marcaStr+' · '+stockBadge+lowNote;
   document.getElementById('m-sku').textContent='SKU: '+item.sku;
 
   var fotoEl=document.getElementById('m-foto');
@@ -482,41 +718,67 @@ function openModal(idx){
     fotoEl.innerHTML='<div class="mp-ph"><div class="mp-ph-icon">'+catIcon(item.c)+'</div><div class="mp-ph-txt">Foto próximamente</div></div>';
   }
 
+  /* SKU/OEM + verificar en catálogo (0.5) */
   var skuboxEl=document.getElementById('m-skubox');
-  if(item.oem){
-    skuboxEl.innerHTML='<div class="sku-col"><div class="sku-lbl">SKU Interno</div><div class="sku-val">'+item.sku+'</div></div>'
-      +'<div class="sku-arrow">&#8594;</div>'
-      +'<div class="sku-col"><div class="sku-lbl oem-lbl">Referencia OEM</div><div class="sku-val oem-val">'+item.oem+'</div></div>';
-    skuboxEl.style.display='flex';
-  }else{
-    skuboxEl.innerHTML='<div class="sku-col"><div class="sku-lbl">SKU Interno</div><div class="sku-val">'+item.sku+'</div></div>';
-    skuboxEl.style.display='flex';
-  }
+  var sb='<div class="sku-col"><div class="sku-lbl">SKU Interno</div><div class="sku-val">'+esc(item.sku)+'</div></div>';
+  if(item.oem)sb+='<div class="sku-arrow">&#8594;</div><div class="sku-col"><div class="sku-lbl oem-lbl">Referencia OEM</div><div class="sku-val oem-val">'+esc(item.oem)+'</div></div>';
+  var q1=item.oem?item.oem.split(' · ')[0]:'';
+  sb+='<div class="verify-links">'
+    +(q1?'<a class="vlink" target="_blank" rel="noopener" href="https://partsouq.com/en/search/all?q='+encodeURIComponent(q1)+'">&#128269; Verificar en PartSouq</a>':'')
+    +'<a class="vlink" target="_blank" rel="noopener" href="https://www.google.com/search?q='+encodeURIComponent((q1?q1+' ':'')+item.d)+'">&#127760; Buscar en Google</a>'
+    +'</div>';
+  skuboxEl.innerHTML=sb;skuboxEl.style.display='flex';
 
+  renderKnow(item);
+
+  /* Compat (con validaciones de mostrador encima) */
   var compatEl=document.getElementById('m-compat');
+  var okv=kOk(item.sku),nov=kNo(item.sku);
+  var novl=nov.map(function(x){return x.toLowerCase();});
+  function chip(v){var cls=novl.indexOf(v.toLowerCase())>=0?' no':'';return'<span class="compat-chip'+cls+'">'+esc(v)+'</span>';}
+  var html='';
   if(item.cr){
-    var parts=item.cr.split(' \u00b7 ');
-    var chips=parts.map(function(v){return'<span class="compat-chip">'+v+'</span>';}).join('');
+    var parts=item.cr.split(' · ');
     var head=item.cv?'&#9888; Compatible — verificar variante':(parts.length>1?'&#128663; Compatible con '+parts.length+' vehículos':'&#128663; Compatible con');
     var note=item.cv?'<div style="font-size:10px;color:#b8860b;font-weight:600;margin-top:5px">Dato de catálogo en revisión — confirma el modelo con el cliente antes de cotizar</div>':'';
-    compatEl.innerHTML='<div class="compat-head">'+head+'</div><div class="compat-chips">'+chips+'</div>'+note;
-    compatEl.style.display='block';
+    html='<div class="compat-head">'+head+'</div><div class="compat-chips">'+parts.map(chip).join('')+'</div>'+note;
   }else if(item.compat){
-    var chips=item.compat.split(/\s*\|\s*|,/).filter(Boolean).map(function(v){return'<span class="compat-chip">'+v.trim()+'</span>';}).join('');
-    compatEl.innerHTML='<div class="compat-head">&#128663; Compatible con</div><div class="compat-chips">'+chips+'</div>';
-    compatEl.style.display='block';
+    html='<div class="compat-head">&#128663; Compatible con</div><div class="compat-chips">'+item.compat.split(/\s*\|\s*|,/).filter(Boolean).map(function(v){return chip(v.trim());}).join('')+'</div>';
   }else{
-    compatEl.innerHTML='<div class="compat-head">&#128663; Compatible con</div><div class="compat-chips"><span class="compat-chip" style="opacity:.5;font-style:italic">Ver descripción del producto</span></div>';
-    compatEl.style.display='block';
+    html='<div class="compat-head">&#128663; Compatible con</div><div class="compat-chips"><span class="compat-chip" style="opacity:.5;font-style:italic">Ver descripción del producto</span></div>';
   }
-  if(item.ox){compatEl.innerHTML+='<div class="compat-head" style="margin-top:12px">&#128279; Equivalencias (ref. alterna)</div><div class="compat-chips">'+item.ox.split(' \u00b7 ').map(function(v){return'<span class="compat-chip">'+v+'</span>';}).join('')+'</div>';compatEl.style.display='block';}
-  if(item.org){compatEl.innerHTML+='<div class="compat-head" style="margin-top:12px">&#127757; Origen ref. original</div><div class="compat-chips"><span class="compat-chip">'+item.org+'</span></div>';compatEl.style.display='block';}
-  if(item.mt){compatEl.innerHTML+='<div class="compat-head" style="margin-top:12px">&#9881; Motor</div><div class="compat-chips"><span class="compat-chip">'+item.mt+'</span></div>';compatEl.style.display='block';}
-  if(item.tec){compatEl.innerHTML+='<div class="compat-head" style="margin-top:12px;color:#8a5a00">&#128297; Datos físicos (verificar con foto)</div><div class="compat-chips">'+item.tec.split(' · ').map(function(v){return'<span class="compat-chip" style="background:#fff4e0;border-color:#e0c080;font-weight:700">'+v+'</span>';}).join('')+'</div>';compatEl.style.display='block';}
-  if(item.ka){compatEl.innerHTML+='<div class="compat-head" style="margin-top:12px">&#128279; Aplicación según Kotraco (verificar)</div><div class="compat-chips"><span class="compat-chip" style="opacity:.85;font-style:italic">'+item.ka+'</span></div>';compatEl.style.display='block';}
+  if(okv.length)html='<div class="compat-head" style="color:#166534">&#10003; Verificado en mostrador</div><div class="compat-chips">'+okv.map(function(v){return'<span class="compat-chip ok">'+esc(v)+'</span>';}).join('')+'</div><div style="height:10px"></div>'+html;
+  if(nov.length)html+='<div class="compat-head" style="margin-top:10px;color:#991b1b">&#10007; No sirve para</div><div class="compat-chips">'+nov.map(function(v){return'<span class="compat-chip no">'+esc(v)+'</span>';}).join('')+'</div>';
+  if(item.ox){html+='<div class="compat-head" style="margin-top:12px">&#128279; Equivalencias (ref. alterna)</div><div class="compat-chips">'+item.ox.split(' · ').map(function(v){var c=refCore(v);var hit=(OXIDX[c]||[]).filter(function(i){return i!==item._idx;})[0];return hit!==undefined?'<span class="compat-chip link" onclick="openModal('+hit+')" title="En inventario: '+esc(P[hit].sku)+'">'+esc(v)+' &#8599;</span>':'<span class="compat-chip">'+esc(v)+'</span>';}).join('')+'</div>';}
+  if(item.org){html+='<div class="compat-head" style="margin-top:12px">&#127757; Origen ref. original</div><div class="compat-chips"><span class="compat-chip">'+esc(item.org)+'</span></div>';}
+  if(item.mt){html+='<div class="compat-head" style="margin-top:12px">&#9881; Motor</div><div class="compat-chips"><span class="compat-chip">'+esc(item.mt)+'</span></div>';}
+  if(item.tec){html+='<div class="compat-head" style="margin-top:12px;color:#8a5a00">&#128297; Datos físicos (verificar con foto)</div><div class="compat-chips">'+item.tec.split(' · ').map(function(v){return'<span class="compat-chip" style="background:#fff4e0;border-color:#e0c080;font-weight:700">'+esc(v)+'</span>';}).join('')+'</div>';}
+  if(item.ka){html+='<div class="compat-head" style="margin-top:12px">&#128279; Aplicación según Kotraco (verificar)</div><div class="compat-chips"><span class="compat-chip" style="opacity:.85;font-style:italic">'+esc(item.ka)+'</span></div>';}
+  if(item.y){html='<div class="compat-head">&#128197; Años: '+esc(item.y)+'</div>'+html;}
+  compatEl.innerHTML=html;compatEl.style.display='block';
 
-  if(item.y){compatEl.innerHTML='<div class="compat-head">&#128197; A\u00f1os: '+item.y+'</div>'+compatEl.innerHTML;compatEl.style.display='block';}
-  /* Price section — GL interno vs precio web (fallback WC) */
+  /* También sirve / sustitución en inventario (5.1) */
+  var also=alsoServes(item);var alsoEl=document.getElementById('m-also');
+  if(also.length){
+    alsoEl.innerHTML='<div class="compat-head">&#128260; También sirve — en inventario</div><div class="compat-chips">'+also.map(function(p){return'<span class="compat-chip link" onclick="openModal('+p._idx+')">'+esc(p.d)+' · <b>'+esc(p.sku)+'</b> · <span class="card-stock '+sCls(p.e)+'" style="padding:1px 6px;font-size:10px">'+sTxt(p.e)+'</span></span>';}).join('')+'</div>';
+    alsoEl.style.display='block';
+  }else{alsoEl.innerHTML='';alsoEl.style.display='none';}
+
+  renderPrices(item);
+  window.__waItem=item;document.getElementById('m-wa-num').value='';
+  document.getElementById('overlay').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function renderPrices(item){
+  var wrap=document.getElementById('m-prices-wrap');
+  if(!vendActive()){
+    document.getElementById('m-price-title').textContent='Precios internos';
+    document.getElementById('m-price-badge').innerHTML='&#128274; Bloqueado';
+    wrap.innerHTML='<table class="price-table">'+(item.pv>0?'<tr class="price-web"><td>&#127991; Precio de venta</td><td>'+fmt(item.pv)+'</td></tr>':'')+'</table>'
+      +'<div class="price-lock"><input type="password" id="pin-in" inputmode="numeric" placeholder="PIN" maxlength="8"><button class="btn-k" onclick="pinUnlock()">Ver precio piso</button><span class="hint">Costo, precio piso y margen solo para el equipo del mostrador.</span></div>';
+    return;
+  }
   var priceHtml;
   if(item.pw){
     document.getElementById('m-price-title').textContent='Referencia de precio';
@@ -529,30 +791,65 @@ function openModal(idx){
     var margen=item.co>0?Math.round((item.p-item.co)/item.p*100):null;
     priceHtml='<tr><td>Costo</td><td>'+fmt(item.co)+'</td></tr>'
       +'<tr class="price-piso"><td>&#128274; Precio piso</td><td>'+fmt(item.p)+'</td></tr>'
-      +(margen!==null?'<tr class="price-margen"><td>Margen</td><td>'+margen+'%</td></tr>':'');
+      +(margen!==null?'<tr class="price-margen"><td>Margen</td><td>'+margen+'%</td></tr>':'')
+      +(item.pv>0&&item.pv!==item.p?'<tr class="price-web"><td>&#127991; Precio de venta (web)</td><td>'+fmt(item.pv)+'</td></tr>':'');
   }
-  document.getElementById('m-prices').innerHTML=priceHtml;
-  window.__waItem=item;document.getElementById('m-wa-num').value='';
-  document.getElementById('overlay').style.display='flex';
-  document.body.style.overflow='hidden';
+  wrap.innerHTML='<table class="price-table" id="m-prices">'+priceHtml+'</table>';
 }
+function pinUnlock(){
+  var v=(document.getElementById('pin-in').value||'').trim();
+  if(v!==String(CFG.pin)){toast('PIN incorrecto');return;}
+  var a=prompt('¿Su nombre? (para firmar notas)',AUTOR||lsGet('refia_autor')||'');
+  AUTOR=((a===null?'':a)||AUTOR||'vendedora').trim();lsSet('refia_autor',AUTOR);
+  lsSet('refia_vend_'+CFG.slug,{exp:Date.now()+12*3600*1000});VEND=true;updVbar();
+  if(CUR){renderPrices(CUR);renderKnow(CUR);}render();toast('Modo vendedora activo por 12 h');}
+
+/* Conocimiento en el modal */
+function renderKnow(item){
+  var el=document.getElementById('m-know');var k=kGet(item.sku);
+  var h='<div class="know-head">&#128221; Saber del mostrador'+(k.n.length||k.v.length?'<span class="k-badge">'+(k.n.length+k.v.length)+'</span>':'')+'</div>';
+  if(k.n.length)h+=k.n.slice().reverse().map(function(e){return'<div class="note">'+esc(e.t)+'<small>'+esc(e.a)+' · '+esc(e.f)+'</small></div>';}).join('');
+  else h+='<div class="know-empty">Nadie ha dejado una nota sobre esta pieza todavía.</div>';
+  if(VEND){
+    var opts=(item.cr||'').split(' · ').filter(Boolean);
+    h+='<div class="know-form">'
+      +'<textarea id="kn-t" placeholder="Nota corta para el próximo vendedor: qué trae la caja, qué versión NO sirve, con qué se confunde…"></textarea>'
+      +'<div class="know-row"><button class="btn-k" onclick="saveNote()">Guardar nota</button></div>'
+      +'<div class="know-row" style="margin-top:4px"><input id="kn-v" list="kn-veh" placeholder="Vehículo (ej. Chevrolet Onix 2019 1.4)"><datalist id="kn-veh">'+opts.map(function(o){return'<option value="'+esc(o)+'">';}).join('')+(VEH?'<option value="'+esc([VEH.marca,VEH.linea,VEH.modelo].filter(Boolean).map(cap).join(' '))+'">':'')+'</datalist>'
+      +'<button class="btn-ok" onclick="saveVal(true)">&#10003; Sí sirve</button><button class="btn-no" onclick="saveVal(false)">&#10007; No sirve</button></div>'
+      +'</div>';
+  }else if(CFG.pin){
+    h+='<div class="know-row" style="margin-top:8px"><button class="btn-lite" onclick="toggleVend()">&#128274; Entrar como vendedora para dejar una nota</button></div>';
+  }
+  el.innerHTML=h;
+}
+function saveNote(){var t=(document.getElementById('kn-t').value||'').trim();if(t.length<3){toast('Escriba la nota');return;}kAdd(CUR.sku,{t:t});renderKnow(CUR);render();}
+function saveVal(ok){var v=(document.getElementById('kn-v').value||'').trim();if(v.length<3){toast('Escriba el vehículo');return;}kAdd(CUR.sku,{v:v,ok:ok});renderKnow(CUR);openModal(CUR._idx);render();}
 
 function closeModal(){
   document.getElementById('overlay').style.display='none';
   document.body.style.overflow='';
 }
 
-/* -- INIT (v15 wa-num) -- */
+/* ---------- INIT (v18 conocimiento · placa · PWA) ---------- */
 document.getElementById('q').addEventListener('input',render);
 document.getElementById('srt').addEventListener('change',render);
-document.getElementById('clr').addEventListener('click',function(){document.getElementById('q').value='';render();});
 document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeAdm();}});
+document.getElementById('pl-placa').addEventListener('keydown',function(e){if(e.key==='Enter')placaLookup();});
+document.getElementById('pl-doc').addEventListener('keydown',function(e){if(e.key==='Enter')placaLookup();});
+window.addEventListener('online',function(){kPush();});
 
 document.getElementById('badge').textContent = P.length + ' SKUs';
+document.getElementById('hdr-cli').textContent = CFG.nombre;
+document.title='REFia — '+CFG.nombre;
 P.forEach(function(p,i){p._idx=i;});
+AUTOR=lsGet('refia_autor')||'';
+VEND=vendActive()&&!!CFG.pin;
+buildOX();kLoad();updVbar();
 buildFB();
 render();
+if('serviceWorker' in navigator && location.protocol==='https:'){Promise.resolve().catch(function(){});}
 </script>
 </body>
 </html>
